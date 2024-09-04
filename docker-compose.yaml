@@ -1,0 +1,24 @@
+name: lionmiss-back
+
+services:
+  sql:
+    image: mariadb:latest
+    ports:
+      - 3021:3306
+    volumes:
+      - db-lionmiss-sql:/var/lib/mysql
+    networks:
+      - net-lionmiss-back
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234qwerty
+      - MARIADB_DATABASE=lionmiss
+      - MARIADB_USER=lionnmiss
+      - MARIADB_PASSWORD=qwerty
+
+networks:
+  net-lionmiss-back:
+    driver: bridge
+
+volumes:
+  db-lionmiss-sql:
+  db-lionmiss-nosql:
