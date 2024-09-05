@@ -1,7 +1,7 @@
 USE lionmiss;
 
 CREATE TABLE article(
-	id BINARY(16) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
 	discolor BOOL NOT NULL
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE tag(
 );
 
 CREATE TABLE article_tag(
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 	tag VARCHAR(25) NOT NULL,
 	
 	FOREIGN KEY (article) REFERENCES article(id)
@@ -30,7 +30,7 @@ CREATE TABLE article_tag(
 );
 
 CREATE TABLE article_sizes (
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 	size VARCHAR(20) NOT NULL,
 	
 	FOREIGN KEY (article) REFERENCES article(id) 
@@ -41,7 +41,7 @@ CREATE TABLE article_sizes (
 );
 
 CREATE TABLE article_variant(
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 	variant VARCHAR(50) NOT NULL,
 	
 	FOREIGN KEY (article) REFERENCES article(id)
@@ -52,7 +52,7 @@ CREATE TABLE article_variant(
 );
 
 CREATE TABLE article_materials(
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 	material VARCHAR(50) NOT NULL,
 	percentage INT(3) NOT NULL,
 	
@@ -64,8 +64,9 @@ CREATE TABLE article_materials(
 );
 
 CREATE TABLE article_instruct(
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 	instruct VARCHAR(25) NOT NULL,
+  descrip VARCHAR(25) NOT NULL, 
 	
 	FOREIGN KEY (article) REFERENCES article(id)
 	ON DELETE CASCADE
@@ -79,14 +80,50 @@ CREATE TABLE article_instruct(
 );
 
 CREATE TABLE area(
-	id BINARY(16) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	country VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE article_area(
-	article BINARY(16) NOT NULL,
-	area BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
+	area CHAR(36) NOT NULL,
+	title TINYTEXT NOT NULL,
+	descrip TEXT,
+	price DECIMAL(6,2) UNSIGNED NOT NULL,
+	tax DECIMAL(4, 2) UNSIGNED NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (area) REFERENCES area(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, area)
+);
+
+CREATE TABLE article_area_variant(
+	article CHAR(36) NOT NULL,
+	variant VARCHAR(50) NOT NULL,
+	area CHAR(36) NOT NULL,
+	label VARCHAR(50) NOT NULL,
+	
+	FOREIGN KEY (article, variant) REFERENCES article_variant(article, variant)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+
+  FOREIGN KEY (area) REFERENCES area(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, variant, area)
+);
+
+CREATE TABLE article_area_instruct(
+	article CHAR(36) NOT NULL,
+	area CHAR(36) NOT NULL,
 	title TINYTEXT NOT NULL,
 	descrip TEXT,
 	price DECIMAL(6,2) UNSIGNED NOT NULL,
@@ -112,9 +149,9 @@ CREATE TABLE user(
 );
 
 CREATE TABLE comment(
-	id BINARY(16) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
 	user VARCHAR(255) NOT NULL,
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 	title TINYTEXT NOT NULL,
 	text TEXT NOT NULL,
 	rating TINYINT(1) UNSIGNED NOT NULL,
@@ -131,7 +168,7 @@ CREATE TABLE comment(
 );
 
 CREATE TABLE comment_pics(
-	comment BINARY(16) NOT NULL,
+	comment CHAR(36) NOT NULL,
 	pic VARCHAR(50) NOT NULL,
 
 	FOREIGN KEY (comment) REFERENCES comment(id)
@@ -142,7 +179,7 @@ CREATE TABLE comment_pics(
 );
 
 CREATE TABLE address(
-	id BINARY(16) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
 	user VARCHAR(255) NOT NULL,
 	alias VARCHAR(50) NOT NULL,
 	name VARCHAR(100) NOT NULL,
@@ -162,7 +199,7 @@ CREATE TABLE address(
 
 CREATE TABLE user_favs(
 	user VARCHAR(255) NOT NULL,
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 
 	FOREIGN KEY (user) REFERENCES user(email)
 	ON DELETE CASCADE
@@ -176,7 +213,7 @@ CREATE TABLE user_favs(
 );
 
 CREATE TABLE measures(
-	id BINARY(16) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
 	user VARCHAR(255) NOT NULL,
 	shoulder TINYINT(23) UNSIGNED,
 	chest TINYINT(23) UNSIGNED,
@@ -194,7 +231,7 @@ CREATE TABLE measures(
 );
 
 CREATE TABLE cart(
-	id BINARY(16) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
 	user VARCHAR(255) NOT NULL,
 
 	FOREIGN KEY (user) REFERENCES user(email)
@@ -203,9 +240,9 @@ CREATE TABLE cart(
 );
 
 CREATE TABLE cart_line(
-	cart BINARY(16) NOT NULL,
+	cart CHAR(36) NOT NULL,
 	line TINYINT(3) NOT NULL,
-	article BINARY(16) NOT NULL,
+	article CHAR(36) NOT NULL,
 	qty TINYINT(2) NOT NULL,
 
 	FOREIGN KEY (cart) REFERENCES cart(id)
@@ -220,7 +257,7 @@ CREATE TABLE cart_line(
 );
 
 CREATE TABLE shipping(
-	id BINARY(16) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
 	idTracking VARCHAR(36) NOT NULL,
 	idPayment VARCHAR(36) NOT NULL,
 	payment ENUM('tarnsfer', 'card', 'crypto', 'paypal') NOT NULL,
@@ -231,8 +268,8 @@ CREATE TABLE shipping(
 );
 
 CREATE TABLE shipping_state(
-	id BINARY(16) NOT NULL,
-	shipping BINARY(16) NOT NULL,
+	id CHAR(36) NOT NULL,
+	shipping CHAR(36) NOT NULL,
 	date DATETIME NOT NULL,
 	status 
 		ENUM(
