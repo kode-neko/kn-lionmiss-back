@@ -1,0 +1,262 @@
+USE lionmiss;
+
+CREATE TABLE article(
+	id BINARY(16) PRIMARY KEY,
+	discolor BOOL NOT NULL
+);
+
+CREATE TABLE instruct(
+	name VARCHAR(25) PRIMARY KEY
+);
+
+
+CREATE TABLE tag(
+	name VARCHAR(50) PRIMARY KEY
+);
+
+CREATE TABLE article_tag(
+	article BINARY(16) NOT NULL,
+	tag VARCHAR(25) NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (tag) REFERENCES tag(name)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, tag)
+);
+
+CREATE TABLE article_sizes (
+	article BINARY(16) NOT NULL,
+	size VARCHAR(20) NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id) 
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, size)
+);
+
+CREATE TABLE article_variant(
+	article BINARY(16) NOT NULL,
+	variant VARCHAR(50) NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, variant)
+);
+
+CREATE TABLE article_materials(
+	article BINARY(16) NOT NULL,
+	material VARCHAR(50) NOT NULL,
+	percentage INT(3) NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, material)
+);
+
+CREATE TABLE article_instruct(
+	article BINARY(16) NOT NULL,
+	instruct VARCHAR(25) NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (instruct) REFERENCES instruct(name)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, instruct)
+);
+
+CREATE TABLE area(
+	id BINARY(16) PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	country VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE article_area(
+	article BINARY(16) NOT NULL,
+	area BINARY(16) NOT NULL,
+	title TINYTEXT NOT NULL,
+	descrip TEXT,
+	price DECIMAL(6,2) UNSIGNED NOT NULL,
+	tax DECIMAL(4, 2) UNSIGNED NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (area) REFERENCES area(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, area)
+);
+
+
+CREATE TABLE user(
+	email VARCHAR(255) PRIMARY KEY,
+	userName VARCHAR(100) UNIQUE NOT NULL,
+	bday DATE NOT NULL,
+	sex ENUM('female', 'male')
+);
+
+CREATE TABLE comment(
+	id BINARY(16) PRIMARY KEY,
+	user VARCHAR(255) NOT NULL,
+	article BINARY(16) NOT NULL,
+	title TINYTEXT NOT NULL,
+	text TEXT NOT NULL,
+	rating TINYINT(1) UNSIGNED NOT NULL,
+	
+	FOREIGN KEY (user) REFERENCES user(email)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	UNIQUE(user, article)
+);
+
+CREATE TABLE comment_pics(
+	comment BINARY(16) NOT NULL,
+	pic VARCHAR(50) NOT NULL,
+
+	FOREIGN KEY (comment) REFERENCES comment(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(comment, pic)
+);
+
+CREATE TABLE address(
+	id BINARY(16) PRIMARY KEY,
+	user VARCHAR(255) NOT NULL,
+	alias VARCHAR(50) NOT NULL,
+	name VARCHAR(100) NOT NULL,
+	surname VARCHAR(100) NOT NULL,
+	address VARCHAR(150) NOT NULL,
+	city VARCHAR(100) NOT NULL,
+	state VARCHAR(100) NOT NULL,
+	country VARCHAR(100) NOT NULL,
+	phone TINYINT(23) UNSIGNED NOT NULL,
+	obs TEXT,
+
+	FOREIGN KEY (user) REFERENCES user(email)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+
+CREATE TABLE user_favs(
+	user VARCHAR(255) NOT NULL,
+	article BINARY(16) NOT NULL,
+
+	FOREIGN KEY (user) REFERENCES user(email)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(user, article)
+);
+
+CREATE TABLE measures(
+	id BINARY(16) PRIMARY KEY,
+	user VARCHAR(255) NOT NULL,
+	shoulder TINYINT(23) UNSIGNED,
+	chest TINYINT(23) UNSIGNED,
+	waist TINYINT(23) UNSIGNED,
+	hips TINYINT(23) UNSIGNED,
+	foot TINYINT(23) UNSIGNED,
+	height TINYINT(23) UNSIGNED,
+	weight TINYINT(23) UNSIGNED,
+	unitsHeight ENUM('cm', 'inch'),
+	unitsWeight ENUM('kg', 'lb'),
+
+	FOREIGN KEY (user) REFERENCES user(email)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+CREATE TABLE cart(
+	id BINARY(16) PRIMARY KEY,
+	user VARCHAR(255) NOT NULL,
+
+	FOREIGN KEY (user) REFERENCES user(email)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+CREATE TABLE cart_line(
+	cart BINARY(16) NOT NULL,
+	line TINYINT(3) NOT NULL,
+	article BINARY(16) NOT NULL,
+	qty TINYINT(2) NOT NULL,
+
+	FOREIGN KEY (cart) REFERENCES cart(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(cart, line)
+);
+
+CREATE TABLE shipping(
+	id BINARY(16) PRIMARY KEY,
+	idTracking VARCHAR(36) NOT NULL,
+	idPayment VARCHAR(36) NOT NULL,
+	payment ENUM('tarnsfer', 'card', 'crypto', 'paypal') NOT NULL,
+
+	FOREIGN KEY (id) REFERENCES cart(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+CREATE TABLE shipping_state(
+	id BINARY(16) NOT NULL,
+	shipping BINARY(16) NOT NULL,
+	date DATETIME NOT NULL,
+	status 
+		ENUM(
+			'order_recieved', 
+			'processing', 
+			'shipped', 
+			'delivering', 
+			'returned',
+			'exception'
+		) 
+		NOT NULL,
+	xtra TINYTEXT,
+	
+	FOREIGN KEY (shipping) REFERENCES shipping(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(id, shipping)
+);
+
+
+
+
+
+
+
+
