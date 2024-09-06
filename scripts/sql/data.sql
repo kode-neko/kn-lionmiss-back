@@ -1,5 +1,5 @@
 INSERT INTO lionmiss.area (id,name,country) VALUES
-	 ('1','España','España');
+	 ('1','Spain','Spain');
 INSERT INTO lionmiss.article (id,discolor) VALUES
 	 ('1',0),
 	 ('10',0),
@@ -169,9 +169,9 @@ INSERT INTO lionmiss.tag (name) VALUES
 	 ('top');
 INSERT INTO lionmiss.tag (name) VALUES
 	 ('trouser');
-INSERT INTO lionmiss.`user` (email,userName,bday,sex) VALUES
-	 ('kodeneko@user.es','kdoeneko','1990-09-18','female'),
-	 ('test@test.es','test','1990-01-12','male');
+INSERT INTO lionmiss.`user` (email,userName,bday,sex,area) VALUES
+	 ('kodeneko@user.es','kdoeneko','1990-09-18','female', 1),
+	 ('test@test.es','test','1990-01-12','male', 1);
 INSERT INTO lionmiss.user_favs (`user`,article) VALUES
 	 ('kodeneko@user.es','1'),
 	 ('kodeneko@user.es','8');

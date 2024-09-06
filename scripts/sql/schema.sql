@@ -145,7 +145,12 @@ CREATE TABLE user(
 	email VARCHAR(255) PRIMARY KEY,
 	userName VARCHAR(100) UNIQUE NOT NULL,
 	bday DATE NOT NULL,
-	sex ENUM('female', 'male')
+	sex ENUM('female', 'male'),
+	area CHAR(36) NOT NULL,
+	
+	FOREIGN KEY (area) REFERENCES area(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 CREATE TABLE comment(
