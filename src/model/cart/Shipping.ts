@@ -4,6 +4,7 @@ import ShipStateEnum from './ShipStateEnum';
 interface Shipping {
   id: string;
   idTracking: string;
+  idShipping: string;
   state: Record<ShipStateEnum, Date>;
   payment: PaymentEnum;
 }

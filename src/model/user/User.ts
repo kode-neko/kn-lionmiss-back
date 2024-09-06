@@ -4,6 +4,7 @@ import SexEnum from './SexEnum';
 import Comment from './Comment';
 import UserMeasures from './UserMeasures';
 import {Cart} from '../cart';
+import Area from '../article/Area';
 
 interface User {
   id: string;
@@ -11,6 +12,7 @@ interface User {
   email: string;
   bday: Date;
   sex: SexEnum;
+  area: Area;
   measures: UserMeasures;
   commentList: Comment[];
   addressList: Address[];
