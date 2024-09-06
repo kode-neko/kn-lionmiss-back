@@ -1,19 +1,33 @@
 name: lionmiss-back
 
 services:
+  
   sql:
     image: mariadb:latest
     ports:
       - 3021:3306
     volumes:
       - db-lionmiss-sql:/var/lib/mysql
+      # - ./scripts/sql:/docker-entrypoint-initdb.d
     networks:
       - net-lionmiss-back
     environment:
-      - MARIADB_ROOT_PASSWORD=1234qwerty
-      - MARIADB_DATABASE=lionmiss
-      - MARIADB_USER=lionnmiss
-      - MARIADB_PASSWORD=qwerty
+      MARIADB_ROOT_PASSWORD: "1234qwerty"
+      MARIADB_DATABASE: "lionmiss"
+      MARIADB_USER: "lionnmiss"
+      MARIADB_PASSWORD: "qwerty"
+  
+  mongo:
+    image: mongo:latest
+    ports: 
+      - 3022:27017
+    volumes:
+      - db-lionmiss-nosql:/data/db
+      # - ./scripts/mongo:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "1234qwerty"
+      MONGO_INITDB_DATABASE: "lionmiss"
 
 networks:
   net-lionmiss-back:
