@@ -1,0 +1,33 @@
+[
+  {
+    "_id" : ObjectId("66db3e857f97b60ae12b4a1e"),
+    "tags" : [
+        "female",
+        "dress",
+        "short",
+        "summer"
+    ],
+    "sizes" : {
+        "s" : NumberInt(20),
+        "m" : NumberInt(4),
+        "l" : NumberInt(20)
+    },
+    "variant" : [
+        "red",
+        "green",
+        "stripes"
+    ],
+    "materials" : {
+        "cotton" : NumberInt(30),
+        "rayon" : NumberInt(70)
+    },
+    "instructions" : {
+        "whasing" : "30º",
+        "ironing" : "180º",
+        "spining" : "low",
+        "dryCleaning" : "no"
+    },
+    "discolor" : false
+}
+
+]

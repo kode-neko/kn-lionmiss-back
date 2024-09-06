@@ -1,0 +1,12 @@
+{
+  "_id" : ObjectId("66db3fc57f97b60ae12b4a21"),
+  "title" : "Vestido noche verano",
+  "desc" : "Lorem ipsum dolor sit amet consectetur adipiscing elit vulputate ultrices potenti conubia convallis.",
+  "price" : 33.95,
+  "tax" : NumberInt(21),
+  "area" : {
+      "name" : "Spain",
+      "country" : "Spain",
+      "symbol" : "€"
+  }
+}
