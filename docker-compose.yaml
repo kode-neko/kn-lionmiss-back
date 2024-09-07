@@ -16,6 +16,18 @@ services:
       MARIADB_DATABASE: "lionmiss"
       MARIADB_USER: "lionnmiss"
       MARIADB_PASSWORD: "qwerty"
+
+  sql-test:
+    image: mariadb:latest
+    ports:
+      - 3023:3306
+    networks:
+      - net-lionmiss-back
+    environment:
+      MARIADB_ROOT_PASSWORD: "1234qwerty"
+      MARIADB_DATABASE: "lionmiss"
+      MARIADB_USER: "lionnmiss"
+      MARIADB_PASSWORD: "qwerty"
   
   mongo:
     image: mongo:latest
