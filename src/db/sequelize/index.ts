@@ -46,6 +46,7 @@ async function initDb () {
   });
   initSchema(adminSeqConn);
   await adminSeqConn.sync();
+  adminSeqConn.close();
 }
 
 async function getConn () {
