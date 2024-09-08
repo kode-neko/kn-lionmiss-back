@@ -15,14 +15,11 @@ initAreaSeq(sequelize);
 initArticleSeq(sequelize);
 
 initArticleInstructSeq(sequelize);
+initArticleAreaSeq(sequelize);
+initArticleMaterialsSeq(sequelize);
+initArticleSizesSeq(sequelize);
+initArticleVariantSeq(sequelize);
 
-/*
- *initArticleAreaSeq(sequelize);
- *
- *initArticleMaterialsSeq(sequelize);
- *initArticleSizesSeq(sequelize);
- *initArticleVariantSeq(sequelize);
- */
 async function init () {
   try {
     await sequelize.authenticate();

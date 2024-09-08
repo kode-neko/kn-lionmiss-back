@@ -15,14 +15,14 @@ function initArticleAreaSeq (sequelize: Sequelize) {
       tax: {type: DataTypes.DECIMAL},
 
       // FK
-      article: {
+      articleId: {
         type: DataTypes.UUID,
         references: {
           model: ArticleSeq,
           key: 'id'
         }
       },
-      area: {
+      areaId: {
         type: DataTypes.UUID,
         references: {
           model: AreaSeq,
@@ -39,11 +39,17 @@ function initArticleAreaSeq (sequelize: Sequelize) {
 
   ArticleSeq.belongsToMany(
     AreaSeq,
-    {through: ArticleAreaSeq}
+    {
+      through: ArticleAreaSeq,
+      foreignKey: 'articleId'
+    }
   );
   AreaSeq.belongsToMany(
     ArticleSeq,
-    {through: ArticleAreaSeq}
+    {
+      through: ArticleAreaSeq,
+      foreignKey: 'areaId'
+    }
   );
 }
 

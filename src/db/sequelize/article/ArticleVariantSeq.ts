@@ -1,13 +1,14 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
+import {ArticleSeq} from './ArticleSeq';
 
 class ArticleVariantSeq extends Model { }
 
 function initArticleVariantSeq (sequelize: Sequelize) {
   ArticleVariantSeq.init(
     {
-      article: {
+      articleId: {
         type: DataTypes.UUID,
         primaryKey: true
       },
@@ -22,6 +23,16 @@ function initArticleVariantSeq (sequelize: Sequelize) {
       modelName: 'article_variant'
     }
   );
+
+  ArticleSeq.hasMany(
+    ArticleVariantSeq,
+    {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    }
+  );
+  ArticleVariantSeq.belongsTo(ArticleSeq);
 }
 
 export {

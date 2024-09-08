@@ -27,7 +27,11 @@ function initArticleInstructSeq (sequelize: Sequelize) {
 
   ArticleSeq.hasMany(
     ArticleInstructSeq,
-    {foreignKey: 'articleId'}
+    {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    }
   );
   ArticleInstructSeq.belongsTo(ArticleSeq);
 }

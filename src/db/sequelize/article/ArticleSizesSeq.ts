@@ -1,13 +1,14 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
+import {ArticleSeq} from './ArticleSeq';
 
 class ArticleSizesSeq extends Model { }
 
 function initArticleSizesSeq (sequelize: Sequelize) {
   ArticleSizesSeq.init(
     {
-      article: {
+      articleId: {
         type: DataTypes.UUID,
         primaryKey: true
       },
@@ -22,6 +23,16 @@ function initArticleSizesSeq (sequelize: Sequelize) {
       modelName: 'article_size'
     }
   );
+
+  ArticleSeq.hasMany(
+    ArticleSizesSeq,
+    {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    }
+  );
+  ArticleSizesSeq.belongsTo(ArticleSeq);
 }
 
 export {
