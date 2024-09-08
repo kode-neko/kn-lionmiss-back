@@ -24,6 +24,7 @@ function initArticleSizesSeq (sequelize: Sequelize) {
     }
   );
 
+  ArticleSizesSeq.belongsTo(ArticleSeq);
   ArticleSeq.hasMany(
     ArticleSizesSeq,
     {
@@ -32,7 +33,6 @@ function initArticleSizesSeq (sequelize: Sequelize) {
       onUpdate: 'CASCADE'
     }
   );
-  ArticleSizesSeq.belongsTo(ArticleSeq);
 }
 
 export {

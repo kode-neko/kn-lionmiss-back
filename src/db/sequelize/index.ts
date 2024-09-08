@@ -2,6 +2,8 @@ import {Sequelize} from 'sequelize';
 import {
   initAreaSeq, initArticleAreaSeq, initArticleInstructSeq, initArticleMaterialsSeq, initArticleSeq, initArticleSizesSeq, initArticleVariantSeq
 } from './article';
+import {initAddressSeq, initCommentSeq, initUserMeasuresSeq, initUserSeq
+} from './user';
 
 const sequelize = new Sequelize({
   dialect: 'mariadb',
@@ -19,6 +21,11 @@ initArticleAreaSeq(sequelize);
 initArticleMaterialsSeq(sequelize);
 initArticleSizesSeq(sequelize);
 initArticleVariantSeq(sequelize);
+
+initUserMeasuresSeq(sequelize);
+initAddressSeq(sequelize);
+initUserSeq(sequelize);
+initCommentSeq(sequelize);
 
 async function init () {
   try {

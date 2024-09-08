@@ -25,6 +25,7 @@ function initArticleInstructSeq (sequelize: Sequelize) {
     }
   );
 
+  ArticleInstructSeq.belongsTo(ArticleSeq);
   ArticleSeq.hasMany(
     ArticleInstructSeq,
     {
@@ -33,7 +34,6 @@ function initArticleInstructSeq (sequelize: Sequelize) {
       onUpdate: 'CASCADE'
     }
   );
-  ArticleInstructSeq.belongsTo(ArticleSeq);
 }
 
 export {

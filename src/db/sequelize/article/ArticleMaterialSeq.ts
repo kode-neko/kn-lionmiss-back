@@ -25,6 +25,7 @@ function initArticleMaterialsSeq (sequelize: Sequelize) {
     }
   );
 
+  ArticleMaterialsSeq.belongsTo(ArticleSeq);
   ArticleSeq.hasMany(
     ArticleMaterialsSeq,
     {
@@ -33,7 +34,6 @@ function initArticleMaterialsSeq (sequelize: Sequelize) {
       onUpdate: 'CASCADE'
     }
   );
-  ArticleMaterialsSeq.belongsTo(ArticleSeq);
 }
 
 export {
