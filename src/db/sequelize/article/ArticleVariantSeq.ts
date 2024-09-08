@@ -23,16 +23,6 @@ function initArticleVariantSeq (sequelize: Sequelize) {
       modelName: 'article_variant'
     }
   );
-
-  ArticleSeq.hasMany(
-    ArticleVariantSeq,
-    {
-      foreignKey: 'articleId',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    }
-  );
-  ArticleVariantSeq.belongsTo(ArticleSeq);
 }
 
 export {

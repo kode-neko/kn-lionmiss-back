@@ -36,21 +36,6 @@ function initArticleAreaSeq (sequelize: Sequelize) {
       modelName: 'article_area'
     }
   );
-
-  ArticleSeq.belongsToMany(
-    AreaSeq,
-    {
-      through: ArticleAreaSeq,
-      foreignKey: 'articleId'
-    }
-  );
-  AreaSeq.belongsToMany(
-    ArticleSeq,
-    {
-      through: ArticleAreaSeq,
-      foreignKey: 'areaId'
-    }
-  );
 }
 
 export {

@@ -1,7 +1,6 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
-import {UserSeq} from './UserSeq';
 
 class CommentSeq extends Model { }
 
@@ -20,12 +19,6 @@ function initCommentSeq (sequelize: Sequelize) {
       freezeTableName: true,
       modelName: 'comment'
     }
-  );
-
-  CommentSeq.belongsTo(UserSeq);
-  UserSeq.hasMany(
-    CommentSeq,
-    {foreignKey: 'commentId'}
   );
 }
 

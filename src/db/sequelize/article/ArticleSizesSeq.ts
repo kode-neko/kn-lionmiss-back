@@ -23,16 +23,6 @@ function initArticleSizesSeq (sequelize: Sequelize) {
       modelName: 'article_size'
     }
   );
-
-  ArticleSizesSeq.belongsTo(ArticleSeq);
-  ArticleSeq.hasMany(
-    ArticleSizesSeq,
-    {
-      foreignKey: 'articleId',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    }
-  );
 }
 
 export {

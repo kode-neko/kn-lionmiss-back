@@ -1,8 +1,6 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
-import {UserMeasuresSeq} from './UserMeasures';
-import {AddressSeq} from './AddressSeq';
 
 class UserSeq extends Model { }
 
@@ -28,17 +26,6 @@ function initUserSeq (sequelize: Sequelize) {
       modelName: 'user'
     }
   );
-
-  UserSeq.hasOne(
-    UserMeasuresSeq,
-    {foreignKey: 'userId'}
-  );
-  UserSeq.hasMany(
-    AddressSeq,
-    {foreignKey: 'addressId'}
-  );
-  AddressSeq.belongsTo(UserSeq);
-  UserMeasuresSeq.belongsTo(UserSeq);
 }
 
 export {

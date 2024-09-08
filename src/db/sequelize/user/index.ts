@@ -14,3 +14,4 @@ export {
   initUserSeq,
   UserSeq
 } from './UserSeq';
+export {default as initUserAssoc} from './assocs';

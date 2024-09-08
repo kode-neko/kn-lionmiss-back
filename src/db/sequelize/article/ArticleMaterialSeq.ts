@@ -1,7 +1,6 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
-import {ArticleSeq} from './ArticleSeq';
 
 class ArticleMaterialsSeq extends Model { }
 
@@ -22,16 +21,6 @@ function initArticleMaterialsSeq (sequelize: Sequelize) {
       sequelize: sequelize,
       freezeTableName: true,
       modelName: 'article_materials'
-    }
-  );
-
-  ArticleMaterialsSeq.belongsTo(ArticleSeq);
-  ArticleSeq.hasMany(
-    ArticleMaterialsSeq,
-    {
-      foreignKey: 'articleId',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
     }
   );
 }

@@ -1,37 +1,70 @@
 import {Sequelize} from 'sequelize';
 import {
-  initAreaSeq, initArticleAreaSeq, initArticleInstructSeq, initArticleMaterialsSeq, initArticleSeq, initArticleSizesSeq, initArticleVariantSeq
+  initAreaSeq, initArticleAreaSeq, initArticleInstructSeq, initArticleMaterialsSeq, initArticleSeq, initArticleSizesSeq, initArticleVariantSeq,
+  initArticleAssocs
 } from './article';
-import {initAddressSeq, initCommentSeq, initUserMeasuresSeq, initUserSeq
+import {
+  initAddressSeq, initCommentSeq, initUserAssoc, initUserMeasuresSeq, initUserSeq
 } from './user';
+import {initCartAssoc, initCartLineSeq, initCartSeq, initShippingSeq
+} from './cart';
 
-const sequelize = new Sequelize({
-  dialect: 'mariadb',
-  port: 3023,
-  database: 'lionmiss',
-  username: 'lionmiss-admin',
-  password: '1234qwerty'
-});
+let seqConn: Sequelize;
 
-initAreaSeq(sequelize);
-initArticleSeq(sequelize);
+function initSchema (seqConn: Sequelize) {
+  // Article blok
+  initAreaSeq(seqConn);
+  initArticleSeq(seqConn);
+  initArticleInstructSeq(seqConn);
+  initArticleAreaSeq(seqConn);
+  initArticleMaterialsSeq(seqConn);
+  initArticleSizesSeq(seqConn);
+  initArticleVariantSeq(seqConn);
+  initArticleAssocs();
 
-initArticleInstructSeq(sequelize);
-initArticleAreaSeq(sequelize);
-initArticleMaterialsSeq(sequelize);
-initArticleSizesSeq(sequelize);
-initArticleVariantSeq(sequelize);
+  // User blok
+  initUserMeasuresSeq(seqConn);
+  initAddressSeq(seqConn);
+  initUserSeq(seqConn);
+  initCommentSeq(seqConn);
+  initUserAssoc();
 
-initUserMeasuresSeq(sequelize);
-initAddressSeq(sequelize);
-initUserSeq(sequelize);
-initCommentSeq(sequelize);
+  // Cart block
+  initCartSeq(seqConn);
+  initCartLineSeq(seqConn);
+  initShippingSeq(seqConn);
+  // initCartAssoc();
+}
+
+async function initDb () {
+  const adminSeqConn = new Sequelize({
+    dialect: 'mariadb',
+    port: 3023,
+    database: 'lionmiss',
+    username: 'lionmiss-admin',
+    password: '1234qwerty'
+  });
+  initSchema(adminSeqConn);
+  await adminSeqConn.sync();
+}
+
+async function getConn () {
+  if (!seqConn) {
+    seqConn = new Sequelize({
+      dialect: 'mariadb',
+      port: 3023,
+      database: 'lionmiss',
+      username: 'lionmiss-admin',
+      password: '1234qwerty'
+    });
+  }
+  return seqConn;
+}
 
 async function init () {
   try {
-    await sequelize.authenticate();
+    initDb();
     console.log('Connection has been established successfully.');
-    await sequelize.sync();
   } catch (error) {
     console.error(
       'Unable to connect to the database:',
