@@ -41,6 +41,15 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: "1234qwerty"
       MONGO_INITDB_DATABASE: "lionmiss"
 
+  mongo-test:
+    image: mongo:latest
+    ports: 
+      - 3024:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "1234qwerty"
+      MONGO_INITDB_DATABASE: "lionmiss"
+
 networks:
   net-lionmiss-back:
     driver: bridge
