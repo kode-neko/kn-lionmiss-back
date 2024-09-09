@@ -1,12 +1,18 @@
 import {Schema} from 'mongoose';
 import addressSchema from './addressSchema';
 import commentSchema from './commentSchema';
+import {
+  enumSex, enumUnitsHeight, enumUnitsWeight
+} from './utils';
 
 const userSchema = new Schema({
   userName: String,
   email: String,
   bday: Date,
-  sex: String,
+  sex: {
+    type: String,
+    validator: enumSex
+  },
   addresses: [addressSchema],
   commentList: [commentSchema],
   measures: {
@@ -17,8 +23,14 @@ const userSchema = new Schema({
     foot: Number,
     height: Number,
     weight: Number,
-    unitsHeight: String,
-    unitsWeight: String
+    unitsHeight: {
+      type: String,
+      validator: enumUnitsHeight
+    },
+    unitsWeight: {
+      type: String,
+      validator: enumUnitsWeight
+    }
   }
 });
 

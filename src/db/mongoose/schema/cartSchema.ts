@@ -1,4 +1,5 @@
 import {Schema} from 'mongoose';
+import {enumPayment, enumShipState} from './utils';
 
 const cartSchema = new Schema({
   lines: [{
@@ -10,9 +11,14 @@ const cartSchema = new Schema({
     idShipping: String,
     state: {
       type: Map,
-      of: String
+      of: Date,
+      validator: enumShipState
     },
-    payment: String
+    payment: {
+      type: Map,
+      of: Date,
+      validator: enumPayment
+    }
   }
 });
 

@@ -1,4 +1,5 @@
 import {Schema} from 'mongoose';
+import {enumInstruct} from './utils';
 
 const articleSchema = new Schema({
   tags: [String],
@@ -14,9 +15,10 @@ const articleSchema = new Schema({
     type: Map,
     of: String
   },
-  isntructions: {
+  instructs: {
     type: Map,
-    of: String
+    of: String,
+    validator: enumInstruct
   },
   discolor: Boolean
 });
