@@ -16,12 +16,17 @@ function initShippingSeq (sequelize: Sequelize) {
           key: 'id'
         }
       },
-      line: {
-        type: DataTypes.INTEGER,
-        primaryKey: true
-
-      },
-      qty: {type: DataTypes.INTEGER}
+      idTracking: {type: DataTypes.STRING},
+      idPayment: {type: DataTypes.STRING},
+      payment: {
+        type: DataTypes.ENUM(
+          'transfer',
+          'card',
+          'crypto',
+          'paypal'
+        ),
+        allowNull: false
+      }
     },
     {
       sequelize: sequelize,

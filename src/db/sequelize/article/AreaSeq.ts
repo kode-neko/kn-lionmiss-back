@@ -11,8 +11,14 @@ function initAreaSeq (sequelize: Sequelize) {
         type: DataTypes.UUID,
         primaryKey: true
       },
-      name: {type: DataTypes.STRING},
-      country: {type: DataTypes.STRING}
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      country: {
+        type: DataTypes.STRING,
+        allowNull: false
+      }
     },
     {
       sequelize: sequelize,

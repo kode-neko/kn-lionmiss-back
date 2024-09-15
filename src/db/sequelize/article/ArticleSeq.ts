@@ -11,7 +11,10 @@ function initArticleSeq (sequelize: Sequelize) {
         type: DataTypes.UUID,
         primaryKey: true
       },
-      discolor: {type: DataTypes.BOOLEAN}
+      discolor: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      }
     },
     {
       sequelize: sequelize,

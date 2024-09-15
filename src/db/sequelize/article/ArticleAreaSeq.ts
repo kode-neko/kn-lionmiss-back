@@ -9,14 +9,27 @@ class ArticleAreaSeq extends Model { }
 function initArticleAreaSeq (sequelize: Sequelize) {
   ArticleAreaSeq.init(
     {
-      title: {type: DataTypes.STRING},
-      desc: {type: DataTypes.STRING},
-      price: {type: DataTypes.DECIMAL},
-      tax: {type: DataTypes.DECIMAL},
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      desc: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      price: {
+        type: DataTypes.DECIMAL,
+        allowNull: false
+      },
+      tax: {
+        type: DataTypes.DECIMAL,
+        allowNull: false
+      },
 
       // FK
       articleId: {
         type: DataTypes.UUID,
+        allowNull: false,
         references: {
           model: ArticleSeq,
           key: 'id'
@@ -24,6 +37,7 @@ function initArticleAreaSeq (sequelize: Sequelize) {
       },
       areaId: {
         type: DataTypes.UUID,
+        allowNull: false,
         references: {
           model: AreaSeq,
           key: 'id'

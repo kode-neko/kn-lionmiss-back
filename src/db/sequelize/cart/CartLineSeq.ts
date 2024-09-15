@@ -18,10 +18,14 @@ function initCartLineSeq (sequelize: Sequelize) {
       },
       line: {
         type: DataTypes.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false
 
       },
-      qty: {type: DataTypes.INTEGER}
+      qty: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
     },
     {
       sequelize: sequelize,

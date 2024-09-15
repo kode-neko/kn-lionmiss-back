@@ -11,7 +11,10 @@ function initCommentSeq (sequelize: Sequelize) {
         type: DataTypes.UUID,
         primaryKey: true
       },
-      text: {type: DataTypes.STRING},
+      text: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       rating: {type: DataTypes.INTEGER}
     },
     {

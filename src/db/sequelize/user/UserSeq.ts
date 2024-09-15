@@ -7,12 +7,18 @@ class UserSeq extends Model { }
 function initUserSeq (sequelize: Sequelize) {
   UserSeq.init(
     {
-      userName: {type: DataTypes.STRING},
+      userName: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       email: {
         type: DataTypes.STRING,
         primaryKey: true
       },
-      bday: {type: DataTypes.DATE},
+      bday: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
       sex: {
         type: DataTypes.ENUM(
           'female',

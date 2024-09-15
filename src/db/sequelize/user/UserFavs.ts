@@ -11,6 +11,7 @@ function initUserFavsSeq (sequelize: Sequelize) {
     {
       article: {
         type: DataTypes.UUID,
+        primaryKey: true,
         references: {
           model: ArticleSeq,
           key: 'id'
@@ -18,6 +19,7 @@ function initUserFavsSeq (sequelize: Sequelize) {
       },
       user: {
         type: DataTypes.UUID,
+        primaryKey: true,
         references: {
           model: UserSeq,
           key: 'id'

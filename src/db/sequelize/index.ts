@@ -43,7 +43,7 @@ async function initDb () {
     port: 3023,
     database: 'lionmiss',
     username: 'lionmiss',
-    password: '1234qwerty'
+    password: 'qwerty'
   });
   initSchema(adminSeqConn);
   await adminSeqConn.sync();

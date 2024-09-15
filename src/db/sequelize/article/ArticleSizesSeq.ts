@@ -1,7 +1,6 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
-import {ArticleSeq} from './ArticleSeq';
 
 class ArticleSizesSeq extends Model { }
 
