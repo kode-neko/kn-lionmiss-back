@@ -1,6 +1,7 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
+import {UserSeq} from '../user/UserSeq';
 
 class CartSeq extends Model { }
 
@@ -10,6 +11,14 @@ function initCartSeq (sequelize: Sequelize) {
       id: {
         type: DataTypes.UUID,
         primaryKey: true
+      },
+      userId: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        references: {
+          model: UserSeq,
+          key: 'email'
+        }
       }
     },
     {
