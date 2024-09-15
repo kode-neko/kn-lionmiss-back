@@ -265,7 +265,7 @@ CREATE TABLE shipping(
 	id CHAR(36) PRIMARY KEY,
 	idTracking VARCHAR(36) NOT NULL,
 	idPayment VARCHAR(36) NOT NULL,
-	payment ENUM('tarnsfer', 'card', 'crypto', 'paypal') NOT NULL,
+	payment ENUM('transfer', 'card', 'crypto', 'paypal') NOT NULL,
 
 	FOREIGN KEY (id) REFERENCES cart(id)
 	ON DELETE CASCADE

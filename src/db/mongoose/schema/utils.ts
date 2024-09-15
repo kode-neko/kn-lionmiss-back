@@ -1,5 +1,5 @@
 import {
-  SexEnum, PaymentEnum, InstructEnum, UnitsHeightEnum, UnitsWeightEnum
+  SexEnum, ShipStateEnum, PaymentEnum, InstructEnum, UnitsHeightEnum, UnitsWeightEnum
 } from '@model/index';
 
 function enumSex (val: string) {
@@ -13,16 +13,16 @@ function enumPayment (val: string) {
 }
 
 function enumShipState (map: Map<string, Date>) {
-  const shipStateList = Object.values(SexEnum);
+  const shipStateList = Object.values(ShipStateEnum);
   const mapKeys = Object.keys(map);
-  return mapKeys.every((k) => shipStateList.includes(k) &&
+  return mapKeys.every((k) => shipStateList.includes(k as ShipStateEnum) &&
     map.get(k) instanceof Date);
 }
 
 function enumInstruct (map: Map<string, string>) {
   const instructList = Object.values(InstructEnum);
   const mapKeys = Object.keys(map);
-  return mapKeys.every((k) => instructList.includes(k));
+  return mapKeys.every((k) => instructList.includes(k as InstructEnum));
 }
 
 function enumUnitsHeight (val: string) {

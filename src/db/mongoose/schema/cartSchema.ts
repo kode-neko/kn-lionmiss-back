@@ -2,22 +2,33 @@ import {Schema} from 'mongoose';
 import {enumPayment, enumShipState} from './utils';
 
 const cartSchema = new Schema({
-  lines: [{
-    id: Number,
-    qty: Number
-  }],
+  lines: {
+    type: [{
+      id: Number,
+      qty: Number
+    }],
+    required: true
+  },
   shipping: {
-    idTracking: String,
-    idShipping: String,
+    idTracking: {
+      type: String,
+      required: true
+    },
+    idShipping: {
+      type: String,
+      required: true
+    },
     state: {
       type: Map,
       of: Date,
-      validator: enumShipState
+      validator: enumShipState,
+      required: true
     },
     payment: {
       type: Map,
       of: Date,
-      validator: enumPayment
+      validator: enumPayment,
+      required: true
     }
   }
 });

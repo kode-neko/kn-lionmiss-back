@@ -1,12 +1,26 @@
-import {Schema} from 'mongoose';
+import {Schema, Types} from 'mongoose';
 
 const commentSchema = new Schema({
-  text: String,
+  title: {
+    type: String,
+    required: true
+  },
+  text: {
+    type: String,
+    required: true
+  },
+  article: {
+    type: Types.ObjectId,
+    required: true
+  },
   rating: {
     type: Number,
     maxlength: 1
   },
-  pics: [String]
+  pics: {
+    type: [String],
+    required: true
+  }
 });
 
 export default commentSchema;

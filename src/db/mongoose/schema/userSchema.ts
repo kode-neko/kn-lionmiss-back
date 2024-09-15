@@ -1,4 +1,4 @@
-import {Schema} from 'mongoose';
+import {Schema, Types} from 'mongoose';
 import addressSchema from './addressSchema';
 import commentSchema from './commentSchema';
 import {
@@ -6,30 +6,73 @@ import {
 } from './utils';
 
 const userSchema = new Schema({
-  userName: String,
-  email: String,
-  bday: Date,
+  userName: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  bday: {
+    type: Date,
+    required: true
+  },
   sex: {
     type: String,
-    validator: enumSex
+    validator: enumSex,
+    required: true
   },
-  addresses: [addressSchema],
-  commentList: [commentSchema],
+  addresses: {
+    type: [addressSchema],
+    required: true
+  },
+  commentList: {
+    type: [commentSchema],
+    required: true
+  },
+  favs: {
+    type: [Types.ObjectId],
+    required: true
+  },
   measures: {
-    shoulder: Number,
-    chest: Number,
-    waist: Number,
-    hips: Number,
-    foot: Number,
-    height: Number,
-    weight: Number,
+    shoulder: {
+      type: Number,
+      required: true
+    },
+    chest: {
+      type: Number,
+      required: true
+    },
+    waist: {
+      type: Number,
+      required: true
+    },
+    hips: {
+      type: Number,
+      required: true
+    },
+    foot: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
+    },
+    weight: {
+      type: Number,
+      required: true
+    },
     unitsHeight: {
       type: String,
-      validator: enumUnitsHeight
+      validator: enumUnitsHeight,
+      required: true
     },
     unitsWeight: {
       type: String,
-      validator: enumUnitsWeight
+      validator: enumUnitsWeight,
+      required: true
     }
   }
 });

@@ -2,25 +2,30 @@ import {Schema} from 'mongoose';
 import {enumInstruct} from './utils';
 
 const articleSchema = new Schema({
-  tags: [String],
+  tags: {
+    type: [String],
+    required: true
+  },
   sizes: {
     type: Map,
-    of: Number
-  },
-  variant: {
-    type: Map,
-    of: String
+    of: Number,
+    required: true
   },
   materials: {
     type: Map,
-    of: String
+    of: String,
+    required: true
   },
   instructs: {
     type: Map,
     of: String,
-    validator: enumInstruct
+    validator: enumInstruct,
+    required: true
   },
-  discolor: Boolean
+  discolor: {
+    type: Boolean,
+    required: true
+  }
 });
 
 export default articleSchema;
