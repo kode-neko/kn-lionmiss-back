@@ -34,7 +34,6 @@ function initSchema (seqConn: Sequelize) {
   initCartSeq(seqConn);
   initCartLineSeq(seqConn);
   initShippingSeq(seqConn);
-
   initCartAssoc();
 }
 
@@ -43,7 +42,7 @@ async function initDb () {
     dialect: 'mariadb',
     port: 3023,
     database: 'lionmiss',
-    username: 'lionmiss-admin',
+    username: 'lionmiss',
     password: '1234qwerty'
   });
   initSchema(adminSeqConn);
