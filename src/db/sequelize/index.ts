@@ -4,7 +4,7 @@ import {
   initArticleAssocs
 } from './article';
 import {
-  initAddressSeq, initCommentSeq, initUserAssoc, initUserMeasuresSeq, initUserSeq
+  initAddressSeq, initCommentSeq, initUserAssoc, initUserFavsSeq, initUserMeasuresSeq, initUserSeq
 } from './user';
 import {initCartAssoc, initCartLineSeq, initCartSeq, initShippingSeq
 } from './cart';
@@ -27,13 +27,15 @@ function initSchema (seqConn: Sequelize) {
   initAddressSeq(seqConn);
   initUserSeq(seqConn);
   initCommentSeq(seqConn);
+  initUserFavsSeq(seqConn);
   initUserAssoc();
 
   // Cart block
   initCartSeq(seqConn);
   initCartLineSeq(seqConn);
   initShippingSeq(seqConn);
-  // initCartAssoc();
+
+  initCartAssoc();
 }
 
 async function initDb () {

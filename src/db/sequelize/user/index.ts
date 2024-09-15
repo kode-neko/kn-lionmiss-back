@@ -15,3 +15,7 @@ export {
   UserSeq
 } from './UserSeq';
 export {default as initUserAssoc} from './assocs';
+export {
+  initUserFavsSeq,
+  UserFavsSeq
+} from './UserFavs';
