@@ -1,0 +1,49 @@
+{
+  "_id" : ObjectId("66db42707f97b60ae12b4a25"),
+  "userName" : "kodeneko",
+  "email" : "kdoeneko@mail.es",
+  "bday" : ISODate("2021-02-25T10:03:46.000+0000"),
+  "sex" : "female",
+  "area" : {
+      "name" : "Spain",
+      "country" : "Spain"
+  },
+  "address" : [
+      {
+          "alias" : "Casa",
+          "name" : "Elena",
+          "surname" : "Nito del Bosque",
+          "address" : "Olivo 42",
+          "city" : "Río Claro",
+          "state" : "Sevilla",
+          "country" : "Spain",
+          "phone" : NumberInt(766543321),
+          "obs" : ""
+      },
+      {
+          "alias" : "Empresa",
+          "name" : "Elena",
+          "surname" : "Nito del Bosque",
+          "address" : "Venus 42 (Paquito SA)",
+          "city" : "Río Claro",
+          "state" : "Sevilla",
+          "country" : "Spain",
+          "phone" : NumberInt(766543321),
+          "obs" : ""
+      }
+  ],
+  "measures" : {
+      "shoulder" : NumberInt(42),
+      "chest" : NumberInt(96),
+      "waist" : NumberInt(78),
+      "hips" : NumberInt(100),
+      "foot" : NumberInt(42),
+      "height" : NumberInt(177),
+      "weight" : NumberInt(64),
+      "unitsHeight" : "cm",
+      "unitsWeight" : "kg"
+  },
+  "favs" : [
+      ObjectId("66db3e857f97b60ae12b4a1e")
+  ]
+}
