@@ -5,50 +5,29 @@ services:
   sql:
     image: mariadb:latest
     ports:
-      - 3021:3306
+      - ${PORT_MARIA}:3306
     volumes:
       - db-lionmiss-sql:/var/lib/mysql
       # - ./scripts/sql:/docker-entrypoint-initdb.d
     networks:
       - net-lionmiss-back
     environment:
-      MARIADB_ROOT_PASSWORD: "1234qwerty"
-      MARIADB_DATABASE: "lionmiss"
-      MARIADB_USER: "lionnmiss"
-      MARIADB_PASSWORD: "qwerty"
-
-  sql-test:
-    image: mariadb:latest
-    ports:
-      - 3023:3306
-    networks:
-      - net-lionmiss-back
-    environment:
-      MARIADB_ROOT_PASSWORD: "1234qwerty"
-      MARIADB_DATABASE: "lionmiss"
-      MARIADB_USER: "lionmiss"
-      MARIADB_PASSWORD: "qwerty"
+      MARIADB_ROOT_PASSWORD: ${PASS_ROOT}
+      MARIADB_DATABASE: ${DB}
+      MARIADB_USER: ${USER_ADMIN}
+      MARIADB_PASSWORD: ${PASS_USER_ADMIN}
   
   mongo:
     image: mongo:latest
     ports: 
-      - 3022:27017
+      - ${PORT_MARIA}:27017
     volumes:
       - db-lionmiss-nosql:/data/db
       # - ./scripts/mongo:/docker-entrypoint-initdb.d
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "1234qwerty"
-      MONGO_INITDB_DATABASE: "lionmiss"
-
-  mongo-test:
-    image: mongo:latest
-    ports: 
-      - 3024:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "1234qwerty"
-      MONGO_INITDB_DATABASE: "lionmiss"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${PASS_ROOT}
+      MONGO_INITDB_DATABASE: ${DB}
 
 networks:
   net-lionmiss-back:

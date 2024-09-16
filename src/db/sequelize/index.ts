@@ -6,7 +6,8 @@ import {
 import {
   initAddressSeq, initCommentSeq, initUserAssoc, initUserFavsSeq, initUserMeasuresSeq, initUserSeq
 } from './user';
-import {initCartAssoc, initCartLineSeq, initCartSeq, initShippingSeq
+import {
+  initCartAssoc, initCartLineSeq, initCartSeq, initShippingSeq
 } from './cart';
 
 let seqConn: Sequelize;
@@ -37,42 +38,45 @@ function initSchema (seqConn: Sequelize) {
   initCartAssoc();
 }
 
-async function initDb () {
+const {
+  DB,
+  USER_ADMIN,
+  USER,
+  PASS_USER_ADMIN,
+  PASS_USER,
+  HOST_MARIA,
+  PORT_MARIA
+} = process.env;
+
+async function initDbSeq () {
   const adminSeqConn = new Sequelize({
     dialect: 'mariadb',
-    port: 3023,
-    database: 'lionmiss',
-    username: 'lionmiss',
-    password: 'qwerty'
+    host: HOST_MARIA,
+    port: Number(PORT_MARIA),
+    database: DB,
+    username: USER_ADMIN,
+    password: PASS_USER_ADMIN
   });
   initSchema(adminSeqConn);
   await adminSeqConn.sync();
   adminSeqConn.close();
 }
 
-async function getConn () {
+async function getConnSeq () {
   if (!seqConn) {
     seqConn = new Sequelize({
       dialect: 'mariadb',
-      port: 3023,
-      database: 'lionmiss',
-      username: 'lionmiss-admin',
-      password: '1234qwerty'
+      host: HOST_MARIA,
+      port: Number(PORT_MARIA),
+      database: DB,
+      username: USER,
+      password: PASS_USER
     });
   }
   return seqConn;
 }
 
-async function init () {
-  try {
-    initDb();
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error(
-      'Unable to connect to the database:',
-      error
-    );
-  }
-}
-
-init();
+export {
+  initDbSeq,
+  getConnSeq
+};

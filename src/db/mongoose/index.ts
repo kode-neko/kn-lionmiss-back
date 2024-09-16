@@ -1,30 +1,20 @@
-import mongoose, {connect} from 'mongoose';
-import addressSchema from './schema/addressSchema';
+import {connect} from 'mongoose';
 
-function init () {
-  connect('mongodb://root:1234qwerty@localhost:3024/lionmiss').
-    then(async () => {
-      console.log('Connected Mongo');
-      const Address = mongoose.model(
-        'Address',
-        addressSchema
-      );
-      const a = new Address({
-        alias: 'casa',
-        name: 'elena',
-        surname: 'nito del bosque',
-        address: 'Luna 12',
-        city: 'Marbella',
-        state: 'Malaga',
-        country: 'España',
-        phone: 222,
-        obs: 'Hola k ase!'
-      });
-      return a.save();
-    }).
-    catch((err) => {
-      console.log(err);
-    });
+const {
+  DB,
+  USER,
+  PASS_USER,
+  HOST_MONGO,
+  PORT_MONGO
+} = process.env;
+
+function initConnMongo () {
+  connect(
+    `mongodb://${USER}:${PASS_USER}@${HOST_MONGO}:${PORT_MONGO}`,
+    {dbName: DB}
+  ).
+    then(async () => console.log(`Connected to Mongo server ${HOST_MONGO}:${PORT_MONGO}`)).
+    catch((err) => console.log(err));
 }
 
-init();
+export {initConnMongo};
