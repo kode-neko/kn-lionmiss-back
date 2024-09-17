@@ -3,7 +3,7 @@ import {Router} from 'express';
 const router = Router();
 
 router.get('/:id');
-router.post('/kogin');
+router.post('/login');
 router.post('/logout');
 router.get('/:id/cart');
 
