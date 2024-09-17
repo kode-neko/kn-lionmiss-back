@@ -20,7 +20,7 @@ services:
   mongo:
     image: mongo:latest
     ports: 
-      - ${PORT_MARIA}:27017
+      - ${PORT_MONGO}:27017
     volumes:
       - db-lionmiss-nosql:/data/db
       # - ./scripts/mongo:/docker-entrypoint-initdb.d
