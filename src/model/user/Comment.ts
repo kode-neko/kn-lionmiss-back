@@ -1,7 +1,7 @@
 import {Article} from '@model/article';
 
 interface Comment {
-  id: string;
+  id?: string;
   title: string;
   cont: string;
   rating: number;
