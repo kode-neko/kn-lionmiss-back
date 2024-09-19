@@ -23,4 +23,4 @@ export {
   UserMeasures
 } from './user';
 
-export {SearchParams} from './app';
+export {SearchParams, UserLogin} from './app';
