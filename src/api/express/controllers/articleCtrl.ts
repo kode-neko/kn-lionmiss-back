@@ -24,8 +24,11 @@ function deleteArticle (req: Request, res: Response) {
 
 // Translations per area
 
-function getArticleIdAreId (req: Request, res: Response) {
+function getArticleIdAreaId (req: Request, res: Response) {
   res.status(200).send({created: 'getArticleIdAreId'});
+}
+function getArticleIdAreaList (req: Request, res: Response) {
+  res.status(200).send({created: 'getArticleIdAreaList'});
 }
 
 // Comments related
@@ -57,7 +60,8 @@ export {
   putArticle,
   deleteArticle,
 
-  getArticleIdAreId,
+  getArticleIdAreaId,
+  getArticleIdAreaList,
 
   getArticleIdCommentId,
   postArticleIdCommentIdList,

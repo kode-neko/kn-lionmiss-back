@@ -12,7 +12,9 @@ import {
   postArticleIdCommentIdList,
   postArticleIdCommentId,
   putArticleIdCommentId,
-  deleteArticleIdCommentId
+  deleteArticleIdCommentId,
+  getArticleIdAreaList,
+  getArticleIdAreaId
 } from '../controllers/articleCtrl';
 
 const router = Router();
@@ -41,29 +43,33 @@ router.delete(
 
 // Translations per area
 router.get(
-  '/:id/area/:id',
-  getArticleIdAreId
+  '/:idArticle/area/list',
+  getArticleIdAreaId
+);
+router.get(
+  '/:idArticle/area/:idArea',
+  getArticleIdAreaList
 );
 
 // Comments related
 router.get(
-  '/:id/comment/:id',
+  '/:idArticle/comment/:idComment',
   getArticleIdCommentId
 );
 router.post(
-  '/:id/comment/:id/list',
+  '/:idArticle/comment/:idComment/list',
   postArticleIdCommentIdList
 );
 router.post(
-  '/:id/comment/:id',
+  '/:idArticle/comment',
   postArticleIdCommentId
 );
 router.put(
-  '/:id/comment/:id',
+  '/:idArticle/comment',
   putArticleIdCommentId
 );
 router.delete(
-  '/:id/comment/:id',
+  '/:idArticle/comment/:idComment',
   deleteArticleIdCommentId
 );
 

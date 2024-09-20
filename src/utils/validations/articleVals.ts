@@ -34,6 +34,16 @@ const ArticleValSchema = z.object({
 });
 const ArticleIdValSchema = ArticleValSchema.extend({id: z.string()});
 
+const ArticleIdAreaIdValSchema = z.object({
+  idArticle: z.string(),
+  idArea: z.string()
+});
+
+const ArticleIdCommentIdValSchema = z.object({
+  idArticle: z.string(),
+  idComment: z.string()
+});
+
 export {
   InstructEnumValSchema,
   AreaValSchema,
@@ -41,5 +51,7 @@ export {
   ArticleAreaValSchema,
   ArticleAreaIdValSchema,
   ArticleValSchema,
-  ArticleIdValSchema
+  ArticleIdValSchema,
+  ArticleIdAreaIdValSchema,
+  ArticleIdCommentIdValSchema
 };

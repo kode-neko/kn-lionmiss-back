@@ -1,4 +1,5 @@
 export {
+  IdValSchema,
   SearParamsValSchema,
   UserLoginValSchema
 } from './appVals';
@@ -14,7 +15,11 @@ export {
 } from './articleVals';
 
 export {
-  CartLineValSchema, CartValSchema, CarIdtValSchema
+  CartLineValSchema,
+  CartValSchema,
+  CarIdtValSchema,
+  ShippingValSchema,
+  ShippingIdValSchema
 } from './cartVals';
 
 export {
