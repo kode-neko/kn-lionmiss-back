@@ -7,19 +7,14 @@ export {
 export {
   InstructEnumValSchema,
   AreaValSchema,
-  AreaIdValSchema,
   ArticleAreaValSchema,
-  ArticleAreaIdValSchema,
-  ArticleValSchema,
-  ArticleIdValSchema
+  ArticleValSchema
 } from './articleVals';
 
 export {
   CartLineValSchema,
   CartValSchema,
-  CarIdtValSchema,
-  ShippingValSchema,
-  ShippingIdValSchema
+  ShippingValSchema
 } from './cartVals';
 
 export {
@@ -27,9 +22,7 @@ export {
   UnitsHeightEnumValSchema,
   UnitsWeightEnumValSchema,
   AddressValSchema,
-  AddressIdValSchema,
   CommentValSchema,
-  CommentIdValSchema,
   UserMeasuresValSchema,
   UserValSchema
 } from './userVals';

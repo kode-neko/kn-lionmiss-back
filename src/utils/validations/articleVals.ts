@@ -8,7 +8,6 @@ const AreaValSchema = z.object({
   name: z.string(),
   country: z.string()
 });
-const AreaIdValSchema = AreaValSchema.extend({id: z.string()});
 
 const ArticleAreaValSchema = z.object({
   id: z.string().nullable(),
@@ -18,7 +17,6 @@ const ArticleAreaValSchema = z.object({
   tax: z.number(),
   area: AreaValSchema
 });
-const ArticleAreaIdValSchema = ArticleAreaValSchema.extend({id: z.string()});
 
 const ArticleValSchema = z.object({
   id: z.string().nullable(),
@@ -32,7 +30,6 @@ const ArticleValSchema = z.object({
   discolor: z.boolean().nullable(),
   articleAreaList: z.array(ArticleAreaValSchema)
 });
-const ArticleIdValSchema = ArticleValSchema.extend({id: z.string()});
 
 const ArticleIdAreaIdValSchema = z.object({
   idArticle: z.string(),
@@ -46,12 +43,11 @@ const ArticleIdCommentIdValSchema = z.object({
 
 export {
   InstructEnumValSchema,
+
   AreaValSchema,
-  AreaIdValSchema,
+
   ArticleAreaValSchema,
-  ArticleAreaIdValSchema,
   ArticleValSchema,
-  ArticleIdValSchema,
   ArticleIdAreaIdValSchema,
   ArticleIdCommentIdValSchema
 };

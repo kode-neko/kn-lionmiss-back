@@ -21,7 +21,6 @@ const AddressValSchema = z.object({
   phone: z.number(),
   obs: z.string()
 });
-const AddressIdValSchema = AddressValSchema.extend({id: z.string()});
 
 const CommentValSchema = z.object({
   id: z.string().nullable(),
@@ -32,7 +31,6 @@ const CommentValSchema = z.object({
   pics: z.array(z.string()),
   article: z.string()
 });
-const CommentIdValSchema = CommentValSchema.extend({id: z.string()});
 
 const UserMeasuresValSchema = z.object({
   shoulder: z.number(),
@@ -64,9 +62,7 @@ export {
   UnitsHeightEnumValSchema,
   UnitsWeightEnumValSchema,
   AddressValSchema,
-  AddressIdValSchema,
   CommentValSchema,
-  CommentIdValSchema,
   UserMeasuresValSchema,
   UserValSchema
 };

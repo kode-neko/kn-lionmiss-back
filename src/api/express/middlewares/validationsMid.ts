@@ -2,9 +2,10 @@ import {
   NextFunction, Request, Response
 } from 'express';
 import {
-  ArticleIdValSchema, ArticleValSchema, CommentIdValSchema, CommentValSchema, IdValSchema
+  ArticleValSchema, CartValSchema, CommentValSchema, IdValSchema,
+  ShippingValSchema,
+  UserValSchema
 } from '../../../utils/validations';
-import {ArticleIdAreaIdValSchema, ArticleIdCommentIdValSchema} from '../../../utils/validations/articleVals';
 import {createIdNameValSchemaFunc} from '../../../utils/validations/appVals';
 
 // Generic
@@ -30,51 +31,44 @@ function validationArticleMid (req: Request, res: Response, next: NextFunction) 
   next();
 }
 
-function validationArticleIdMid (req: Request, res: Response, next: NextFunction) {
-  const article = req.body;
-  ArticleIdValSchema.parse(article);
-  next();
-}
-
-// Article - Area
-
-function validationArticleIdAreaId (req: Request, res: Response, next: NextFunction) {
-  const article = req.body;
-  ArticleIdAreaIdValSchema.parse(article);
-  next();
-}
-
-// Article - Comment
-
-function validationArticleIdCommentId (req: Request, res: Response, next: NextFunction) {
-  const article = req.body;
-  ArticleIdCommentIdValSchema.parse(article);
-  next();
-}
-
 // Comment
 
-function validationComment (req: Request, res: Response, next: NextFunction) {
-  const article = req.body;
-  CommentValSchema.parse(article);
+function validationCommentMid (req: Request, res: Response, next: NextFunction) {
+  const comment = req.body;
+  CommentValSchema.parse(comment);
   next();
 }
 
-function validationCommentId (req: Request, res: Response, next: NextFunction) {
-  const article = req.body;
-  CommentIdValSchema.parse(article);
+// User
+
+function validationUserMid (req: Request, res: Response, next: NextFunction) {
+  const user = req.body;
+  UserValSchema.parse(user);
+  next();
+}
+
+// Cart
+
+function validationCartMid (req: Request, res: Response, next: NextFunction) {
+  const cart = req.body;
+  CartValSchema.parse(cart);
+  next();
+}
+
+// Shipping
+
+function validationShippingMid (req: Request, res: Response, next: NextFunction) {
+  const shipping = req.body;
+  ShippingValSchema.parse(shipping);
   next();
 }
 
 export {
   validationIdMid,
   validationIdNameMidCreateFunc,
-
   validationArticleMid,
-  validationArticleIdMid,
-  validationArticleIdAreaId,
-  validationArticleIdCommentId,
-
-  validationComment,
-  validationCommentId
+  validationCommentMid,
+  validationUserMid,
+  validationCartMid,
+  validationShippingMid
 };
