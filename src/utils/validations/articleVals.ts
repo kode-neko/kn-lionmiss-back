@@ -1,5 +1,5 @@
+import {InstructEnum} from '@model/index';
 import {z} from 'zod';
-import {InstructEnum} from '@model/article';
 
 const InstructEnumValSchema = z.nativeEnum(InstructEnum);
 
