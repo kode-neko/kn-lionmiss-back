@@ -1,8 +1,8 @@
-import {articleList} from '@fixtures/article';
+import { articleList } from '@fixtures/article';
 import {
   Article, SearchParams, Comment
 } from '@model/index';
-import {comment as commentFix} from '@fixtures/comment';
+import { comment as commentFix } from '@fixtures/comment';
 
 class ArticleService {
 

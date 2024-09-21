@@ -10,7 +10,8 @@ import {
   LoginValSchema,
   SearParamsValSchema,
   ShippingValSchema,
-  UserValSchema
+  UserValSchema,
+  CartLineValSchema
 } from '@utils/validations';
 
 function validationIdCreateFunc (idName: string) {
@@ -41,6 +42,7 @@ const mapVals: Record<string, any> = {
   comment: CommentValSchema,
   user: UserValSchema,
   cart: CartValSchema,
+  cartLine: CartLineValSchema,
   shipping: ShippingValSchema
 };
 

@@ -17,8 +17,9 @@ export {
 
 export {
   getCart,
-  postCart,
-  putCart
+  postCartLine,
+  putCartLine,
+  deleteCartLine
 } from './cartCtrl';
 
 export {

@@ -1,4 +1,4 @@
-import {Article} from '@model/article';
+import { Article } from '@model/index';
 
 interface CartLine {
   id: string;

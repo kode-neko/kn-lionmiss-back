@@ -4,16 +4,21 @@ function getCart (req: Request, res: Response) {
   res.status(200).send({ created: 'getCart' });
 }
 
-function postCart (req: Request, res: Response) {
-  res.status(201).send({ created: 'postCart' });
+function postCartLine (req: Request, res: Response) {
+  res.status(201).send({ created: 'postCartLine' });
 }
 
-function putCart (req: Request, res: Response) {
-  res.status(200).send({ created: 'putCart' });
+function putCartLine (req: Request, res: Response) {
+  res.status(200).send({ created: 'putCartLine' });
+}
+
+function deleteCartLine (req: Request, res: Response) {
+  res.status(200).send({ created: 'deleteCartLine' });
 }
 
 export {
   getCart,
-  postCart,
-  putCart
+  postCartLine,
+  putCartLine,
+  deleteCartLine
 };
