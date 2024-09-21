@@ -12,6 +12,7 @@ export default [
     plugins: {'@stylistic': stylistic},
     rules: {
       ...stylistic.configs['all-flat'].rules,
+      '@stylistic/js/function-call-argument-newline': ["error", "consistent"],
       '@stylistic/indent': [
         'error',
         2

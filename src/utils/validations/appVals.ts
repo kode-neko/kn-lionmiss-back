@@ -2,7 +2,7 @@ import {z} from 'zod';
 
 const IdValSchema = z.object({id: z.string()});
 
-function createIdNameValSchemaFunc (idName: string) {
+function idValSchemaCreateFunc (idName: string) {
   return z.object({[idName]: z.string()});
 }
 
@@ -21,7 +21,7 @@ const UserLoginValSchema = z.object({
 
 export {
   IdValSchema,
-  createIdNameValSchemaFunc,
+  idValSchemaCreateFunc,
   SearParamsValSchema,
   UserLoginValSchema
 };

@@ -57,6 +57,10 @@ const UserValSchema = z.object({
   cart: CartValSchema
 });
 
+const LoginValSchema = UserValSchema
+  .pick({ userName: true })
+  .extend({ pass: z.string() })
+
 export {
   SexEnumValSchema,
   UnitsHeightEnumValSchema,
@@ -64,5 +68,6 @@ export {
   AddressValSchema,
   CommentValSchema,
   UserMeasuresValSchema,
-  UserValSchema
+  UserValSchema,
+  LoginValSchema
 };

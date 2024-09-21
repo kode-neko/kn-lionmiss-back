@@ -6,19 +6,29 @@ import {
   ShippingValSchema,
   UserValSchema
 } from '../../../utils/validations';
-import {createIdNameValSchemaFunc} from '../../../utils/validations/appVals';
+import {idValSchemaCreateFunc, SearParamsValSchema} from '../../../utils/validations/appVals';
+import { LoginValSchema } from '../../../utils/validations/userVals';
 
-function validationIdMid (req: Request, res: Response, next: NextFunction) {
-  IdValSchema.parse(req.params);
-  next();
-}
-
-function validationIdNameMidCreateFunc (idName: string) {
+function validationIdCreateFunc (idName: string) {
   return (req: Request, res: Response, next: NextFunction) => {
-    const ValidSchemaIdName = createIdNameValSchemaFunc(idName);
+    const ValidSchemaIdName = idValSchemaCreateFunc(idName);
     ValidSchemaIdName.parse(req.params[idName]);
     next();
   };
+}
+
+function validationIdMid (req: Request, res: Response, next: NextFunction) {
+  validationIdCreateFunc ('id')
+}
+
+function validationIdBodyMid (req: Request, res: Response, next: NextFunction) {
+  IdValSchema.parse(req.body);
+  next();
+}
+
+function validationSearchParamsMid (req: Request, res: Response, next: NextFunction) {
+  SearParamsValSchema.parse(req.body);
+  next();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,8 +47,17 @@ function validationBodyMidCreateFunc (name: string) {
   };
 }
 
+function validationLoginMid(req: Request, res: Response, next: NextFunction) {
+  LoginValSchema.parse(req.body)
+  next();
+}
+
+
 export {
   validationIdMid,
-  validationIdNameMidCreateFunc,
-  validationBodyMidCreateFunc
+  validationIdBodyMid,
+  validationSearchParamsMid,
+  validationIdCreateFunc,
+  validationBodyMidCreateFunc,
+  validationLoginMid
 };
