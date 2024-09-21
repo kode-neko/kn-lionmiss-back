@@ -1,8 +1,8 @@
-import {z} from 'zod';
+import { z } from 'zod';
 import UnitsHeightEnum from '../../model/user/UnitsHeightEnum';
 import UnitsWeightEnum from '../../model/user/UnitsWeightEnum';
-import {AreaValSchema} from './articleVals';
-import {CartValSchema} from './cartVals';
+import { AreaValSchema } from './articleVals';
+import { CartValSchema } from './cartVals';
 import SexEnum from '../../model/user/SexEnum';
 
 const SexEnumValSchema = z.nativeEnum(SexEnum);
@@ -57,9 +57,9 @@ const UserValSchema = z.object({
   cart: CartValSchema
 });
 
-const LoginValSchema = UserValSchema
-  .pick({ userName: true })
-  .extend({ pass: z.string() })
+const LoginValSchema = UserValSchema.
+  pick({ userName: true }).
+  extend({ pass: z.string() });
 
 export {
   SexEnumValSchema,

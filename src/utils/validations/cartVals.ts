@@ -1,5 +1,5 @@
-import {z} from 'zod';
-import {ArticleValSchema} from './articleVals';
+import { z } from 'zod';
+import { ArticleValSchema } from './articleVals';
 import ShipStateEnum from '../../model/cart/ShipStateEnum';
 import PaymentEnum from '../../model/cart/PaymentEnum';
 

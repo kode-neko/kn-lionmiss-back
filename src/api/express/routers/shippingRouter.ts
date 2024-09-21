@@ -1,12 +1,17 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import {
   getShippingId,
   postShippingList,
   postShipping,
   putShipping,
   deleteShipping
-} from '../controllers/shippingCtrl';
-import { validationBodyMidCreateFunc, validationIdBodyMid, validationIdMid, validationSearchParamsMid } from '../middlewares/validationsMid';
+} from '../controllers';
+import {
+  validationBodyMidCreateFunc,
+  validationIdBodyMid,
+  validationIdMid,
+  validationSearchParamsMid
+} from '../middlewares';
 
 const router = Router();
 

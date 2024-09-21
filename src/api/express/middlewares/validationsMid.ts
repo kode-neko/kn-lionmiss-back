@@ -2,12 +2,16 @@ import {
   NextFunction, Request, Response
 } from 'express';
 import {
-  ArticleValSchema, CartValSchema, CommentValSchema, IdValSchema,
+  ArticleValSchema,
+  CartValSchema,
+  CommentValSchema,
+  IdValSchema,
+  idValSchemaCreateFunc,
+  LoginValSchema,
+  SearParamsValSchema,
   ShippingValSchema,
   UserValSchema
-} from '../../../utils/validations';
-import {idValSchemaCreateFunc, SearParamsValSchema} from '../../../utils/validations/appVals';
-import { LoginValSchema } from '../../../utils/validations/userVals';
+} from '@utils/validations';
 
 function validationIdCreateFunc (idName: string) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -17,8 +21,8 @@ function validationIdCreateFunc (idName: string) {
   };
 }
 
-function validationIdMid (req: Request, res: Response, next: NextFunction) {
-  validationIdCreateFunc ('id')
+function validationIdMid () {
+  validationIdCreateFunc('id');
 }
 
 function validationIdBodyMid (req: Request, res: Response, next: NextFunction) {
@@ -47,11 +51,10 @@ function validationBodyMidCreateFunc (name: string) {
   };
 }
 
-function validationLoginMid(req: Request, res: Response, next: NextFunction) {
-  LoginValSchema.parse(req.body)
+function validationLoginMid (req: Request, res: Response, next: NextFunction) {
+  LoginValSchema.parse(req.body);
   next();
 }
-
 
 export {
   validationIdMid,

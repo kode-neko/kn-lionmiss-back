@@ -1,6 +1,14 @@
-import {Router} from 'express';
-import { getUserId, getUserIdCart, postUserLogin, postUserLogout } from '../controllers/userCtrl';
-import { validationIdCreateFunc, validationLoginMid } from '../middlewares/validationsMid';
+import { Router } from 'express';
+import {
+  getUserId,
+  getUserIdCart,
+  postUserLogin,
+  postUserLogout
+} from '../controllers';
+import {
+  validationIdCreateFunc,
+  validationLoginMid
+} from '../middlewares';
 
 const router = Router();
 

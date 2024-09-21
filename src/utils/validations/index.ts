@@ -1,5 +1,6 @@
 export {
   IdValSchema,
+  idValSchemaCreateFunc,
   SearParamsValSchema,
   UserLoginValSchema
 } from './appVals';
@@ -24,5 +25,6 @@ export {
   AddressValSchema,
   CommentValSchema,
   UserMeasuresValSchema,
-  UserValSchema
+  UserValSchema,
+  LoginValSchema
 } from './userVals';

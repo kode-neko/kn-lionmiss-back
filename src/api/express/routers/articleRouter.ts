@@ -1,4 +1,4 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import {
   getArticleId,
   postArticleList,
@@ -12,20 +12,20 @@ import {
   deleteArticleIdCommentId,
   getArticleIdAreaList,
   getArticleIdAreaId
-} from '../controllers/articleCtrl';
+} from '../controllers';
 import {
   validationBodyMidCreateFunc,
   validationIdBodyMid,
   validationIdMid,
   validationIdCreateFunc,
   validationSearchParamsMid
-} from '../middlewares/validationsMid';
+} from '../middlewares';
 
 const router = Router();
 
 // Article ops
-router.get('/:id',validationIdMid,getArticleId);
-router.post('/list',validationSearchParamsMid,postArticleList);
+router.get('/:id', validationIdMid, getArticleId);
+router.post('/list', validationSearchParamsMid, postArticleList);
 router.post(
   '/',
   validationIdBodyMid,
