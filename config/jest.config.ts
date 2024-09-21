@@ -6,7 +6,11 @@ const config: Config = {
   testEnvironment: 'node',
   rootDir: '../',
   moduleNameMapper: {
-    '^@model/(.*)$': '<rootDir>/src/model/$1'
+    "^@api/(.*)$": ["<rootDir>/src/api/$1"],
+    "^@db/(.*)$": ["<rootDir>/src/db/$1"],
+    "^@fixtures/(.*)$": ["<rootDir>/src/fixtures/$1"],
+    "^@model/(.*)$": ["<rootDir>/src/model/$1"],
+    "^@utils/(.*)$": ["<rootDir>/src/utils/$1"]
   },
   transform: {
     '^.+.ts?$': ['ts-jest',

@@ -12,7 +12,10 @@ export default [
     plugins: {'@stylistic': stylistic},
     rules: {
       ...stylistic.configs['all-flat'].rules,
-      '@stylistic/js/function-call-argument-newline': ["error", "consistent"],
+      '@stylistic/object-curly-spacing': ['error', 'always'] ,
+      // '@stylistic/object-curly-newline': ['error', 'always'] ,
+      '@stylistic/function-call-argument-newline': ["error", "consistent"],
+      '@stylistic/object-property-newline': ["error", { "allowAllPropertiesOnSameLine": true }],
       '@stylistic/indent': [
         'error',
         2
