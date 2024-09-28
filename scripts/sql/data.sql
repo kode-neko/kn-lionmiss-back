@@ -1,5 +1,5 @@
-INSERT INTO lionmiss.area (id,name,country) VALUES
-	 ('1','Spain','Spain');
+INSERT INTO lionmiss.area (id,name,country, symbol) VALUES
+	 ('1','Spain','Spain', '€');
 INSERT INTO lionmiss.article (id,discolor) VALUES
 	 ('1',0),
 	 ('10',0),

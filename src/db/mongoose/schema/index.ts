@@ -1,7 +1,7 @@
-export {default as addressSchema} from './addressSchema';
-export {default as areaSchema} from './areaSchema';
-export {default as articleAreaSchema} from './articleAreaSchema';
-export {default as articleSchema} from './articleSchema';
-export {default as cartSchema} from './cartSchema';
-export {default as commentSchema} from './commentSchema';
-export {default as userSchema} from './userSchema';
+export { default as addressSchemaMongo } from './addressSchemaMongo';
+export { default as areaSchemaMongo } from './areaSchemaMongo';
+export { default as articleAreaSchemaMongo } from './articleAreaSchemaMongo';
+export { default as articleSchemaMongo } from './articleSchemaMongo';
+export { default as cartSchemaMongo } from './cartSchemaMongo';
+export { default as commentSchemaMongo } from './commentSchemaMongo';
+export { default as userSchemaMongo } from './userSchemaMongo';

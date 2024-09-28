@@ -18,6 +18,10 @@ function initAreaSeq (sequelize: Sequelize) {
       country: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      symbol: {
+        type: DataTypes.STRING,
+        allowNull: false
       }
     },
     {

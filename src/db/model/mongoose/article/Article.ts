@@ -1,26 +1,77 @@
+import { Model } from 'mongoose';
+import { ArticleMongo } from '../../../mongoose';
+import { articleSchema } from '../../../mongoose/schema';
 import IModelDB from '../../IModelDB';
-import { Article } from '@model/index';
+import {
+  Article, SearchParams, ArticleArea
+} from '@model/index';
+
+type ArticleMongoModel = Model<typeof ArticleMongo>;
 
 class ArticleMongoModelDB implements IModelDB<Article> {
 
-  read (id: string): Promise<Article> {
-    throw new Error('Method not implemented.');
+  private static instance: IModelDB<Article>;
+
+  public static getIntance (): IModelDB<Article> {
+    if (!ArticleMongoModelDB.instance) {
+      ArticleMongoModelDB.instance = new ArticleMongoModelDB();
+    }
+    return ArticleMongoModelDB.instance;
   }
 
-  readList (searchParams: Article): Promise<Article[]> {
-    throw new Error('Method not implemented.');
+  private constructor () {
+
+  }
+
+  public static parseArticleToSchema (article: Article): ArticleMongoModel {
+    const { id, ...rest } = article;
+    return {
+      _id: id,
+      ...rest,
+      sizes: Object.entries(article.sizes),
+      materials: Object.entries(article.materials),
+      variants: Object.entries(article.variants),
+      articleAreaList: []
+    };
+  }
+
+  public static parseSchemaToArticle (mongo: ArticleMongoModel): Article {
+    const { _id, ...rest } = mongo;
+    return {
+      id: _id,
+      ...rest,
+      sizes: Object.fromEntries(mongo.sizes),
+      materials: Object.fromEntries(mongo.materials),
+      variants: Object.fromEntries(mongo.variants),
+      articleAreaList: []
+    };
+  }
+
+  read (id: string): Promise<Article> {
+    return ArticleMongo.findById(id);
+  }
+
+  readList ({ limit, skip }: SearchParams): Promise<Article[]> {
+    return ArticleMongo.
+      find().
+      skip(skip).
+      limit(limit);
   }
 
   create (obj: Article): Promise<Article> {
-    throw new Error('Method not implemented.');
+    return ArticleMongo.create(obj);
   }
 
   update (obj: Article): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return ArticleMongo.
+      updateOne({ _id: obj.id }, obj).
+      then(({ modifiedCount }) => Boolean(modifiedCount));
   }
 
   delete (id: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return ArticleMongo.
+      deleteOne({ _id: id }).
+      then(({ deletedCount }) => Boolean(deletedCount));
   }
 
 }

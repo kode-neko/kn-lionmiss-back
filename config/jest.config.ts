@@ -13,8 +13,12 @@ const config: Config = {
     "^@utils/(.*)$": ["<rootDir>/src/utils/$1"]
   },
   transform: {
-    '^.+.ts?$': ['ts-jest',
-      {tsconfig: './config/tsconfig.json'}]
+    '^.+.ts?$': [
+      'ts-jest',
+      {
+        tsconfig: './config/tsconfig.test.json'
+      }
+    ]
   }
 };
 

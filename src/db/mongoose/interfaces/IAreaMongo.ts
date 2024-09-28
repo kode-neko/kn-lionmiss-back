@@ -1,8 +1,7 @@
-interface Area {
-  id?: string;
+interface IAreaMongo {
   name: string;
   country: string;
   symbol: string;
 }
 
-export default Area;
+export default IAreaMongo;

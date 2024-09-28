@@ -1,37 +1,41 @@
-import {model} from 'mongoose';
+import { model } from 'mongoose';
 import {
-  articleAreaSchema,
-  articleSchema,
-  cartSchema,
-  commentSchema,
-  userSchema
+  articleAreaSchemaMongo,
+  articleSchemaMongo,
+  cartSchemaMongo,
+  commentSchemaMongo,
+  userSchemaMongo
 } from './schema';
 
-const ArticleArea = model(
+const ArticleAreaModelMongo = model(
   'article_area',
-  articleAreaSchema
+  articleAreaSchemaMongo
 );
-const Article = model(
+const ArticleModelMongo = model(
   'article',
-  articleSchema
+  articleSchemaMongo,
+  'article'
 );
-const Cart = model(
+const CartModelMongo = model(
   'cart',
-  cartSchema
+  cartSchemaMongo,
+  'cart'
 );
-const Comment = model(
+const CommentModelMongo = model(
   'comment',
-  commentSchema
+  commentSchemaMongo,
+  'comment'
 );
-const User = model(
+const UserModelMongo = model(
   'user',
-  userSchema
+  userSchemaMongo,
+  'user'
 );
 
 export {
-  ArticleArea,
-  Article,
-  Cart,
-  Comment,
-  User
+  ArticleAreaModelMongo,
+  ArticleModelMongo,
+  CartModelMongo,
+  CommentModelMongo,
+  UserModelMongo
 };

@@ -1,6 +1,7 @@
-import {Schema, Types} from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import ICommentMongo from '../interfaces/ICommentMongo';
 
-const commentSchema = new Schema({
+const commentSchemaMongo = new Schema<ICommentMongo>({
   title: {
     type: String,
     required: true
@@ -10,7 +11,7 @@ const commentSchema = new Schema({
     required: true
   },
   article: {
-    type: Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true
   },
   rating: {
@@ -23,4 +24,4 @@ const commentSchema = new Schema({
   }
 });
 
-export default commentSchema;
+export default commentSchemaMongo;
