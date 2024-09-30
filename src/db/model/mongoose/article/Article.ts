@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { ArticleMongo } from '../../../mongoose';
+import { ArticleMongo, IArticleMongo } from '../../../mongoose';
 import { articleSchema } from '../../../mongoose/schema';
 import IModelDB from '../../IModelDB';
 import {
@@ -23,7 +23,7 @@ class ArticleMongoModelDB implements IModelDB<Article> {
 
   }
 
-  public static parseArticleToSchema (article: Article): ArticleMongoModel {
+  public static parseArticleToSchema (article: Article): IArticleMongo {
     const { id, ...rest } = article;
     return {
       _id: id,
@@ -35,7 +35,7 @@ class ArticleMongoModelDB implements IModelDB<Article> {
     };
   }
 
-  public static parseSchemaToArticle (mongo: ArticleMongoModel): Article {
+  public static parseSchemaToArticle (mongo: IArticleMongo): Article {
     const { _id, ...rest } = mongo;
     return {
       id: _id,
