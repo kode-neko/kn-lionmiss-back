@@ -1,6 +1,7 @@
-import { ArticleAreaMongo } from '../../../mongoose';
 import { Area } from '@model/index';
-import IModelDBArticleArea from '../../IModelDBArticleArea';
+import { ArticleAreaModelMongo, IAreaMongo } from '../../../mongoose';
+import { IModelDBArticleArea } from '../../interfaces';
+import { Types } from 'mongoose';
 
 class AreaMongoModelDB implements IModelDBArticleArea {
 
@@ -17,8 +18,18 @@ class AreaMongoModelDB implements IModelDBArticleArea {
 
   }
 
+  private static parseAreaToMongo (area: Area): IAreaMongo {
+    const { id, ...rest } = area;
+    return { _id: new Types.ObjectId(id), ...rest };
+  }
+
+  private static parseMongoToArea (mongo: IAreaMongo): Area {
+    const { _id, ...rest } = mongo;
+    return { id: _id?.toString(), ...rest };
+  }
+
   read (id: string): Promise<Area> {
-    return ArticleAreaMongo.aggregate([
+    return ArticleAreaModelMongo.aggregate([
       { $match: { 'area.name': id } },
       { $group: { _id: '$area' } },
       {
@@ -27,11 +38,11 @@ class AreaMongoModelDB implements IModelDBArticleArea {
           area: '$_id'
         }
       }
-    ]).then((list) => list.shift());
+    ]).then((list) => AreaMongoModelDB.parseMongoToArea(list.shift()));
   }
 
   readList (): Promise<Area[]> {
-    return ArticleAreaMongo.aggregate([
+    return ArticleAreaModelMongo.aggregate([
       { $group: { _id: '$area' } },
       {
         $project: {
@@ -39,7 +50,7 @@ class AreaMongoModelDB implements IModelDBArticleArea {
           area: '$_id'
         }
       }
-    ]).then((list) => list.map((area) => ({ ...area })));
+    ]).then((list) => list.map((res) => AreaMongoModelDB.parseMongoToArea(res.area)));
   }
 
 }

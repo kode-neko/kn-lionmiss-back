@@ -8,8 +8,9 @@ import {
 } from './schema';
 
 const ArticleAreaModelMongo = model(
-  'article_area',
-  articleAreaSchemaMongo
+  'articleArea',
+  articleAreaSchemaMongo,
+  'articleArea'
 );
 const ArticleModelMongo = model(
   'article',
