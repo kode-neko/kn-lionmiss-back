@@ -12,6 +12,7 @@ export default [
     plugins: {'@stylistic': stylistic},
     rules: {
       ...stylistic.configs['all-flat'].rules,
+      '@stylistic/dot-location': ["error", "property"],
       '@stylistic/object-curly-spacing': ['error', 'always'] ,
       // '@stylistic/object-curly-newline': ['error', 'always'] ,
       '@stylistic/function-call-argument-newline': ["error", "consistent"],

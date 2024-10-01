@@ -5,7 +5,7 @@ interface IArticleAreaMongo {
   title: string;
   article: Types.ObjectId;
   desc: string;
-  variant: Record<string, string>;
+  variants: Map<string, string>;
   price: number;
   tax: number;
   area: IAreaMongo;

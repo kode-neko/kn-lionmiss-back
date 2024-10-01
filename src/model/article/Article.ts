@@ -6,7 +6,6 @@ interface Article {
   instructs: Partial<Record<InstructEnum, string>>;
   sizes: Record<string, number>;
   materials: Record<string, number>;
-  variants: Record<string, string>;
   tags: string[];
   discolor: boolean;
   articleAreaList: ArticleArea[];

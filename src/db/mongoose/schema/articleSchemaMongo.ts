@@ -19,10 +19,6 @@ const articleSchemaMongo = new Schema<IArticleMongo>({
     of: String,
     required: true
   },
-  variants: {
-    type: String,
-    required: true
-  },
   tags: {
     type: [String],
     required: true

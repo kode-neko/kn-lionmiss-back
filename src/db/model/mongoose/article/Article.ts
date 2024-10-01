@@ -1,12 +1,7 @@
-import { Model } from 'mongoose';
-import { ArticleMongo, IArticleMongo } from '../../../mongoose';
-import { articleSchema } from '../../../mongoose/schema';
-import IModelDB from '../../IModelDB';
-import {
-  Article, SearchParams, ArticleArea
-} from '@model/index';
-
-type ArticleMongoModel = Model<typeof ArticleMongo>;
+import { Article, SearchParams } from '@model/index';
+import { ArticleModelMongo, IArticleMongo } from '../../../mongoose';
+import { IModelDB } from '../../interfaces';
+import { Types } from 'mongoose';
 
 class ArticleMongoModelDB implements IModelDB<Article> {
 
@@ -23,55 +18,59 @@ class ArticleMongoModelDB implements IModelDB<Article> {
 
   }
 
-  public static parseArticleToSchema (article: Article): IArticleMongo {
-    const { id, ...rest } = article;
+  private static parseArticleToMongo (article: Article): IArticleMongo {
     return {
-      _id: id,
-      ...rest,
-      sizes: Object.entries(article.sizes),
-      materials: Object.entries(article.materials),
-      variants: Object.entries(article.variants),
-      articleAreaList: []
+      _id: new Types.ObjectId(article.id),
+      instructs: new Map(Object.entries(article.instructs)),
+      sizes: new Map(Object.entries(article.sizes)),
+      materials: new Map(Object.entries(article.materials)),
+      tags: article.tags,
+      discolor: article.discolor
     };
   }
 
-  public static parseSchemaToArticle (mongo: IArticleMongo): Article {
-    const { _id, ...rest } = mongo;
+  private static parseMongoToArticle (mongo: IArticleMongo): Article {
     return {
-      id: _id,
-      ...rest,
+      id: mongo._id?.toString(),
+      instructs: Object.fromEntries(mongo.instructs),
       sizes: Object.fromEntries(mongo.sizes),
       materials: Object.fromEntries(mongo.materials),
-      variants: Object.fromEntries(mongo.variants),
+      tags: mongo.tags,
+      discolor: mongo.discolor,
       articleAreaList: []
     };
   }
 
   read (id: string): Promise<Article> {
-    return ArticleMongo.findById(id);
+    return ArticleModelMongo.findById(id).then((res) => ArticleMongoModelDB.parseMongoToArticle(res as IArticleMongo));
   }
 
   readList ({ limit, skip }: SearchParams): Promise<Article[]> {
-    return ArticleMongo.
-      find().
-      skip(skip).
-      limit(limit);
+    return ArticleModelMongo
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .then((list) => list.map((e) => ArticleMongoModelDB.parseMongoToArticle(e as IArticleMongo)));
   }
 
   create (obj: Article): Promise<Article> {
-    return ArticleMongo.create(obj);
+    return ArticleModelMongo.create(ArticleMongoModelDB.parseArticleToMongo(obj)).then((res) => ArticleMongoModelDB.parseMongoToArticle(res));
   }
 
   update (obj: Article): Promise<boolean> {
-    return ArticleMongo.
-      updateOne({ _id: obj.id }, obj).
-      then(({ modifiedCount }) => Boolean(modifiedCount));
+    const { _id, ...rest } = ArticleMongoModelDB.parseArticleToMongo(obj);
+    return ArticleModelMongo
+      .updateOne(
+        { _id },
+        rest
+      )
+      .then(({ modifiedCount }) => Boolean(modifiedCount));
   }
 
   delete (id: string): Promise<boolean> {
-    return ArticleMongo.
-      deleteOne({ _id: id }).
-      then(({ deletedCount }) => Boolean(deletedCount));
+    return ArticleModelMongo
+      .deleteOne({ _id: id })
+      .then(({ deletedCount }) => Boolean(deletedCount));
   }
 
 }

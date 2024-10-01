@@ -1,10 +1,10 @@
-import { InstructEnum } from '@model/index';
+import { Types } from 'mongoose';
 
 interface IArticleMongo {
-  instructs: Partial<Record<InstructEnum, string>>;
-  sizes: Record<string, number>;
-  materials: Record<string, string>;
-  variants: Record<string, string>;
+  _id?: Types.ObjectId;
+  instructs: Map<string, string>;
+  sizes: Map<string, number>;
+  materials: Map<string, number>;
   tags: string[];
   discolor: boolean;
 }

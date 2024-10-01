@@ -26,4 +26,4 @@ export {
   ArticleVariantSeq,
   initArticleVariantSeq
 } from './ArticleVariantSeq';
-export {default as initArticleAssocs} from './assocs';
+export { default as initArticleAssocs } from './assocs';

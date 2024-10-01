@@ -15,7 +15,7 @@ const articleAreaSchemaMongo = new Schema<IArticleAreaMongo>({
     type: String,
     required: true
   },
-  variant: {
+  variants: {
     type: Map,
     of: String
   },
