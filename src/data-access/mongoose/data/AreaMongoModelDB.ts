@@ -1,7 +1,7 @@
 import { Area } from '@model/index';
-import { ArticleAreaModelMongo, IAreaMongo } from '../../../mongoose';
 import { IModelDBArticleArea } from '../../interfaces';
 import { Types } from 'mongoose';
+import { ArticleAreaModelMongo, IAreaMongo } from '../db';
 
 class AreaMongoModelDB implements IModelDBArticleArea {
 

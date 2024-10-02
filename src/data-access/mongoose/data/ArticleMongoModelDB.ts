@@ -1,7 +1,7 @@
 import { Article, SearchParams } from '@model/index';
-import { ArticleModelMongo, IArticleMongo } from '../../../mongoose';
-import { IModelDB } from '../../interfaces';
 import { Types } from 'mongoose';
+import { IModelDB } from '../../interfaces';
+import { ArticleModelMongo, IArticleMongo } from '../db';
 
 class ArticleMongoModelDB implements IModelDB<Article> {
 
@@ -18,7 +18,7 @@ class ArticleMongoModelDB implements IModelDB<Article> {
 
   }
 
-  private static parseArticleToMongo (article: Article): IArticleMongo {
+  public static parseArticleToMongo (article: Article): IArticleMongo {
     return {
       _id: new Types.ObjectId(article.id),
       instructs: new Map(Object.entries(article.instructs)),
@@ -29,7 +29,7 @@ class ArticleMongoModelDB implements IModelDB<Article> {
     };
   }
 
-  private static parseMongoToArticle (mongo: IArticleMongo): Article {
+  public static parseMongoToArticle (mongo: IArticleMongo): Article {
     return {
       id: mongo._id?.toString(),
       instructs: Object.fromEntries(mongo.instructs),

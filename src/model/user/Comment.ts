@@ -1,12 +1,12 @@
-import {Article} from '@model/article';
+import { Article } from '@model/article';
 
 interface Comment {
   id?: string;
   title: string;
-  cont: string;
+  text: string;
   rating: number;
   pics: string[];
-  article: Article;
+  article?: Article;
 }
 
 export default Comment;
