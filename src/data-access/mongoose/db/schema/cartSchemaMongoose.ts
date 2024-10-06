@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose';
 import { enumPayment, enumShipState } from './utils';
-import ICartMongo from '../interfaces/ICartMongo';
+import ICartMongoose from '../interfaces/ICartMongoose';
 
-const cartSchemaMongo = new Schema<ICartMongo>({
+const cartSchemaMongoose = new Schema<ICartMongoose>({
   lines: {
     type: [{
       id: Number,
@@ -34,4 +34,4 @@ const cartSchemaMongo = new Schema<ICartMongo>({
   }
 });
 
-export default cartSchemaMongo;
+export default cartSchemaMongoose;

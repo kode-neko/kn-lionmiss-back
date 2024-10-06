@@ -7,9 +7,9 @@ import {
 
 /* import Article from '../../../../src/model/article/Article';
    import AreaMongoModelDB from '../../../../src/db/model/mongoose/article/Area'; */
-import CommentMongoModelDB from '../../../../src/data-access/mongoose/data/CommentMongoModelDB';
-import Comment from '../../../../src/model/user/Comment';
-import { initConnMongo } from '../../../../src/data-access/mongoose/db';
+import CommentMongoModelDB from '../../../src/data-access/mongoose/data/CommentMongoModelDB';
+import Comment from '../../../src/model/user/Comment';
+import { initConnMongo } from '../../../src/data-access/mongoose/db';
 
 describe('sum module', () => {
   beforeAll(async () => {

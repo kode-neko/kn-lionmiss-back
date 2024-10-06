@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
-import IAddressMongo from '../interfaces/IAddressMongo';
+import IAddressMongoose from '../interfaces/IAddressMongoose';
 
-const addressSchemaMongo = new Schema<IAddressMongo>({
+const addressSchemaMongoose = new Schema<IAddressMongoose>({
   alias: String,
   name: String,
   surname: String,
@@ -13,4 +13,4 @@ const addressSchemaMongo = new Schema<IAddressMongo>({
   obs: String
 });
 
-export default addressSchemaMongo;
+export default addressSchemaMongoose;

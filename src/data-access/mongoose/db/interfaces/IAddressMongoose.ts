@@ -1,4 +1,4 @@
-interface IAddressMongo {
+interface IAddressMongoose {
   alias: string;
   name: string;
   surname: string;
@@ -10,4 +10,4 @@ interface IAddressMongo {
   obs: string;
 }
 
-export default IAddressMongo;
+export default IAddressMongoose;

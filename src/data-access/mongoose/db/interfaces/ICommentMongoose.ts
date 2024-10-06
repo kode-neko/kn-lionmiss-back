@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-interface ICommentMongo {
+interface ICommentMongoose {
   _id?: Types.ObjectId;
   title: string;
   text: string;
@@ -9,4 +9,4 @@ interface ICommentMongo {
   article: Types.ObjectId;
 }
 
-export default ICommentMongo;
+export default ICommentMongoose;

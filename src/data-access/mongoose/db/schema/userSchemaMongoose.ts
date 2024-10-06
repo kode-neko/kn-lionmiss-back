@@ -1,12 +1,12 @@
 import { Schema } from 'mongoose';
-import addressSchemaMongo from './addressSchemaMongo';
-import commentSchemaMongo from './commentSchemaMongo';
+import addressSchemaMongoose from './addressSchemaMongoose';
+import commentSchemaMongoose from './commentSchemaMongoose';
 import {
   enumSex, enumUnitsHeight, enumUnitsWeight
 } from './utils';
-import IUserMongo from '../interfaces/IUserMongo';
+import IUserMongoose from '../interfaces/IUserMongoose';
 
-const userSchemaMongo = new Schema<IUserMongo>({
+const userSchemaMongoose = new Schema<IUserMongoose>({
   userName: {
     type: String,
     required: true
@@ -25,15 +25,19 @@ const userSchemaMongo = new Schema<IUserMongo>({
     required: true
   },
   addresses: {
-    type: [addressSchemaMongo],
+    type: [addressSchemaMongoose],
     required: true
   },
   commentList: {
-    type: [commentSchemaMongo],
+    type: [commentSchemaMongoose],
     required: true
   },
   favs: {
     type: [Schema.Types.ObjectId],
+    required: true
+  },
+  cart: {
+    type: Schema.Types.ObjectId,
     required: true
   },
   measures: {
@@ -57,4 +61,4 @@ const userSchemaMongo = new Schema<IUserMongo>({
   }
 });
 
-export default userSchemaMongo;
+export default userSchemaMongoose;

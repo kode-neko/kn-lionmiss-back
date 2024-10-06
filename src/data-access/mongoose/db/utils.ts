@@ -10,7 +10,7 @@ const {
 
 let mongoose: Mongoose;
 
-async function initConnMongo (): Promise<Mongoose> {
+async function initConnMongoose (): Promise<Mongoose> {
   if (mongoose) return mongoose;
   try {
     const urlConnect = `mongodb://${USER}:${PASS_USER}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
@@ -23,4 +23,4 @@ async function initConnMongo (): Promise<Mongoose> {
   return mongoose;
 }
 
-export { initConnMongo };
+export { initConnMongoose };

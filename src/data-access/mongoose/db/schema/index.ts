@@ -1,7 +1,7 @@
-export { default as addressSchemaMongo } from './addressSchemaMongo';
-export { default as areaSchemaMongo } from './areaSchemaMongo';
-export { default as articleAreaSchemaMongo } from './articleAreaSchemaMongo';
-export { default as articleSchemaMongo } from './articleSchemaMongo';
-export { default as cartSchemaMongo } from './cartSchemaMongo';
-export { default as commentSchemaMongo } from './commentSchemaMongo';
-export { default as userSchemaMongo } from './userSchemaMongo';
+export { default as addressSchemaMongoose } from './addressSchemaMongoose';
+export { default as areaSchemaMongoose } from './areaSchemaMongoose';
+export { default as articleAreaSchemaMongoose } from './articleAreaSchemaMongoose';
+export { default as articleSchemaMongoose } from './articleSchemaMongoose';
+export { default as cartSchemaMongoose } from './cartSchemaMongoose';
+export { default as commentSchemaMongoose } from './commentSchemaMongoose';
+export { default as userSchemaMongoose } from './userSchemaMongoose';

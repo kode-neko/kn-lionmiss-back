@@ -7,9 +7,10 @@ const config: Config = {
   rootDir: '../',
   moduleNameMapper: {
     "^@api/(.*)$": ["<rootDir>/src/api/$1"],
-    "^@db/(.*)$": ["<rootDir>/src/db/$1"],
+    "^@data-access/(.*)$": ["<rootDir>/src/data-access/$1"],
     "^@fixtures/(.*)$": ["<rootDir>/src/fixtures/$1"],
     "^@model/(.*)$": ["<rootDir>/src/model/$1"],
+    "^@services/(.*)$": ["<rootDir>/src/services/$1"],
     "^@utils/(.*)$": ["<rootDir>/src/utils/$1"]
   },
   transform: {

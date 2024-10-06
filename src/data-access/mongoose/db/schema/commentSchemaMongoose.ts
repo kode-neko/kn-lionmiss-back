@@ -1,7 +1,7 @@
 import { Schema, Types } from 'mongoose';
-import ICommentMongo from '../interfaces/ICommentMongo';
+import ICommentMongoose from '../interfaces/ICommentMongoose';
 
-const commentSchemaMongo = new Schema<ICommentMongo>({
+const commentSchemaMongoose = new Schema<ICommentMongoose>({
   title: {
     type: String,
     required: true
@@ -24,4 +24,4 @@ const commentSchemaMongo = new Schema<ICommentMongo>({
   }
 });
 
-export default commentSchemaMongo;
+export default commentSchemaMongoose;

@@ -7,6 +7,7 @@ interface Article {
   sizes: Record<string, number>;
   materials: Record<string, number>;
   tags: string[];
+  variants: string[];
   discolor: boolean;
   articleAreaList: ArticleArea[];
 }

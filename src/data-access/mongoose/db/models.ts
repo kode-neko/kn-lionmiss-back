@@ -1,42 +1,42 @@
 import { model } from 'mongoose';
 import {
-  articleAreaSchemaMongo,
-  articleSchemaMongo,
-  cartSchemaMongo,
-  commentSchemaMongo,
-  userSchemaMongo
+  articleAreaSchemaMongoose,
+  articleSchemaMongoose,
+  cartSchemaMongoose,
+  commentSchemaMongoose,
+  userSchemaMongoose
 } from './schema';
 
-const ArticleAreaModelMongo = model(
+const ArticleAreaModelMongoose = model(
   'articleArea',
-  articleAreaSchemaMongo,
+  articleAreaSchemaMongoose,
   'articleArea'
 );
-const ArticleModelMongo = model(
+const ArticleModelMongoose = model(
   'article',
-  articleSchemaMongo,
+  articleSchemaMongoose,
   'article'
 );
-const CartModelMongo = model(
+const CartModelMongoose = model(
   'cart',
-  cartSchemaMongo,
+  cartSchemaMongoose,
   'cart'
 );
-const CommentModelMongo = model(
+const CommentModelMongoose = model(
   'comment',
-  commentSchemaMongo,
+  commentSchemaMongoose,
   'comment'
 );
-const UserModelMongo = model(
+const UserModelMongoose = model(
   'user',
-  userSchemaMongo,
+  userSchemaMongoose,
   'user'
 );
 
 export {
-  ArticleAreaModelMongo,
-  ArticleModelMongo,
-  CartModelMongo,
-  CommentModelMongo,
-  UserModelMongo
+  ArticleAreaModelMongoose,
+  ArticleModelMongoose,
+  CartModelMongoose,
+  CommentModelMongoose,
+  UserModelMongoose
 };

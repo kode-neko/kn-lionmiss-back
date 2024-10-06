@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose';
-import areaSchemaMongo from './areaSchemaMongo';
-import IArticleAreaMongo from '../interfaces/IArticleAreaMongo';
+import areaSchemaMongoose from './areaSchemaMongoose';
+import IArticleAreaMongoose from '../interfaces/IArticleAreaMongoose';
 
-const articleAreaSchemaMongo = new Schema<IArticleAreaMongo>({
+const articleAreaSchemaMongoose = new Schema<IArticleAreaMongoose>({
   title: {
     type: String,
     required: true
@@ -29,9 +29,9 @@ const articleAreaSchemaMongo = new Schema<IArticleAreaMongo>({
     required: true
   },
   area: {
-    type: areaSchemaMongo,
+    type: areaSchemaMongoose,
     required: true
   }
 });
 
-export default articleAreaSchemaMongo;
+export default articleAreaSchemaMongoose;

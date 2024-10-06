@@ -1,26 +1,26 @@
-export { initConnMongo } from './utils';
+export { initConnMongoose } from './utils';
 export {
-  IAddressMongo,
-  IAreaMongo,
-  IArticleAreaMongo,
-  IArticleMongo,
-  ICartMongo,
-  ICommentMongo,
-  IUserMongo
+  IAddressMongoose,
+  IAreaMongoose,
+  IArticleAreaMongoose,
+  IArticleMongoose,
+  ICartMongoose,
+  ICommentMongoose,
+  IUserMongoose
 } from './interfaces';
 export {
-  addressSchemaMongo,
-  areaSchemaMongo,
-  articleAreaSchemaMongo,
-  articleSchemaMongo,
-  cartSchemaMongo,
-  commentSchemaMongo,
-  userSchemaMongo
+  addressSchemaMongoose,
+  areaSchemaMongoose,
+  articleAreaSchemaMongoose,
+  articleSchemaMongoose,
+  cartSchemaMongoose,
+  commentSchemaMongoose,
+  userSchemaMongoose
 } from './schema';
 export {
-  ArticleAreaModelMongo,
-  ArticleModelMongo,
-  CartModelMongo,
-  CommentModelMongo,
-  UserModelMongo
+  ArticleAreaModelMongoose,
+  ArticleModelMongoose,
+  CartModelMongoose,
+  CommentModelMongoose,
+  UserModelMongoose
 } from './models';

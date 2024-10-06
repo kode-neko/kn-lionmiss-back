@@ -32,9 +32,10 @@
     "paths": {
       "*": ["../node_modules/*"],
       "@api/*": ["./src/api/*"],
-      "@db/*": ["./src/db/*"],
+      "@data-access/*": ["./src/data-access/*"],
       "@fixtures/*": ["./src/fixtures/*"],
       "@model/*": ["./src/model/*"],
+      "@services/*": ["./src/services/*"],
       "@utils/*": ["./src/utils/*"]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

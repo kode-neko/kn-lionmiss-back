@@ -1,7 +1,7 @@
 import { Area } from '@model/index';
 import { IModelDBArticleArea } from '../../interfaces';
-import { Types } from 'mongoose';
-import { ArticleAreaModelMongo, IAreaMongo } from '../db';
+import IAreaMongo from '../db/interfaces/IAreaMongoose';
+import { ArticleAreaModelMongoose } from '../db';
 
 class AreaMongoModelDB implements IModelDBArticleArea {
 
@@ -19,17 +19,15 @@ class AreaMongoModelDB implements IModelDBArticleArea {
   }
 
   private static parseAreaToMongo (area: Area): IAreaMongo {
-    const { id, ...rest } = area;
-    return { _id: new Types.ObjectId(id), ...rest };
+    return { ...area };
   }
 
   private static parseMongoToArea (mongo: IAreaMongo): Area {
-    const { _id, ...rest } = mongo;
-    return { id: _id?.toString(), ...rest };
+    return { ...mongo };
   }
 
   read (id: string): Promise<Area> {
-    return ArticleAreaModelMongo.aggregate([
+    return ArticleAreaModelMongoose.aggregate([
       { $match: { 'area.name': id } },
       { $group: { _id: '$area' } },
       {
@@ -42,7 +40,7 @@ class AreaMongoModelDB implements IModelDBArticleArea {
   }
 
   readList (): Promise<Area[]> {
-    return ArticleAreaModelMongo.aggregate([
+    return ArticleAreaModelMongoose.aggregate([
       { $group: { _id: '$area' } },
       {
         $project: {

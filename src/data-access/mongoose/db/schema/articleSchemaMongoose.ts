@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose';
 import { enumInstruct } from './utils';
-import IArticleMongo from '../interfaces/IArticleMongo';
+import IArticleMongoose from '../interfaces/IArticleMongoose';
 
-const articleSchemaMongo = new Schema<IArticleMongo>({
+const articleSchemaMongoose = new Schema<IArticleMongoose>({
   instructs: {
     type: Map,
     of: String,
@@ -16,10 +16,14 @@ const articleSchemaMongo = new Schema<IArticleMongo>({
   },
   materials: {
     type: Map,
-    of: String,
+    of: Number,
     required: true
   },
   tags: {
+    type: [String],
+    required: true
+  },
+  variants: {
     type: [String],
     required: true
   },
@@ -29,4 +33,4 @@ const articleSchemaMongo = new Schema<IArticleMongo>({
   }
 }, { id: true });
 
-export default articleSchemaMongo;
+export default articleSchemaMongoose;

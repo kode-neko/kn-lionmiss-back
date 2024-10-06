@@ -1,8 +1,9 @@
 import { ShipStateEnum, PaymentEnum } from '@model/index';
+import { ObjectId } from 'mongodb';
 
 interface ICartMongo {
-  lines:
-  {
+  _id: ObjectId;
+  lines: {
     id: number;
     qty: number;
   }[];

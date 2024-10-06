@@ -1,18 +1,6 @@
-export {
-  Area,
-  Article,
-  ArticleArea
-} from './article';
+export { default as AreaMongooseModelDB } from './AreaMongooseModelDB';
+export { default as ArticleMongooseModelDB } from './ArticleMongooseModelDB';
+export { default as CommentMongooseModelDB } from './CommentMongooseModelDB';
 
-export {
-  Cart,
-  CartLine,
-  Shipping
-} from './cart';
-
-export {
-  Address,
-  Comment,
-  User,
-  UserMeasures
-} from './user';
+/* export { default as ShippingMongooseModelDB } from './ShippingMongooseModelDB';
+   export { default as UserMongooseModelDB } from './UserMongooseModelDB'; */
