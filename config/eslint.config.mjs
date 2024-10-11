@@ -12,6 +12,12 @@ export default [
     plugins: {'@stylistic': stylistic},
     rules: {
       ...stylistic.configs['all-flat'].rules,
+      '@stylistic/dot-location': ["error", "property"],
+      '@stylistic/object-curly-spacing': ['error', 'always'],
+      '@stylistic/multiline-comment-style': ["error", "bare-block"],
+      // '@stylistic/object-curly-newline': ['error', 'always'] ,
+      '@stylistic/function-call-argument-newline': ["error", "consistent"],
+      '@stylistic/object-property-newline': ["error", { "allowAllPropertiesOnSameLine": true }],
       '@stylistic/indent': [
         'error',
         2

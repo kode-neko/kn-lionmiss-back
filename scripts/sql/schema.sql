@@ -83,6 +83,7 @@ CREATE TABLE area(
 	id CHAR(36) PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	country VARCHAR(100) NOT NULL
+	symbol VARCHAR(1) NOT NULL
 );
 
 CREATE TABLE article_area(

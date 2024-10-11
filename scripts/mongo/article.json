@@ -12,7 +12,7 @@
         "m" : NumberInt(4),
         "l" : NumberInt(20)
     },
-    "variant" : [
+    "variants" : [
         "red",
         "green",
         "stripes"
@@ -21,13 +21,13 @@
         "cotton" : NumberInt(30),
         "rayon" : NumberInt(70)
     },
-    "instructions" : {
+    "instructs" : {
         "whasing" : "30º",
         "ironing" : "180º",
         "spining" : "low",
         "dryCleaning" : "no"
     },
     "discolor" : false
-}
+    }
 
 ]

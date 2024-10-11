@@ -1,8 +1,8 @@
 enum InstructEnum {
   WHASING = 'whasing',
   IRONING = 'ironing',
-  SPIN = 'spin',
-  DRY_CLEANING = 'dryClean'
+  SPIN = 'spining',
+  DRY_CLEANING = 'dryCleaning'
 }
 
 export default InstructEnum;
