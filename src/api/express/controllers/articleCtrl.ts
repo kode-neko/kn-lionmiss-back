@@ -25,7 +25,7 @@ function deleteArticle (req: Request, res: Response) {
 // Translations per area
 
 function getArticleIdAreaId (req: Request, res: Response) {
-  res.status(200).send({ created: 'getArticleIdAreId' });
+  res.status(200).send({ created: 'getArticleIdAreaId' });
 }
 function getArticleIdAreaList (req: Request, res: Response) {
   res.status(200).send({ created: 'getArticleIdAreaList' });
