@@ -38,7 +38,7 @@ function createFixListComment (size = 10): Comment[] {
 
 function createFixAddress (): Address {
   return {
-    id: faker.database.mongodbObjectId,
+    id: faker.database.mongodbObjectId(),
     alias: faker.internet.userName(),
     name: faker.person.firstName(),
     surname: faker.person.lastName(),
@@ -46,14 +46,20 @@ function createFixAddress (): Address {
     city: faker.location.city(),
     state: faker.location.state(),
     country: faker.location.country(),
-    phone: faker.phone.number(),
+    phone: Number(faker.phone.number()),
     obs: faker.lorem.paragraph()
   };
 }
 
-function createFixAddressNoId (): Comment {
+function createFixAddressNoId (): Address {
   const { id, ...rest } = createFixAddress();
   return rest;
+}
+
+function createFixListAddress (size = 3): Address[] {
+  return Array(size)
+    .fill({})
+    .map(() => createFixAddress());
 }
 
 // Measures
@@ -83,7 +89,7 @@ function createFixUser (): User {
     area: createFixArea(),
     measures: createFixMeasures(),
     commentList: createFixListComment(),
-    addressList: createFixAddress(),
+    addressList: createFixListAddress(),
     favList: createFixListArticle(),
     cart: createFixCart()
   };
@@ -96,6 +102,7 @@ export {
 
   createFixAddress,
   createFixAddressNoId,
+  createFixListAddress,
 
   createFixMeasures,
   createFixUser

@@ -31,6 +31,7 @@ export {
   // Address
   createFixAddress,
   createFixAddressNoId,
+  createFixListAddress,
   // User
   createFixMeasures,
   createFixUser

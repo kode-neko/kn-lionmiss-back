@@ -33,7 +33,7 @@ function createFixListArticle (size = 10): Article[] {
 
 // Area
 
-function createFixArea (area?: Area): ArticleArea {
+function createFixArea (area?: Area): Area {
   const {
     name, country, symbol
   }: Area = area || faker.helpers.arrayElement(constFixListArea);
@@ -45,12 +45,12 @@ function createFixArea (area?: Area): ArticleArea {
   };
 }
 
-function createFixAreaNoId (area?: Area): ArticleArea {
+function createFixAreaNoId (area?: Area): Area {
   const { id, ...rest } = createFixArea(area);
   return rest;
 }
 
-function createFixListArea (size = 10): ArticleArea[] {
+function createFixListArea (size = 10): Area[] {
   return Array(size)
     .fill({})
     .map(() => createFixArea());
@@ -63,7 +63,9 @@ function createFixArticleArea (area?): ArticleArea {
     id: faker.database.mongodbObjectId(),
     title: faker.lorem.words(),
     desc: faker.lorem.sentence(),
-    price: faker.commerce.price(),
+    price: faker.number.float({
+      min: 6, max: 100, fractionDigits: 2
+    }),
     tax: faker.helpers.rangeToNumber({ min: 0, max: 99 }),
     area: area || createFixArea()
   };

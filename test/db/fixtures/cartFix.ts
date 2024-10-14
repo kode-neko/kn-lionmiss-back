@@ -7,7 +7,7 @@ import { createFixArticle } from './articleFix';
 
 // Cart
 
-function createFixCartLine (order: number, article?: Article): CartLine {
+function createFixCartLine (order: string, article?: Article): CartLine {
   return {
     id: order,
     qty: faker.helpers.rangeToNumber({ min: 1, max: 3 }),
@@ -19,7 +19,7 @@ function createFixCart (cartLinesNum = 4): Cart {
   return {
     id: faker.database.mongodbObjectId(),
     cartLines: Array(cartLinesNum).fill({})
-      .map((_, i) => createFixCartLine(i))
+      .map((_, i) => createFixCartLine(i.toString()))
   };
 }
 
@@ -40,7 +40,7 @@ function createFixShipping (): Shipping {
   };
 }
 
-function createFixShippingNoId (): Cart {
+function createFixShippingNoId (): Shipping {
   const { id, ...rest } = createFixShipping();
   return rest;
 }
