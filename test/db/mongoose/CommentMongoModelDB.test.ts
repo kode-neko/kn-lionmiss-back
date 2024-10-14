@@ -8,12 +8,15 @@ import {
   ArticleMongooseModelDB
 } from '@data-access/mongoose/index';
 import {
-  Collection, Db, MongoClient
+  Collection, Db, MongoClient,
+  ObjectId
 } from 'mongodb';
-import { faker } from '@faker-js/faker';
 import {
-  createFixArticle, createFixArticleNoId, createFixListArticle
-} from '../fixtures';
+  createArticleFixMongo,
+  createArticleListFixMongo,
+  createArticleNoIdFixMongo
+} from '../fixtures/utilsFixMongo';
+import { faker } from '@faker-js/faker';
 
 const {
   DB,
@@ -43,7 +46,7 @@ describe('ArticleMongooseModelDB', () => {
   });
 
   beforeEach(async () => {
-    const articleList = createFixListArticle();
+    const articleList = createArticleListFixMongo();
     await collArticle.insertMany(articleList.map((a) => ArticleMongooseModelDB.parseArticleToMongoose(a)));
     artExample = articleList[0];
   });
@@ -74,13 +77,13 @@ describe('ArticleMongooseModelDB', () => {
   });
 
   test('Create', async () => {
-    const newArt = createFixArticleNoId();
+    const newArt = createArticleNoIdFixMongo();
     const { id, ...newArtId } = await articleMongooseModel.create(newArt);
     expect({ id, ...newArt }).toEqual({ id, ...newArtId });
   });
 
   test('Update existing', async () => {
-    const art = createFixArticle();
+    const art = createArticleFixMongo();
     collArticle.insertOne(ArticleMongooseModelDB.parseArticleToMongoose(art));
     art.tags = [faker.lorem.word()];
     expect(async () => await articleMongooseModel.update(art))
@@ -89,14 +92,14 @@ describe('ArticleMongooseModelDB', () => {
   });
 
   test('Update not existing', async () => {
-    const art = createFixArticle();
+    const art = createArticleFixMongo();
     expect(async () => await articleMongooseModel.update(art))
       .rejects
       .toThrow(NotFoundDbException);
   });
 
   test('Delete existing', async () => {
-    const art = createFixArticle();
+    const art = createArticleFixMongo();
     await collArticle.insertOne(ArticleMongooseModelDB.parseArticleToMongoose(art));
     expect(async () => await articleMongooseModel.delete(art.id))
       .not
