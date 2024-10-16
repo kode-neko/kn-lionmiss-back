@@ -1,18 +1,11 @@
-import { ShipStateEnum, PaymentEnum } from '@model/index';
 import { Types } from 'mongoose';
+import ICartLineMongoose from './ICartLineMongoose';
+import IShippingMongoose from './IShippingMongoose';
 
 interface ICartMongoose {
   _id?: Types.ObjectId;
-  lines: {
-    id: number;
-    qty: number;
-  }[];
-  shipping: {
-    idTracking: string;
-    idShipping: string;
-    state: Partial<Record<ShipStateEnum, Date>>;
-    payment: PaymentEnum;
-  };
+  lines: ICartLineMongoose[];
+  shipping: IShippingMongoose;
 }
 
 export default ICartMongoose;

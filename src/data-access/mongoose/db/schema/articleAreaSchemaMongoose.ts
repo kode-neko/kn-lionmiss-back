@@ -15,10 +15,6 @@ const articleAreaSchemaMongoose = new Schema<IArticleAreaMongoose>({
     type: String,
     required: true
   },
-  variants: {
-    type: Map,
-    of: String
-  },
   price: {
     type: Number,
     required: true

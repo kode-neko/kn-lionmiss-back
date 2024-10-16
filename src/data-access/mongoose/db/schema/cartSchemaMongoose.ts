@@ -6,6 +6,7 @@ const cartSchemaMongoose = new Schema<ICartMongoose>({
   lines: {
     type: [{
       id: Number,
+      article: Schema.Types.ObjectId,
       qty: Number
     }],
     required: true

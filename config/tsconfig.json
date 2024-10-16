@@ -31,6 +31,7 @@
     "baseUrl": "../",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": {
       "*": ["../node_modules/*"],
+
       "@api/*": ["./src/api/*"],
       "@data-access/*": ["./src/data-access/*"],
       "@fixtures/*": ["./src/fixtures/*"],
