@@ -75,7 +75,7 @@ class CommentMongooseModelDB implements IModelDB<Comment> {
       });
   }
 
-  create (obj: Comment): Promise<Comment> {
+  create (obj: Exclude<Comment, 'id'>): Promise<Comment> {
     return CommentModelMongoose
       .create(CommentMongooseModelDB.parseCommentToMongoose(obj))
       .then((res) => {
@@ -84,7 +84,7 @@ class CommentMongooseModelDB implements IModelDB<Comment> {
       });
   }
 
-  update (obj: Comment): Promise<void> | NotFoundDbException {
+  update (obj: Comment & { id: string }): Promise<void> | NotFoundDbException {
     const { _id, ...rest } = CommentMongooseModelDB.parseCommentToMongoose(obj);
     return CommentModelMongoose
       .updateOne({ _id }, rest)

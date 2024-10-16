@@ -6,5 +6,5 @@
   "jestrunner.debugOptions": {
     "envFile": "${workspaceRoot}/config/env/.env.dev"
   },
-  "jestrunner.jestCommand": "npx dotenvx run -f ./config/env/.env.dev -- npx jest"
+  "jestrunner.jestCommand": "npx dotenvx run -f ./config/env/.env.dev -- npx jest --runInBand --testTimeout=10000"
 }

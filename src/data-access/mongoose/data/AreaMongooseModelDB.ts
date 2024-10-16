@@ -1,29 +1,36 @@
 import { Area } from '@model/index';
 import { IModelDBArticleArea } from '../../interfaces';
-import IAreaMongo from '../db/interfaces/IAreaMongoose';
-import { ArticleAreaModelMongoose } from '../db';
+import { ArticleAreaModelMongoose, IAreaMongoose } from '../db';
 
-class AreaMongoModelDB implements IModelDBArticleArea {
+class AreaMongooseModelDB implements IModelDBArticleArea {
 
   private static instance: IModelDBArticleArea;
 
   public static getIntance (): IModelDBArticleArea {
-    if (!AreaMongoModelDB.instance) {
-      AreaMongoModelDB.instance = new AreaMongoModelDB();
+    if (!AreaMongooseModelDB.instance) {
+      AreaMongooseModelDB.instance = new AreaMongooseModelDB();
     }
-    return AreaMongoModelDB.instance;
+    return AreaMongooseModelDB.instance;
   }
 
   private constructor () {
 
   }
 
-  private static parseAreaToMongo (area: Area): IAreaMongo {
-    return { ...area };
+  public static parseAreaToMongo (area: Area): IAreaMongoose {
+    return {
+      name: area.name,
+      country: area.country,
+      symbol: area.symbol
+    };
   }
 
-  private static parseMongoToArea (mongo: IAreaMongo): Area {
-    return { ...mongo };
+  public static parseMongoToArea (mongo: IAreaMongoose): Area {
+    return {
+      name: mongo.name,
+      country: mongo.country,
+      symbol: mongo.symbol
+    };
   }
 
   read (id: string): Promise<Area> {
@@ -36,7 +43,7 @@ class AreaMongoModelDB implements IModelDBArticleArea {
           area: '$_id'
         }
       }
-    ]).then((list) => AreaMongoModelDB.parseMongoToArea(list.shift()));
+    ]).then((list) => AreaMongooseModelDB.parseMongoToArea(list.shift()));
   }
 
   readList (): Promise<Area[]> {
@@ -48,9 +55,9 @@ class AreaMongoModelDB implements IModelDBArticleArea {
           area: '$_id'
         }
       }
-    ]).then((list) => list.map((res) => AreaMongoModelDB.parseMongoToArea(res.area)));
+    ]).then((list) => list.map((res) => AreaMongooseModelDB.parseMongoToArea(res.area)));
   }
 
 }
 
-export default AreaMongoModelDB;
+export default AreaMongooseModelDB;

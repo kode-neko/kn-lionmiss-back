@@ -2,11 +2,10 @@ import { Types } from 'mongoose';
 import IAreaMongoose from './IAreaMongoose';
 
 interface IArticleAreaMongoose {
-  id?: Types.ObjectId;
-  title: string;
+  _id?: Types.ObjectId;
   article: Types.ObjectId;
+  title: string;
   desc: string;
-  variants: Map<string, string>;
   price: number;
   tax: number;
   area: IAreaMongoose;

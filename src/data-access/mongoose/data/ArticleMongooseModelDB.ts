@@ -1,10 +1,15 @@
-import { Article, SearchParams } from '@model/index';
+import {
+  Article, ArticleArea, SearchParams
+} from '@model/index';
 import { Types } from 'mongoose';
-import { IModelDB } from '../../interfaces';
-import { ArticleModelMongoose, IArticleMongoose } from '../db';
+import { IModelDB, IModelDBArticle } from '../../interfaces';
+import {
+  ArticleAreaModelMongoose, ArticleModelMongoose, IArticleAreaMongoose, IArticleMongoose
+} from '../db';
 import { NotFoundDbException } from '../../error';
+import ArticleAreaMongooseModelDB from './ArticleAreaMongooseModelDB';
 
-class ArticleMongooseModelDB implements IModelDB<Article> {
+class ArticleMongooseModelDB implements IModelDBArticle {
 
   private static instance: IModelDB<Article>;
 
@@ -61,13 +66,13 @@ class ArticleMongooseModelDB implements IModelDB<Article> {
       .then((list) => list.map((e) => ArticleMongooseModelDB.parseMongooseToArticle(e as IArticleMongoose)));
   }
 
-  create (obj: Article): Promise<Article> {
+  create (obj: Exclude<Article, 'id'>): Promise<Article> {
     return ArticleModelMongoose
       .create(ArticleMongooseModelDB.parseArticleToMongoose(obj))
       .then((res) => ArticleMongooseModelDB.parseMongooseToArticle(res));
   }
 
-  update (obj: Article): Promise<void> | NotFoundDbException {
+  update (obj: Article & { id: string }): Promise<void> | NotFoundDbException {
     const { _id, ...rest } = ArticleMongooseModelDB.parseArticleToMongoose(obj);
     return ArticleModelMongoose
       .updateOne({ _id }, rest)
@@ -81,6 +86,25 @@ class ArticleMongooseModelDB implements IModelDB<Article> {
       .deleteMany({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {
         if (deletedCount === 0) throw new NotFoundDbException();
+      });
+  }
+
+  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+    return ArticleAreaModelMongoose
+      .findOne({ article: new Types.ObjectId(idArticle), 'area.name': nameArea })
+      .then((res) => {
+        if (!res) throw new NotFoundDbException();
+        return ArticleAreaMongooseModelDB.parseMongoToArticleArea(res as IArticleAreaMongoose);
+      });
+  }
+
+  createInfoArea (idArticle: string, articleArea: Exclude<ArticleArea, 'id'>): Promise<ArticleArea> {
+    const articleAreaMongoose = ArticleAreaMongooseModelDB.parseArticleAreaToMongo(articleArea, idArticle);
+    return ArticleAreaModelMongoose
+      .create(articleAreaMongoose)
+      .then((res) => {
+        if (!res) throw new NotFoundDbException();
+        return ArticleAreaMongooseModelDB.parseMongoToArticleArea(res as IArticleAreaMongoose);
       });
   }
 
