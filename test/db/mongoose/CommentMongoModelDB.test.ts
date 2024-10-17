@@ -1,22 +1,22 @@
-import { Comment, Article } from '@model/index';
+import { Comment } from '@model/index';
 import {
   describe, expect, test, beforeAll, afterAll
 } from '@jest/globals';
 import { NotFoundDbException } from '@data-access/index';
 import {
   initConnMongoose,
-  CommentMongooseModelDB
+  CommentMongooseModelDB,
+  ArticleMongooseModelDB
 } from '@data-access/mongoose/index';
 import {
-  Collection, Db, MongoClient,
-  ObjectId
+  Collection, Db, MongoClient
 } from 'mongodb';
 import { faker } from '@faker-js/faker';
 import {
   createFixComment, createFixCommentNoId,
+  createFixListArticle,
   createFixListComment
 } from '../fixtures';
-import ArticleMongooseModelDB from '../../../src/data-access/mongoose/data/ArticleMongooseModelDB';
 
 const {
   DB,
@@ -50,10 +50,13 @@ describe('CommentMongooseModelDB', () => {
 
   beforeEach(async () => {
     const commentList = createFixListComment();
-    await collComment.insertMany(commentList.map((a) => CommentMongooseModelDB.parseCommentToMongoose(a)));
+    const articleList = createFixListArticle()
+      .map((a, i) => ({ ...a, id: commentList[i].article }));
 
-    const articleList = commentList.map((c) => c.article);
-    await collArticle.insertMany(articleList.map((a) => ArticleMongooseModelDB.parseArticleToMongoose(a)));
+    await collComment.insertMany(commentList
+      .map((c) => CommentMongooseModelDB.parseCommentToMongoose(c)));
+    await collArticle.insertMany(articleList
+      .map((a) => ArticleMongooseModelDB.parseArticleToMongoose(a)));
 
     commentExample = commentList[0];
   });

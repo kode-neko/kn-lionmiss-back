@@ -19,7 +19,8 @@ function createFixComment (): Comment {
     text: faker.lorem.words(),
     rating: faker.helpers.rangeToNumber({ min: 0, max: 5 }),
     pics: [],
-    article: createFixArticle()
+    user: faker.internet.userName(),
+    article: faker.database.mongodbObjectId()
   };
 }
 

@@ -3,9 +3,9 @@ import { NotFoundDbException } from '../error';
 
 interface IModelDB<T> {
   read(id: string): Promise<T> | NotFoundDbException;
-  readList(searchParams?: SearchParams): Promise<T[]>;
-  create(obj: Exclude<T, 'id'>): Promise<T>;
-  update(obj: T & { id: string }): Promise<void> | NotFoundDbException;
+  readList(searchParams?: SearchParams<T>): Promise<T[]>;
+  create(obj: T): Promise<T>;
+  update(obj: T): Promise<void> | NotFoundDbException;
   delete(id: string): Promise<void> | NotFoundDbException;
 }
 

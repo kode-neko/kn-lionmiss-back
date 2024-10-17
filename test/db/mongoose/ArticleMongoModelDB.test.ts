@@ -81,7 +81,7 @@ describe('ArticleMongooseModelDB', () => {
 
   test('Update existing', async () => {
     const art = createFixArticle();
-    collArticle.insertOne(ArticleMongooseModelDB.parseArticleToMongoose(art));
+    await collArticle.insertOne(ArticleMongooseModelDB.parseArticleToMongoose(art));
     art.tags = [faker.lorem.word()];
     expect(async () => await articleMongooseModel.update(art))
       .not

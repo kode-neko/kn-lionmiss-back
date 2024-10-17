@@ -13,6 +13,7 @@ export {
   IUserMeasuresMongoose
 } from './interfaces';
 export {
+  AreaModelMongoose,
   ArticleAreaModelMongoose,
   ArticleModelMongoose,
   CartModelMongoose,

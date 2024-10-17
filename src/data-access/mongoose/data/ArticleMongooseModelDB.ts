@@ -58,21 +58,22 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       });
   }
 
-  readList ({ limit, skip }: SearchParams): Promise<Article[]> {
+  readList ({ limit, skip }: SearchParams<Article>): Promise<Article[]> {
     return ArticleModelMongoose
       .find()
       .skip(skip)
       .limit(limit)
-      .then((list) => list.map((e) => ArticleMongooseModelDB.parseMongooseToArticle(e as IArticleMongoose)));
+      .then((list) => list.map((a) => ArticleMongooseModelDB
+        .parseMongooseToArticle(a)));
   }
 
-  create (obj: Exclude<Article, 'id'>): Promise<Article> {
+  create (obj: Article): Promise<Article> {
     return ArticleModelMongoose
       .create(ArticleMongooseModelDB.parseArticleToMongoose(obj))
       .then((res) => ArticleMongooseModelDB.parseMongooseToArticle(res));
   }
 
-  update (obj: Article & { id: string }): Promise<void> | NotFoundDbException {
+  update (obj: Article): Promise<void> | NotFoundDbException {
     const { _id, ...rest } = ArticleMongooseModelDB.parseArticleToMongoose(obj);
     return ArticleModelMongoose
       .updateOne({ _id }, rest)

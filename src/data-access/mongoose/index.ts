@@ -1,5 +1,4 @@
 export {
-  AreaMongooseModelDB,
   ArticleMongooseModelDB,
   CommentMongooseModelDB
 } from './data';

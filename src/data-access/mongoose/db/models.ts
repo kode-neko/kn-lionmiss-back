@@ -1,5 +1,6 @@
 import { model } from 'mongoose';
 import {
+  areaSchemaMongoose,
   articleAreaSchemaMongoose,
   articleSchemaMongoose,
   cartSchemaMongoose,
@@ -8,6 +9,11 @@ import {
   userSchemaMongoose
 } from './schema';
 
+const AreaModelMongoose = model(
+  'area',
+  areaSchemaMongoose,
+  'area'
+);
 const ArticleAreaModelMongoose = model(
   'articleArea',
   articleAreaSchemaMongoose,
@@ -40,6 +46,7 @@ const UserModelMongoose = model(
 );
 
 export {
+  AreaModelMongoose,
   ArticleAreaModelMongoose,
   ArticleModelMongoose,
   CartModelMongoose,

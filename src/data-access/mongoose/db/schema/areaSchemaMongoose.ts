@@ -2,11 +2,22 @@ import { Schema } from 'mongoose';
 import { IAreaMongoose } from '../interfaces';
 
 const areaSchemaMongoose = new Schema<IAreaMongoose>({
-  name: String,
-  country: String,
+  name: {
+    type: String,
+    required: true
+  },
+  locale: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true
+  },
   symbol: {
     type: String,
-    maxlength: 1
+    maxlength: 1,
+    required: true
   }
 });
 

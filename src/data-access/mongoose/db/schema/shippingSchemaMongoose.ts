@@ -30,8 +30,7 @@ const shippingSchemaMongoose = new Schema<IShippingMongoose>({
     required: true
   },
   payment: {
-    type: Map,
-    of: Date,
+    type: String,
     validator: enumPayment,
     required: true
   },

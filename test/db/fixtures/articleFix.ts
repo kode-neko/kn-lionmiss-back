@@ -35,11 +35,12 @@ function createFixListArticle (size = 10): Article[] {
 
 function createFixArea (area?: Area): Area {
   const {
-    name, country, symbol
+    name, locale, country, symbol
   }: Area = area || faker.helpers.arrayElement(constFixListArea);
   return {
     id: faker.database.mongodbObjectId(),
     name,
+    locale,
     country,
     symbol
   };

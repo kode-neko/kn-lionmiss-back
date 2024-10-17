@@ -1,11 +1,8 @@
 import { Comment, SearchParams } from '@model/index';
 import { Types } from 'mongoose';
 import { IModelDB } from '../../interfaces';
-import {
-  ArticleModelMongoose, CommentModelMongoose, IArticleMongoose, ICommentMongoose
-} from '../db';
+import { CommentModelMongoose, ICommentMongoose } from '../db';
 import { NotFoundDbException } from '../../error';
-import ArticleMongooseModelDB from './ArticleMongooseModelDB';
 
 class CommentMongooseModelDB implements IModelDB<Comment> {
 
@@ -29,53 +26,42 @@ class CommentMongooseModelDB implements IModelDB<Comment> {
       text: comment.text,
       rating: comment.rating,
       pics: comment.pics,
-      article: new Types.ObjectId(comment.article.id)
+      article: new Types.ObjectId(comment.article),
+      user: comment.user
     };
   }
 
-  public static parseMongooseToComment (mongoComment: ICommentMongoose, mongoArticle?: IArticleMongoose): Comment {
+  public static parseMongooseToComment (mongoComment: ICommentMongoose): Comment {
     return {
       id: mongoComment._id?.toString(),
       title: mongoComment.title,
       text: mongoComment.text,
       rating: mongoComment.rating,
       pics: mongoComment.pics,
-      article: mongoArticle
-        ? ArticleMongooseModelDB.parseMongooseToArticle(mongoArticle)
-        : undefined
+      user: mongoComment.user,
+      article: mongoComment.article._id?.toString()
     };
   }
 
   read (id: string): Promise<Comment> | NotFoundDbException {
-    let commentMongoose: ICommentMongoose;
     return CommentModelMongoose
       .findById(id)
       .then((res) => {
         if (!res) throw new NotFoundDbException();
-        commentMongoose = res as ICommentMongoose;
-        return ArticleModelMongoose.findById(res?.article);
-      })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException();
-        return CommentMongooseModelDB.parseMongooseToComment(commentMongoose as ICommentMongoose, res as IArticleMongoose);
+        return CommentMongooseModelDB.parseMongooseToComment(res);
       });
   }
 
-  readList ({ limit, skip }: SearchParams): Promise<Comment[]> {
+  readList ({ limit, skip }: SearchParams<Comment>): Promise<Comment[]> {
     return CommentModelMongoose
       .find({})
       .limit(limit)
       .skip(skip)
-      .then((list) => {
-        const promList = list.map(async (c) => {
-          const article = await ArticleModelMongoose.findById(c.article);
-          return CommentMongooseModelDB.parseMongooseToComment(c, article as IArticleMongoose);
-        });
-        return Promise.all(promList);
-      });
+      .then((list) => list.map((c) => CommentMongooseModelDB
+        .parseMongooseToComment(c)));
   }
 
-  create (obj: Exclude<Comment, 'id'>): Promise<Comment> {
+  create (obj: Comment): Promise<Comment> {
     return CommentModelMongoose
       .create(CommentMongooseModelDB.parseCommentToMongoose(obj))
       .then((res) => {
@@ -84,7 +70,7 @@ class CommentMongooseModelDB implements IModelDB<Comment> {
       });
   }
 
-  update (obj: Comment & { id: string }): Promise<void> | NotFoundDbException {
+  update (obj: Comment): Promise<void> | NotFoundDbException {
     const { _id, ...rest } = CommentMongooseModelDB.parseCommentToMongoose(obj);
     return CommentModelMongoose
       .updateOne({ _id }, rest)

@@ -1,16 +1,13 @@
-import {
-  Article, Area, ArticleArea
-} from '@model/index';
-import { IModelDBArticleArea } from '../../interfaces';
+import { ArticleArea, Area } from '@model/index';
 import { IArticleAreaMongoose } from '../db';
 import { Types } from 'mongoose';
 import AreaMongooseModelDB from './AreaMongooseModelDB';
 
 class ArticleAreaMongooseModelDB {
 
-  private static instance: IModelDBArticleArea;
+  private static instance: ArticleAreaMongooseModelDB;
 
-  public static getIntance (): IModelDBArticleArea {
+  public static getIntance (): ArticleAreaMongooseModelDB {
     if (!ArticleAreaMongooseModelDB.instance) {
       ArticleAreaMongooseModelDB.instance = new ArticleAreaMongooseModelDB();
     }
@@ -29,18 +26,19 @@ class ArticleAreaMongooseModelDB {
       desc: articleArea.desc,
       price: articleArea.price,
       tax: articleArea.tax,
-      area: AreaMongooseModelDB.parseAreaToMongo(articleArea.area)
+      area: articleArea.area.name
     };
   }
 
-  public static parseMongoToArticleArea (articleAreaMongo: IArticleAreaMongoose): ArticleArea {
+  public static async parseMongoToArticleArea (articleAreaMongo: IArticleAreaMongoose): Promise<ArticleArea> {
+    const area = (await AreaMongooseModelDB.getIntance().readByProps({ name: articleAreaMongo.area })) as Area;
     return {
       id: articleAreaMongo._id?.toString(),
       title: articleAreaMongo.title,
       desc: articleAreaMongo.desc,
       price: articleAreaMongo.price,
       tax: articleAreaMongo.tax,
-      area: AreaMongooseModelDB.parseMongoToArea(articleAreaMongo.area)
+      area
     };
   }
 
