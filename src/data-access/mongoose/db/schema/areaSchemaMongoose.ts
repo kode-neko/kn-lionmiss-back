@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import IAreaMongoose from '../interfaces/IAreaMongoose';
+import { IAreaMongoose } from '../interfaces';
 
 const areaSchemaMongoose = new Schema<IAreaMongoose>({
   name: String,

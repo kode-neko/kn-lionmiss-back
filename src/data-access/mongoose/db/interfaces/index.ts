@@ -5,5 +5,7 @@ export { default as IArticleMongoose } from './IArticleMongoose';
 export { default as ICartMongoose } from './ICartMongoose';
 export { default as ICartLineMongoose } from './ICartLineMongoose';
 export { default as IShippingMongoose } from './IShippingMongoose';
+export { default as IShippingLineMongoose } from './IShippingLineMongoose';
 export { default as ICommentMongoose } from './ICommentMongoose';
 export { default as IUserMongoose } from './IUserMongoose';
+export { default as IUserMeasuresMongoose } from './IUserMeasuresMongoose';

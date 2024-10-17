@@ -1,7 +1,4 @@
 {
-  "typescript.tsconfig": [
-    "./config/tsconfig.json"
-  ],
   "typescript.preferences.useAliasesForRenames": true,
   "eslint.options": {
     "overrideConfigFile": "./config/eslint.config.mjs",

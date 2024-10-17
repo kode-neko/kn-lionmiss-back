@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 import { enumInstruct } from './utils';
-import IArticleMongoose from '../interfaces/IArticleMongoose';
+import { IArticleMongoose } from '../interfaces';
 
 const articleSchemaMongoose = new Schema<IArticleMongoose>({
   instructs: {

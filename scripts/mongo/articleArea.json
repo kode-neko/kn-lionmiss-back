@@ -6,11 +6,7 @@
     "desc" : "Lorem ipsum dolor sit amet consectetur adipiscing elit vulputate ultrices potenti conubia convallis.",
     "price" : 33.95,
     "tax" : NumberInt(21),
-    "area" : {
-        "name" : "Spain",
-        "country" : "Spain",
-        "symbol" : "€"
-    }
+    "area" : "Spanish"
   },
   {
     "_id" : ObjectId("66f1e45ebbc729d277277a6c"),
@@ -19,11 +15,7 @@
     "desc" : "Lorem ipsum dolor sit amet consectetur adipiscing elit vulputate ultrices potenti conubia convallis.",
     "price" : 33.95,
     "tax" : NumberInt(21),
-    "area" : {
-        "name" : "England",
-        "country" : "England",
-        "symbol" : "$"
-    }
+    "area" : "English-UK"
   }
   
 ]

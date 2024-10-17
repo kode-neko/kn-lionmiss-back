@@ -1,10 +1,29 @@
 import { Schema } from 'mongoose';
-import addressSchemaMongoose from './addressSchemaMongoose';
-import commentSchemaMongoose from './commentSchemaMongoose';
 import {
   enumSex, enumUnitsHeight, enumUnitsWeight
 } from './utils';
-import IUserMongoose from '../interfaces/IUserMongoose';
+import { IUserMeasuresMongoose, IUserMongoose } from '../interfaces';
+import addressSchemaMongoose from './addressSchemaMongoose';
+
+const userMeasuresSchemaMongoose = new Schema<IUserMeasuresMongoose>({
+  shoulder: Number,
+  chest: Number,
+  waist: Number,
+  hips: Number,
+  foot: Number,
+  height: Number,
+  weight: Number,
+  unitsHeight: {
+    type: String,
+    validator: enumUnitsHeight,
+    required: true
+  },
+  unitsWeight: {
+    type: String,
+    validator: enumUnitsWeight,
+    required: true
+  }
+});
 
 const userSchemaMongoose = new Schema<IUserMongoose>({
   userName: {
@@ -13,6 +32,14 @@ const userSchemaMongoose = new Schema<IUserMongoose>({
   },
   email: {
     type: String,
+    required: true
+  },
+  cart: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  shippings: {
+    type: [Schema.Types.ObjectId],
     required: true
   },
   bday: {
@@ -24,40 +51,21 @@ const userSchemaMongoose = new Schema<IUserMongoose>({
     validator: enumSex,
     required: true
   },
-  addresses: {
-    type: [addressSchemaMongoose],
+  area: {
+    type: String,
     required: true
   },
-  commentList: {
-    type: [commentSchemaMongoose],
+  measures: {
+    type: userMeasuresSchemaMongoose,
     required: true
   },
   favs: {
     type: [Schema.Types.ObjectId],
     required: true
   },
-  cart: {
-    type: Schema.Types.ObjectId,
+  addresses: {
+    type: [addressSchemaMongoose],
     required: true
-  },
-  measures: {
-    shoulder: Number,
-    chest: Number,
-    waist: Number,
-    hips: Number,
-    foot: Number,
-    height: Number,
-    weight: Number,
-    unitsHeight: {
-      type: String,
-      validator: enumUnitsHeight,
-      required: true
-    },
-    unitsWeight: {
-      type: String,
-      validator: enumUnitsWeight,
-      required: true
-    }
   }
 });
 

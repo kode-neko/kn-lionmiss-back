@@ -1,37 +1,26 @@
 import { Schema } from 'mongoose';
-import { enumPayment, enumShipState } from './utils';
-import ICartMongoose from '../interfaces/ICartMongoose';
+import { ICartLineMongoose, ICartMongoose } from '../interfaces';
+
+const cartLineSchema = new Schema<ICartLineMongoose>({
+  id: String,
+  article: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  qty: {
+    type: Number,
+    required: true
+  }
+});
 
 const cartSchemaMongoose = new Schema<ICartMongoose>({
   lines: {
-    type: [{
-      id: Number,
-      article: Schema.Types.ObjectId,
-      qty: Number
-    }],
+    type: [cartLineSchema],
     required: true
   },
-  shipping: {
-    idTracking: {
-      type: String,
-      required: true
-    },
-    idShipping: {
-      type: String,
-      required: true
-    },
-    state: {
-      type: Map,
-      of: Date,
-      validator: enumShipState,
-      required: true
-    },
-    payment: {
-      type: Map,
-      of: Date,
-      validator: enumPayment,
-      required: true
-    }
+  user: {
+    type: String,
+    required: true
   }
 });
 

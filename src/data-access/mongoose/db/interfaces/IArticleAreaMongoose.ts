@@ -1,5 +1,4 @@
 import { Types } from 'mongoose';
-import IAreaMongoose from './IAreaMongoose';
 
 interface IArticleAreaMongoose {
   _id?: Types.ObjectId;
@@ -8,7 +7,7 @@ interface IArticleAreaMongoose {
   desc: string;
   price: number;
   tax: number;
-  area: IAreaMongoose;
+  area: string;
 }
 
 export default IArticleAreaMongoose;

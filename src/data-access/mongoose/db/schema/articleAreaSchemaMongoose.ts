@@ -1,14 +1,13 @@
 import { Schema } from 'mongoose';
-import areaSchemaMongoose from './areaSchemaMongoose';
-import IArticleAreaMongoose from '../interfaces/IArticleAreaMongoose';
+import { IArticleAreaMongoose } from '../interfaces';
 
 const articleAreaSchemaMongoose = new Schema<IArticleAreaMongoose>({
-  title: {
-    type: String,
-    required: true
-  },
   article: {
     type: Schema.Types.ObjectId,
+    required: true
+  },
+  title: {
+    type: String,
     required: true
   },
   desc: {
@@ -25,7 +24,7 @@ const articleAreaSchemaMongoose = new Schema<IArticleAreaMongoose>({
     required: true
   },
   area: {
-    type: areaSchemaMongoose,
+    type: String,
     required: true
   }
 });

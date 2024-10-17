@@ -4,6 +4,7 @@ import {
   articleSchemaMongoose,
   cartSchemaMongoose,
   commentSchemaMongoose,
+  shippingSchemaMongoose,
   userSchemaMongoose
 } from './schema';
 
@@ -22,6 +23,11 @@ const CartModelMongoose = model(
   cartSchemaMongoose,
   'cart'
 );
+const ShippingModelMongoose = model(
+  'shipping',
+  shippingSchemaMongoose,
+  'shipping'
+);
 const CommentModelMongoose = model(
   'comment',
   commentSchemaMongoose,
@@ -37,6 +43,7 @@ export {
   ArticleAreaModelMongoose,
   ArticleModelMongoose,
   CartModelMongoose,
+  ShippingModelMongoose,
   CommentModelMongoose,
   UserModelMongoose
 };
