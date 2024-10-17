@@ -19,7 +19,6 @@ async function initConnMongoose (): Promise<Mongoose> {
   } catch (err) {
     console.log(err);
   }
-
   return mongoose;
 }
 
