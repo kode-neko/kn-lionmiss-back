@@ -1,8 +1,8 @@
 import { NotFoundDbException } from '@data-access/index';
 import { Area, SearchParams } from '@model/index';
 import { AreaModelMongoose, IAreaMongoose } from '../db';
-import { IModelDBArea } from '../../interfaces';
 import { Types } from 'mongoose';
+import { IModelDBArea } from '../../interfaces';
 
 class AreaMongooseModelDB implements IModelDBArea {
 
@@ -66,32 +66,28 @@ class AreaMongooseModelDB implements IModelDBArea {
         .parseMongooseToArea(a)));
   }
 
-  /*
-  read (id: string): Promise<Area> {
-    return ArticleAreaModelMongoose.aggregate([
-      { $match: { 'area.name': id } },
-      { $group: { _id: '$area' } },
-      {
-        $project: {
-          _id: 0,
-          area: '$_id'
-        }
-      }
-    ]).then((list) => AreaMongooseModelDB.parseMongoToArea(list.shift()));
+  create (obj: Area): Promise<Area> {
+    return AreaModelMongoose
+      .create(AreaMongooseModelDB.parseAreaToMongoose(obj))
+      .then((res) => AreaMongooseModelDB.parseMongooseToArea(res));
   }
 
-  readList (): Promise<Area[]> {
-    return ArticleAreaModelMongoose.aggregate([
-      { $group: { _id: '$area' } },
-      {
-        $project: {
-          _id: 0,
-          area: '$_id'
-        }
-      }
-    ]).then((list) => list.map((res) => AreaMongooseModelDB.parseMongoToArea(res.area)));
+  update (obj: Area): Promise<void> | NotFoundDbException {
+    const { _id, ...rest } = AreaMongooseModelDB.parseAreaToMongoose(obj);
+    return AreaModelMongoose
+      .updateOne({ _id }, rest)
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException();
+      });
   }
-*/
+
+  delete (id: string): Promise<void> | NotFoundDbException {
+    return AreaModelMongoose
+      .deleteMany({ _id: new Types.ObjectId(id) })
+      .then(({ deletedCount }) => {
+        if (deletedCount === 0) throw new NotFoundDbException();
+      });
+  }
 
 }
 

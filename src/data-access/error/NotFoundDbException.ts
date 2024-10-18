@@ -1,7 +1,7 @@
 class NotFoundDbException extends Error {
 
-  constructor () {
-    super('NotFoundDbException: Not found document');
+  constructor (docName?: string) {
+    super(`NotFoundDbException: Not found document "${docName}"`);
   }
 
 }

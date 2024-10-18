@@ -10,6 +10,10 @@ class CartService {
 
   }
 
+  createCartByUser (idUser: string) {
+
+  }
+
   createCartLine (idCart: string, line: CartLine) {
 
   }

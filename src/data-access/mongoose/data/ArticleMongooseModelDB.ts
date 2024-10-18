@@ -54,7 +54,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       .findById(id)
       .then((res) => {
         if (!res) throw new NotFoundDbException();
-        return ArticleMongooseModelDB.parseMongooseToArticle(res as IArticleMongoose);
+        return ArticleMongooseModelDB.parseMongooseToArticle(res);
       });
   }
 

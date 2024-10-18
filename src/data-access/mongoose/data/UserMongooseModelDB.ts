@@ -22,33 +22,58 @@ class UserMongooseModelDB implements IModelDBUser {
 
   }
 
-  public static parseUserToMongoose (article: User): IUserMongoose {
+  public static parseUserToMongoose (user: User): IUserMongoose {
     return {
-      _id: new Types.ObjectId(article.id),
-      instructs: new Map(Object.entries(article.instructs)),
-      sizes: new Map(Object.entries(article.sizes)),
-      materials: new Map(Object.entries(article.materials)),
-      tags: article.tags,
-      variants: article.variants,
-      discolor: article.discolor
+      _id: new Types.ObjectId(user.id),
+      userName: user.userName,
+      email: user.email,
+      cart: new Types.ObjectId(user.cart.id),
+      shippings: user.shippings.map((s) => new Types.ObjectId(s.id)),
+      bday: user.bday,
+      sex: user.sex,
+      area: user.area.name,
+      measures: { ...user.measures },
+      favs: user.favs.map((s) => new Types.ObjectId(s.id)),
+      addresses: user.address
     };
   }
 
   public static parseMongooseToUser (mongo: IUserMongoose): User {
     return {
-      id: mongo._id?.toString(),
-      instructs: Object.fromEntries(mongo.instructs),
-      sizes: Object.fromEntries(mongo.sizes),
-      materials: Object.fromEntries(mongo.materials),
-      tags: mongo.tags,
-      variants: mongo.variants,
-      discolor: mongo.discolor,
-      articleAreaList: []
+      _id: mongo._id?.toString(),
+      userName: mongo.userName,
+      email: mongo.email,
+      cart: new Types.ObjectId(mongo.cart._id),
+      shippings: mongo.shippings.map((s) => new Types.ObjectId(s._id)),
+      bday: mongo.bday,
+      sex: mongo.sex,
+      // area: ,
+      measures: mongo.measures,
+      favs: [],
+      addressList: mongo.addresses,
+      commentList: []
     };
   }
 
-  read (id: string): NotFoundDbException | Promise<User> {
-    throw new Error('Method not implemented.');
+  read (id: string): Promise<User> | NotFoundDbException {
+    return UserModelMongoose
+      .findOne({
+        $or: [{ _id: id },
+          { userName: id }]
+      })
+      .then((res) => {
+        if (!res) throw new NotFoundDbException();
+        return UserMongooseModelDB.parseMongooseToUser(res);
+      });
+  }
+
+  update (obj: User): Promise<void> | NotFoundDbException {
+    const { _id, ...rest } = UserMongooseModelDB.parseUserToMongoose(obj);
+    return UserModelMongoose
+      .updateOne({ _id }, rest)
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('user');
+      });
   }
 
 }
