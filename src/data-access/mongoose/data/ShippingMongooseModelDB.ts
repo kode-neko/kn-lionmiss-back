@@ -7,7 +7,8 @@ import {
   ShippingAreaModelMongoose, ShippingModelMongoose, IShippingAreaMongoose, IShippingMongoose,
   CartModelMongoose,
   IArticleMongoose,
-  IShippingLineMongoose
+  IShippingLineMongoose,
+  ArticleModelMongoose
 } from '../db';
 import { NotFoundDbException } from '../../error';
 import ShippingAreaMongooseModelDB from './ShippingAreaMongooseModelDB';
@@ -35,26 +36,11 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       idShipping: shipping.idShipping,
       state: shipping.state,
       payment: shipping.payment,
-      lines: shipping.lines
+      lines: shipping.lines.map(l => ShippingMongooseModelDB.parseShippingLineToMongoose(l)) 
     };
   }
 
-  public static parseMongooseToShipping (shippingMongo: IShippingMongoose, shippingList?: ShippingLine[]): Shipping {
-    return {
-      id: shippingMongo._id?._id.toString(),
-      idTracking: shippingMongo.idTracking,
-      idShipping: shippingMongo.idShipping,
-      state: shippingMongo.state,
-      payment: shippingMongo.payment,
-      lines: shippingMongo.lines.map((l) => ({
-        id: l.id,
-        article: ,
-        qty: l.qty
-      }))
-    };
-  }
-
-  public static parseShippingLineToMongoose (shippingLine: Shipping): IShippingLineMongoose {
+  public static parseShippingLineToMongoose (shippingLine: ShippingLine): IShippingLineMongoose {
     return {
       id: shippingLine.id,
       qty: shippingLine.qty,
@@ -62,37 +48,65 @@ class ShippingMongooseModelDB implements IModelDBShipping {
     };
   }
 
-  public static parseMongooseToShippingLine (shippingLineMongo: IShippingLineMongoose, article: Article): ShippingLine {
+  public static parseMongooseToShipping (shippingMongo: IShippingMongoose, articleListMongo: IArticleMongoose[]): Shipping {
     return {
-      id: shippingLineMongo.id,
-      qty: shippingLineMongo.qty,
-      article: article
+      id: shippingMongo._id?._id.toString(),
+      idTracking: shippingMongo.idTracking,
+      idShipping: shippingMongo.idShipping,
+      state: shippingMongo.state,
+      payment: shippingMongo.payment,
+      lines: shippingMongo.lines.map(l => ShippingMongooseModelDB.parseMongooseToShippingLine(l, articleListMongo.find(a => a._id?.toString() === l.article._id?.toString()) as IArticleMongoose))
     };
   }
 
-  read (id: string): NotFoundDbException | Promise<Shipping> {
-    return CartModelMongoose
+  public static parseMongooseToShippingLine (shippingLineMongo: IShippingLineMongoose, articleMongo: IArticleMongoose): ShippingLine {
+    return {
+      id: shippingLineMongo.id,
+      qty: shippingLineMongo.qty,
+      article: ArticleMongooseModelDB.parseMongooseToArticle(articleMongo)
+    };
+  }
+
+  read(id: string): NotFoundDbException | Promise<Shipping> {
+    let shipping: IShippingMongoose;
+    return ShippingModelMongoose
       .findById(id)
       .then((res) => {
         if (!res) throw new NotFoundDbException();
-        return ShippingMongooseModelDB
-          .parseMongooseToShipping(res.shipping, res.id.toString());
-      });
+        shipping = res;
+        const articlesIds = shipping.lines.map(l => l.article);
+        return ArticleModelMongoose.find({_id: {$in: articlesIds}})
+      })
+      .then(list => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
   }
 
-  readList ({ limit, skip }: SearchParams): Promise<Shipping[]> {
-    return CartModelMongoose
+  readList({ limit, skip }: SearchParams): Promise<Shipping[]> {
+    let shippingList: IShippingMongoose[];
+    return ShippingModelMongoose
       .find()
       .skip(skip)
       .limit(limit)
-      .then((list) => list.map((c) => ShippingMongooseModelDB
-        .parseMongooseToShipping(c.shipping, c.id.toString())));
+      .then((list) => {
+        const articleIds = list.flatMap(s => s.lines.map(l => l.article))
+        return ArticleModelMongoose
+        .find({_id: {$in: articleIds}})
+      })
+      .then(list => {
+        return shippingList.map(s => ShippingMongooseModelDB.parseMongooseToShipping(s, list)) 
+      });
   }
 
-  create (obj: Shipping): Promise<Shipping> {
+  create(obj: Shipping): Promise<Shipping> {
+    let shipping;
     return ShippingModelMongoose
       .create(ShippingMongooseModelDB.parseShippingToMongoose(obj))
-      .then((res) => ShippingMongooseModelDB.parseMongooseToShipping(res));
+      .then((res) => {
+        shipping = res
+        const articleIds = shipping.lines.map(l => l.article)
+        return ArticleModelMongoose
+          .find({_id: {$in: articleIds}})
+      })
+      .then((list) => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
   }
 
   update (obj: Shipping): Promise<void> | NotFoundDbException {
@@ -106,7 +120,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
 
   delete (id: string): Promise<void> | NotFoundDbException {
     return ShippingModelMongoose
-      .deleteMany({ _id: new Types.ObjectId(id) })
+      .deleteOne({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {
         if (deletedCount === 0) throw new NotFoundDbException();
       });
