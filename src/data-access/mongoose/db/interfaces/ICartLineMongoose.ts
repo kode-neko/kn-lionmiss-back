@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 interface ICartLineMongoose {
-  id?: number;
+  id: number;
   article: Types.ObjectId;
   qty: number;
 }

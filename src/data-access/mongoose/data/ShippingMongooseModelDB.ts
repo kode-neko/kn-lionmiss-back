@@ -1,12 +1,17 @@
-import { Shipping, SearchParams } from '@model/index';
+import {
+  Shipping, ShippingLine, SearchParams, Article
+} from '@model/index';
 import { Types } from 'mongoose';
 import { IModelDB, IModelDBShipping } from '../../interfaces';
 import {
   ShippingAreaModelMongoose, ShippingModelMongoose, IShippingAreaMongoose, IShippingMongoose,
-  CartModelMongoose
+  CartModelMongoose,
+  IArticleMongoose,
+  IShippingLineMongoose
 } from '../db';
 import { NotFoundDbException } from '../../error';
 import ShippingAreaMongooseModelDB from './ShippingAreaMongooseModelDB';
+import ArticleMongooseModelDB from './ArticleMongooseModelDB';
 
 class ShippingMongooseModelDB implements IModelDBShipping {
 
@@ -25,20 +30,43 @@ class ShippingMongooseModelDB implements IModelDBShipping {
 
   public static parseShippingToMongoose (shipping: Shipping): IShippingMongoose {
     return {
+      _id: new Types.ObjectId(shipping.id),
       idTracking: shipping.idTracking,
       idShipping: shipping.idShipping,
       state: shipping.state,
-      payment: shipping.payment
+      payment: shipping.payment,
+      lines: shipping.lines
     };
   }
 
-  public static parseMongooseToShipping (mongo: IShippingMongoose, idCart: string): Shipping {
+  public static parseMongooseToShipping (shippingMongo: IShippingMongoose, shippingList?: ShippingLine[]): Shipping {
     return {
-      id: new Types.ObjectId(idCart),
-      idTracking: mongo.idTracking,
-      idShipping: mongo.idShipping,
-      state: mongo.state,
-      payment: mongo.payment
+      id: shippingMongo._id?._id.toString(),
+      idTracking: shippingMongo.idTracking,
+      idShipping: shippingMongo.idShipping,
+      state: shippingMongo.state,
+      payment: shippingMongo.payment,
+      lines: shippingMongo.lines.map((l) => ({
+        id: l.id,
+        article: ,
+        qty: l.qty
+      }))
+    };
+  }
+
+  public static parseShippingLineToMongoose (shippingLine: Shipping): IShippingLineMongoose {
+    return {
+      id: shippingLine.id,
+      qty: shippingLine.qty,
+      article: new Types.ObjectId(shippingLine.article.id)
+    };
+  }
+
+  public static parseMongooseToShippingLine (shippingLineMongo: IShippingLineMongoose, article: Article): ShippingLine {
+    return {
+      id: shippingLineMongo.id,
+      qty: shippingLineMongo.qty,
+      article: article
     };
   }
 
@@ -61,18 +89,27 @@ class ShippingMongooseModelDB implements IModelDBShipping {
         .parseMongooseToShipping(c.shipping, c.id.toString())));
   }
 
-  create (obj: Shipping & { id: string }): Promise<Shipping> {
-    return CartModelMongoose
-      .create(ArticleMongooseModelDB.parseArticleToMongoose(obj))
-      .then((res) => ArticleMongooseModelDB.parseMongooseToArticle(res));
+  create (obj: Shipping): Promise<Shipping> {
+    return ShippingModelMongoose
+      .create(ShippingMongooseModelDB.parseShippingToMongoose(obj))
+      .then((res) => ShippingMongooseModelDB.parseMongooseToShipping(res));
   }
 
-  update (obj: any): Promise<void> | NotFoundDbException {
-    throw new Error('Method not implemented.');
+  update (obj: Shipping): Promise<void> | NotFoundDbException {
+    const { _id, ...rest } = ShippingMongooseModelDB.parseShippingToMongoose(obj);
+    return ShippingModelMongoose
+      .updateOne({ _id }, rest)
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException();
+      });
   }
 
   delete (id: string): Promise<void> | NotFoundDbException {
-    throw new Error('Method not implemented.');
+    return ShippingModelMongoose
+      .deleteMany({ _id: new Types.ObjectId(id) })
+      .then(({ deletedCount }) => {
+        if (deletedCount === 0) throw new NotFoundDbException();
+      });
   }
 
 }

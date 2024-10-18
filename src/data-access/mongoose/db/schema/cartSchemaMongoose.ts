@@ -2,7 +2,10 @@ import { Schema } from 'mongoose';
 import { ICartLineMongoose, ICartMongoose } from '../interfaces';
 
 const cartLineSchema = new Schema<ICartLineMongoose>({
-  id: String,
+  id: {
+    type: Number,
+    required: true
+  },
   article: {
     type: Schema.Types.ObjectId,
     required: true

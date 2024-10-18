@@ -1,5 +1,5 @@
 import {
-  Cart, CartLine, Shipping, User
+  Cart, CartLine, Shipping, User, Article
 } from '@model/index';
 import { Types } from 'mongoose';
 import { IModelDBCart } from '../../interfaces';
@@ -11,7 +11,7 @@ import {
 } from '../db';
 import { NotFoundDbException } from '../../error';
 import ArticleMongooseModelDB from './ArticleMongooseModelDB';
-import { ICartLineMongoose } from '../db/interfaces';
+import { IArticleMongoose, ICartLineMongoose } from '../db/interfaces';
 import UserMongooseModelDB from './UserMongooseModelDB';
 
 class CartMongooseModelDB implements IModelDBCart {
@@ -30,120 +30,123 @@ class CartMongooseModelDB implements IModelDBCart {
   }
 
   public static parseCartToMongoose (cart: Cart, userName: string): ICartMongoose {
-    const lines = cart.lines.map((l) => ({ ...l, article: new Types.ObjectId(l.article.id) }));
     return {
       _id: new Types.ObjectId(cart.id),
-      lines,
+      lines: cart.lines.map((l) => CartMongooseModelDB.parseCartLineToMongoose(l)),
       user: userName
-    };
-  }
-
-  public static async parseMongooseToCart (mongoCart: ICartMongoose): Promise<Cart> {
-    const articlePromises = mongoCart.lines.map((l) => ArticleMongooseModelDB.getIntance().read(l.article.toString()));
-    const articleList = await Promise.all(articlePromises);
-    return {
-      id: mongoCart._id?.toString(),
-      lines: mongoCart.lines.map((l, i) => ({ ...l, article: articleList[i] }))
     };
   }
 
   public static parseCartLineToMongoose (line: CartLine): ICartLineMongoose {
     return {
       id: line.id,
-      article: new Types.ObjectId(line.article.id),
-      qty: line.qty
+      qty: line.qty,
+      article: new Types.ObjectId(line.article.id)
     };
   }
 
-  public static async parseMongooseToCartLine (mongo: ICartLineMongoose): Promise<CartLine> {
-    const article = await ArticleModelMongoose.findById(mongo.article.id);
+  public static parseMongooseToCart (mongoCart: ICartMongoose, articleListMongo: IArticleMongoose[]): Cart {
     return {
-      id: mongo.toString(),
+      id: mongoCart._id?.toString(),
+      lines: mongoCart.lines.map((l) => CartMongooseModelDB.parseMongooseToCartLine(l, articleListMongo.find((a) => a._id === l.article) as IArticleMongoose))
+    };
+  }
+
+  public static parseMongooseToCartLine (mongo: ICartLineMongoose, articleMongo: IArticleMongoose): CartLine {
+    return {
+      id: mongo.id,
       qty: mongo.qty,
-      article: article
+      article: ArticleMongooseModelDB.parseMongooseToArticle(articleMongo)
     };
   }
 
   read (id: string): Promise<Cart> | NotFoundDbException {
+    let cartMongoose: ICartMongoose;
     return CartModelMongoose
       .findById(id)
       .then((res) => {
         if (!res) throw new NotFoundDbException();
-        return CartMongooseModelDB.parseMongooseToCart(res as ICartMongoose);
-      });
+        cartMongoose = res;
+        const articleIds = cartMongoose.lines.map((l) => l.article);
+        return ArticleModelMongoose.find({ _id: { $in: articleIds } });
+      })
+      .then((list) => CartMongooseModelDB.parseMongooseToCart(cartMongoose, list));
   }
 
-  newCartUser (idUser: string): Promise<Cart> | NotFoundDbException {
+  newCartUser(idUser: string): Promise<Cart> | NotFoundDbException {
+    let cart: Cart;
     const filterUser = {
       $or: [{ _id: idUser },
         { userName: idUser }]
     };
     let user: User;
     return UserModelMongoose.findOne(filterUser)
-      .then((res) => {
+      .then((res) => { // Find User to ensure existence
         if (!res) throw new NotFoundDbException('user');
         user = UserMongooseModelDB.parseMongooseToUser(res);
         return CartModelMongoose.create({ lines: [] });
       })
-      .then((res) => {
-        const cart = CartMongooseModelDB.parseMongooseToCart(res);
+      .then((res) => { // Create Cart
+        cart = CartMongooseModelDB.parseMongooseToCart(res, []) as Cart;
         const userNewCart = { ...user, cart };
         return UserModelMongoose.updateOne(filterUser, userNewCart);
       })
-      .then(({ modifiedCount }) => {
+      .then(({ modifiedCount }) => { // Update Cart from user
         if (modifiedCount === 0) throw new NotFoundDbException('user');
+        return cart;
       });
   }
 
   createLine (idCart: string, cartLine: CartLine): Promise<Cart> | NotFoundDbException {
-    const cartLineMongoose = CartMongooseModelDB.parseCartLineToMongoose(cartLine);
     let cartMongoose: ICartMongoose;
     return CartModelMongoose
       .findById(idCart)
-      .then((res) => {
+      .then((res) => { // Find Cart
         if (!res) throw NotFoundDbException;
         cartMongoose = res;
-        cartMongoose.lines = [...cartMongoose.lines,
-          cartLineMongoose];
+        cartMongoose.lines = [
+          ...cartMongoose.lines,
+          CartMongooseModelDB.parseCartLineToMongoose(cartLine)
+        ];
         return CartModelMongoose
           .updateOne({ _id: new Types.ObjectId(idCart) }, cartMongoose);
       })
-      .then(() => {
-        return CartMongooseModelDB.parseMongooseToCart(cartMongoose);
+      .then(() => { // Added new Line to Cart
+        const articlesIds = cartMongoose.lines.map((l) => l.article);
+        return ArticleModelMongoose.find({ _id: { $in: articlesIds } });
+      })
+      .then((list) => { // Find Articles from Lines to return a complete Cart object
+        return CartMongooseModelDB.parseMongooseToCart(cartMongoose, list);
       });
   }
 
   updateLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
     const cartLineMongoose = CartMongooseModelDB.parseCartLineToMongoose(cartLine);
-    let cartMongoose: ICartMongoose;
     return CartModelMongoose
       .findById(idCart)
-      .then((res) => {
+      .then((res) => { // Find Cart to modify
         if (!res) throw NotFoundDbException;
-        cartMongoose = res;
-        cartMongoose.lines = cartMongoose.lines.map((l) => l.id === cartLineMongoose.id ? cartLineMongoose : l);
+        res.lines = res.lines.map((l) => l.id === cartLineMongoose.id ? cartLineMongoose : l);
         return CartModelMongoose
-          .updateOne({ _id: new Types.ObjectId(idCart) }, cartMongoose);
+          .updateOne({ _id: new Types.ObjectId(idCart) }, res);
       })
-      .then(() => {
-        return CartMongooseModelDB.parseMongooseToCart(cartMongoose);
+      .then(({ modifiedCount }) => { // Update Cart with the new line
+        if (modifiedCount === 0) throw new NotFoundDbException('CartLine');
       });
   }
 
   deleteLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
     const cartLineMongoose = CartMongooseModelDB.parseCartLineToMongoose(cartLine);
-    let cartMongoose: ICartMongoose;
     return CartModelMongoose
       .findById(idCart)
-      .then((res) => {
+      .then((res) => { // Find Cart to modify
         if (!res) throw NotFoundDbException;
-        cartMongoose = res;
-        cartMongoose.lines = cartMongoose.lines.filter((l) => l.id !== cartLineMongoose.id);
+        res.lines = res.lines.filter((l) => l.id !== cartLineMongoose.id);
         return CartModelMongoose
-          .updateOne({ _id: new Types.ObjectId(idCart) }, cartMongoose);
+          .updateOne({ _id: new Types.ObjectId(idCart) }, res);
       })
-      .then(() => {
-        return CartMongooseModelDB.parseMongooseToCart(cartMongoose);
+      .then(({ modifiedCount }) => { // Update Cart with deleted line
+        if (modifiedCount === 0) throw new NotFoundDbException('CartLine');
       });
   }
 

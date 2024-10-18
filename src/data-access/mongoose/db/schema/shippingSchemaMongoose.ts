@@ -3,7 +3,10 @@ import { enumPayment, enumShipState } from './utils';
 import { IShippingLineMongoose, IShippingMongoose } from '../interfaces';
 
 const shippingLineSchemaMongoose = new Schema<IShippingLineMongoose>({
-  id: String,
+  id: {
+    type: Number,
+    required: true
+  },
   article: {
     type: Schema.Types.ObjectId,
     required: true
