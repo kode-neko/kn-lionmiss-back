@@ -1,11 +1,8 @@
 import { User } from '@model/index';
 import { Types } from 'mongoose';
-import { IModelDB, IModelDBUser } from '../../interfaces';
-import {
-  UserAreaModelMongoose, UserModelMongoose, IUserAreaMongoose, IUserMongoose
-} from '../db';
+import { IModelDBUser } from '../../interfaces';
+import { UserModelMongoose, IUserMongoose } from '../db';
 import { NotFoundDbException } from '../../error';
-import UserAreaMongooseModelDB from './UserAreaMongooseModelDB';
 
 class UserMongooseModelDB implements IModelDBUser {
 
@@ -64,15 +61,6 @@ class UserMongooseModelDB implements IModelDBUser {
       .then((res) => {
         if (!res) throw new NotFoundDbException();
         return UserMongooseModelDB.parseMongooseToUser(res);
-      });
-  }
-
-  update (obj: User): Promise<void> | NotFoundDbException {
-    const { _id, ...rest } = UserMongooseModelDB.parseUserToMongoose(obj);
-    return UserModelMongoose
-      .updateOne({ _id }, rest)
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('user');
       });
   }
 

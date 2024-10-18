@@ -1,6 +1,5 @@
-import { CartLine } from '@model/cart';
 import {
-  Cart, Shipping, User
+  Cart, CartLine, Shipping, User
 } from '@model/index';
 import { Types } from 'mongoose';
 import { IModelDBCart } from '../../interfaces';
@@ -12,7 +11,7 @@ import {
 } from '../db';
 import { NotFoundDbException } from '../../error';
 import ArticleMongooseModelDB from './ArticleMongooseModelDB';
-import { ICartLineMongoose, IUserMongoose } from '../db/interfaces';
+import { ICartLineMongoose } from '../db/interfaces';
 import UserMongooseModelDB from './UserMongooseModelDB';
 
 class CartMongooseModelDB implements IModelDBCart {
