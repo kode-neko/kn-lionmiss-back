@@ -29,17 +29,12 @@ class CartMongooseModelDB implements IModelDBCart {
 
   }
 
-  public static parseCartToMongoose (cart: Cart, shipping: Shipping): ICartMongoose {
+  public static parseCartToMongoose (cart: Cart, userName: string): ICartMongoose {
     const lines = cart.lines.map((l) => ({ ...l, article: new Types.ObjectId(l.article.id) }));
     return {
       _id: new Types.ObjectId(cart.id),
       lines,
-      shipping: {
-        idTracking: shipping.idTracking,
-        idShipping: shipping.idShipping,
-        state: shipping.state,
-        payment: shipping.payment
-      }
+      user: userName
     };
   }
 
@@ -48,7 +43,7 @@ class CartMongooseModelDB implements IModelDBCart {
     const articleList = await Promise.all(articlePromises);
     return {
       id: mongoCart._id?.toString(),
-      cartLines: mongoCart.lines.map((l, i) => ({ ...l, article: articleList[i] }))
+      lines: mongoCart.lines.map((l, i) => ({ ...l, article: articleList[i] }))
     };
   }
 
@@ -88,7 +83,7 @@ class CartMongooseModelDB implements IModelDBCart {
       .then((res) => {
         if (!res) throw new NotFoundDbException('user');
         user = UserMongooseModelDB.parseMongooseToUser(res);
-        return CartModelMongoose.create({ cartLines: [] });
+        return CartModelMongoose.create({ lines: [] });
       })
       .then((res) => {
         const cart = CartMongooseModelDB.parseMongooseToCart(res);

@@ -18,7 +18,7 @@ function createFixCartLine (order: string, article?: Article): CartLine {
 function createFixCart (cartLinesNum = 4): Cart {
   return {
     id: faker.database.mongodbObjectId(),
-    cartLines: Array(cartLinesNum).fill({})
+    lines: Array(cartLinesNum).fill({})
       .map((_, i) => createFixCartLine(i.toString()))
   };
 }

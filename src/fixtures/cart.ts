@@ -2,7 +2,7 @@ import {Cart} from '@model/index';
 import {articleList} from './article';
 
 const cart: Cart = {
-  cartLines: [
+  lines: [
     {
       id: '1',
       qty: 1,
