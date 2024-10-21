@@ -2,16 +2,15 @@ import {
   Shipping, ShippingLine, SearchParams, Article
 } from '@model/index';
 import { Types } from 'mongoose';
-import { IModelDB, IModelDBShipping } from '../../interfaces';
+import { IModelDBShipping } from '../../interfaces';
 import {
-  ShippingAreaModelMongoose, ShippingModelMongoose, IShippingAreaMongoose, IShippingMongoose,
-  CartModelMongoose,
+  ShippingModelMongoose,
+  IShippingMongoose,
   IArticleMongoose,
   IShippingLineMongoose,
   ArticleModelMongoose
 } from '../db';
 import { NotFoundDbException } from '../../error';
-import ShippingAreaMongooseModelDB from './ShippingAreaMongooseModelDB';
 import ArticleMongooseModelDB from './ArticleMongooseModelDB';
 
 class ShippingMongooseModelDB implements IModelDBShipping {

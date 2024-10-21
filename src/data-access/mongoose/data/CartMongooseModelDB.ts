@@ -1,5 +1,5 @@
 import {
-  Cart, CartLine, Shipping, User, Article
+  Cart, CartLine, User
 } from '@model/index';
 import { Types } from 'mongoose';
 import { IModelDBCart } from '../../interfaces';
