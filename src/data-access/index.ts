@@ -2,6 +2,7 @@ export {
   IModelDB,
   IModelDBArea,
   IModelDBArticle,
+  IModelDBArticleArea,
   IModelDBCart,
   IModelDBComment,
   IModelDBShipping,
