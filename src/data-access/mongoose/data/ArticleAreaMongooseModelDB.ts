@@ -2,6 +2,7 @@ import { ArticleArea, SearchParams } from '@model/index';
 import {
   AreaModelMongoose,
   ArticleAreaModelMongoose,
+  ArticleModelMongoose,
   IAreaMongoose,
   IArticleAreaMongoose
 } from '../db';
@@ -86,23 +87,19 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
   }
 
   create(obj: ArticleArea): Promise<ArticleArea> {
-    let articleAreaMongo: IArticleAreaMongoose;
+    let articleAreaMongo = ArticleAreaMongooseModelDB.parseArticleAreaToMongoose(obj);
+    let areaMongoose = AreaMongooseModelDB.parseAreaToMongoose(obj.area)
     return ArticleAreaModelMongoose
-      .create(obj)
-      .then(res => {
-        articleAreaMongo = res;
-        return AreaModelMongoose.findOne({name: articleAreaMongo.area})
-      })
-      .then(res => {
-        return ArticleAreaMongooseModelDB.parseMongooseToArticleArea(
-          articleAreaMongo,
-          res as IAreaMongoose
-      )})
+      .create(articleAreaMongo)
+      .then(res =>
+        ArticleAreaMongooseModelDB.parseMongooseToArticleArea(res, areaMongoose)
+      )
   }
 
   update(obj: ArticleArea): Promise<void> | NotFoundDbException {
+    const {_id, ...rest} = ArticleAreaMongooseModelDB.parseArticleAreaToMongoose(obj)
     return ArticleAreaModelMongoose
-      .updateOne({_id: new Types.ObjectId(obj.id) }, obj)
+      .updateOne({_id }, rest)
       .then(res => {
         if (!res) throw new NotFoundDbException('ArticleArea');
       })
