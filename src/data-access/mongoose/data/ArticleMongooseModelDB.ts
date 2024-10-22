@@ -24,6 +24,12 @@ class ArticleMongooseModelDB implements IModelDBArticle {
   private constructor () {
 
   }
+  readInfoArea(idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+    throw new Error('Method not implemented.');
+  }
+  createInfoArea(idArticle: string, articleArea: Exclude<ArticleArea, 'id'>): Promise<ArticleArea> {
+    throw new Error('Method not implemented.');
+  }
 
   public static parseArticleToMongoose (article: Article): IArticleMongoose {
     return {
@@ -34,11 +40,11 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       tags: article.tags,
       variants: article.variants,
       discolor: article.discolor,
-      articleAreaList: article.articleList.map(aa => new Types.ObjectId(aa.id))
+      articleAreaList: article.articleAreaList.map(aa => new Types.ObjectId(aa.id))
     };
   }
 
-  public static parseMongooseToArticle (mongo: IArticleMongoose, artAreaList: ArticleArea): Article {
+  public static parseMongooseToArticle (mongo: IArticleMongoose, artAreaList: ArticleArea[]): Article {
     return {
       id: mongo._id?.toString(),
       instructs: Object.fromEntries(mongo.instructs),
@@ -47,7 +53,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       tags: mongo.tags,
       variants: mongo.variants,
       discolor: mongo.discolor,
-      articleAreaList: artAreaList.map(aa => new Types.ObjectId(aa.id))
+      articleAreaList: artAreaList
     };
   }
 
@@ -91,7 +97,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
         if (deletedCount === 0) throw new NotFoundDbException();
       });
   }
-
+/*
   readInfoArea(idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
     let artAreaMongooseList: IArticleAreaMongoose[];
     return ArticleModelMongoose
@@ -124,10 +130,10 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       })
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('ArticleArea');
-        return articleAreaMongoose;
+        return ArticleAreaMongooseModelDB.parseMongooseToArticleArea(articleAreaMongoose);
       });
   }
-
+*/
 }
 
 export default ArticleMongooseModelDB;

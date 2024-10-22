@@ -68,7 +68,7 @@ function createFixArticle (): Article {
     tags: [faker.lorem.word()],
     variants: [faker.lorem.word()],
     discolor: faker.datatype.boolean(),
-    articleAreaList: createFixListArticleArea()
+    articleAreaList: []
   };
 }
 

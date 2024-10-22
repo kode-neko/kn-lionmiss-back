@@ -62,7 +62,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
     return {
       id: shippingLineMongo.id,
       qty: shippingLineMongo.qty,
-      article: ArticleMongooseModelDB.parseMongooseToArticle(articleMongo)
+      article: ArticleMongooseModelDB.parseMongooseToArticle(articleMongo, [])
     };
   }
 
