@@ -27,7 +27,10 @@
         "spining" : "low",
         "dryCleaning" : "no"
     },
-    "discolor" : false
+    "discolor" : false,
+    "articleArea": [
+            ObjectId("66db3fc57f97b60ae12b4a21"),
+            ObjectId("66f1e45ebbc729d277277a6c")
+        ]
     }
-
 ]

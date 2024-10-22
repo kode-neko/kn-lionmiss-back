@@ -10,7 +10,8 @@ export {
   CartLine,
   PaymentEnum,
   ShipStateEnum,
-  Shipping
+  Shipping,
+  ShippingLine
 } from './cart';
 
 export {

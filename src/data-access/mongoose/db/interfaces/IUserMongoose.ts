@@ -12,13 +12,13 @@ interface IUserMongo {
   sex: string;
   area: string;
   measures: {
-    shoulder: number;
-    chest: number;
-    waist: number;
-    hips: number;
-    foot: number;
-    height: number;
-    weight: number;
+    shoulder?: number;
+    chest?: number;
+    waist?: number;
+    hips?: number;
+    foot?: number;
+    height?: number;
+    weight?: number;
     unitsHeight: UnitsHeightEnum;
     unitsWeight: UnitsWeightEnum;
   };

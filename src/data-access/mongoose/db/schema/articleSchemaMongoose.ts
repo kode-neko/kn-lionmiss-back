@@ -30,6 +30,10 @@ const articleSchemaMongoose = new Schema<IArticleMongoose>({
   discolor: {
     type: Boolean,
     required: true
+  },
+  articleAreaList: {
+    type: [Schema.Types.ObjectId],
+    required: true
   }
 }, { id: true });
 

@@ -31,7 +31,7 @@ class UserMongooseModelDB implements IModelDBUser {
       area: user.area.name,
       measures: { ...user.measures },
       favs: user.favs.map((s) => new Types.ObjectId(s.id)),
-      addresses: user.address
+      addresses: user.addresses
     };
   }
 

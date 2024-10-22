@@ -1,6 +1,5 @@
+import { shipping } from '@fixtures/shipping';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// User
-
 import { faker } from '@faker-js/faker';
 import {
   createFixArea, createFixArticle, createFixListArticle
@@ -8,7 +7,7 @@ import {
 import {
   Comment, Address, UnitsHeightEnum, UnitsWeightEnum, SexEnum, User
 } from '@model/index';
-import { createFixCart } from './cartFix';
+import { createFixCart, createFixShipping } from './cartFix';
 
 // Comment
 
@@ -91,8 +90,9 @@ function createFixUser (): User {
     measures: createFixMeasures(),
     commentList: createFixListComment(),
     addressList: createFixListAddress(),
-    favList: createFixListArticle(),
-    cart: createFixCart()
+    favs: createFixListArticle(),
+    cart: createFixCart(),
+    shippings: [createFixShipping()]
   };
 }
 

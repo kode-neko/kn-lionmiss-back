@@ -10,7 +10,7 @@ export {
   // Article-Area
   createFixArticleArea,
   createFixArticleAreaNoId,
-  createArticleAreaListFix
+  createFixListArticleArea
 } from './articleFix';
 
 export {

@@ -2,10 +2,6 @@ import { Schema } from 'mongoose';
 import { IArticleAreaMongoose } from '../interfaces';
 
 const articleAreaSchemaMongoose = new Schema<IArticleAreaMongoose>({
-  article: {
-    type: Schema.Types.ObjectId,
-    required: true
-  },
   title: {
     type: String,
     required: true

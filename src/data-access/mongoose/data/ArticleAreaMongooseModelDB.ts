@@ -25,11 +25,10 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
 
   }
 
-  public static parseArticleAreaToMongo (articleArea: ArticleArea, idArticle: string): IArticleAreaMongoose {
+  public static parseArticleAreaToMongoose (articleArea: ArticleArea): IArticleAreaMongoose {
     return {
       _id: new Types.ObjectId(articleArea.id),
       title: articleArea.title,
-      article: new Types.ObjectId(idArticle),
       desc: articleArea.desc,
       price: articleArea.price,
       tax: articleArea.tax,
@@ -37,7 +36,7 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
     };
   }
 
-  public static async parseMongoToArticleArea (articleAreaMongo: IArticleAreaMongoose, areaMongo: IAreaMongoose): Promise<ArticleArea> {
+  public static parseMongooseToArticleArea (articleAreaMongo: IArticleAreaMongoose, areaMongo: IAreaMongoose): ArticleArea {
     return {
       id: articleAreaMongo._id?.toString(),
       title: articleAreaMongo.title,
@@ -58,7 +57,8 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
         return AreaModelMongoose.findOne({name: articleAreaMongo.area})
       })
       .then(res => {
-        return ArticleAreaMongooseModelDB.parseMongoToArticleArea(
+        if (!res) throw new NotFoundDbException('Area')
+        return ArticleAreaMongooseModelDB.parseMongooseToArticleArea(
           articleAreaMongo,
           res as IAreaMongoose
         )
@@ -78,7 +78,7 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
         
       }).then(list => {
         return articleAreaMongoList.map(aa =>
-          ArticleAreaMongooseModelDB.parseMongoToArticleArea(
+          ArticleAreaMongooseModelDB.parseMongooseToArticleArea(
             aa,
             list.find(a => a.name === aa.area) as IAreaMongoose
         ))
@@ -94,7 +94,7 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
         return AreaModelMongoose.findOne({name: articleAreaMongo.area})
       })
       .then(res => {
-        return ArticleAreaMongooseModelDB.parseMongoToArticleArea(
+        return ArticleAreaMongooseModelDB.parseMongooseToArticleArea(
           articleAreaMongo,
           res as IAreaMongoose
       )})

@@ -4,7 +4,8 @@ import {
 import { Types } from 'mongoose';
 import { IModelDB, IModelDBArticle } from '../../interfaces';
 import {
-  ArticleAreaModelMongoose, ArticleModelMongoose, IArticleAreaMongoose, IArticleMongoose
+  AreaModelMongoose,
+  ArticleAreaModelMongoose, ArticleModelMongoose, IAreaMongoose, IArticleAreaMongoose, IArticleMongoose
 } from '../db';
 import { NotFoundDbException } from '../../error';
 import ArticleAreaMongooseModelDB from './ArticleAreaMongooseModelDB';
@@ -32,11 +33,12 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       materials: new Map(Object.entries(article.materials)),
       tags: article.tags,
       variants: article.variants,
-      discolor: article.discolor
+      discolor: article.discolor,
+      articleAreaList: article.articleList.map(aa => new Types.ObjectId(aa.id))
     };
   }
 
-  public static parseMongooseToArticle (mongo: IArticleMongoose): Article {
+  public static parseMongooseToArticle (mongo: IArticleMongoose, artAreaList: ArticleArea): Article {
     return {
       id: mongo._id?.toString(),
       instructs: Object.fromEntries(mongo.instructs),
@@ -45,7 +47,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       tags: mongo.tags,
       variants: mongo.variants,
       discolor: mongo.discolor,
-      articleAreaList: []
+      articleAreaList: artAreaList.map(aa => new Types.ObjectId(aa.id))
     };
   }
 
@@ -54,7 +56,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       .findById(id)
       .then((res) => {
         if (!res) throw new NotFoundDbException();
-        return ArticleMongooseModelDB.parseMongooseToArticle(res);
+        return ArticleMongooseModelDB.parseMongooseToArticle(res, []);
       });
   }
 
@@ -64,13 +66,13 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       .skip(skip)
       .limit(limit)
       .then((list) => list.map((a) => ArticleMongooseModelDB
-        .parseMongooseToArticle(a)));
+        .parseMongooseToArticle(a, [])));
   }
 
   create (obj: Article): Promise<Article> {
     return ArticleModelMongoose
       .create(ArticleMongooseModelDB.parseArticleToMongoose(obj))
-      .then((res) => ArticleMongooseModelDB.parseMongooseToArticle(res));
+      .then((res) => ArticleMongooseModelDB.parseMongooseToArticle(res, []));
   }
 
   update (obj: Article): Promise<void> | NotFoundDbException {
@@ -90,22 +92,39 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       });
   }
 
-  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
-    return ArticleAreaModelMongoose
-      .findOne({ article: new Types.ObjectId(idArticle), 'area.name': nameArea })
-      .then((res) => {
+  readInfoArea(idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+    let artAreaMongooseList: IArticleAreaMongoose[];
+    return ArticleModelMongoose
+      .findById(idArticle)
+      .then(res => {
         if (!res) throw new NotFoundDbException();
-        return ArticleAreaMongooseModelDB.parseMongoToArticleArea(res as IArticleAreaMongoose);
-      });
+        return ArticleAreaModelMongoose.find({ _id: { $in: res.articleAreaList } });
+      })
+      .then(list => {
+        artAreaMongooseList = list;
+        const nameAreas = artAreaMongooseList.map(aa => aa.area);
+        return AreaModelMongoose.find({ name: { $in: nameAreas } });
+      })
+      .then(list => artAreaMongooseList.map(aa =>
+        ArticleAreaMongooseModelDB
+          .parseMongooseToArticleArea(aa, list.find(a => a.name === aa.area) as IAreaMongoose)
+      ))
   }
 
-  createInfoArea (idArticle: string, articleArea: Exclude<ArticleArea, 'id'>): Promise<ArticleArea> {
-    const articleAreaMongoose = ArticleAreaMongooseModelDB.parseArticleAreaToMongo(articleArea, idArticle);
+  createInfoArea (idArticle: string, articleArea: ArticleArea): Promise<ArticleArea> {
+    const articleAreaMongoose = ArticleAreaMongooseModelDB.parseArticleAreaToMongoose(articleArea);
     return ArticleAreaModelMongoose
       .create(articleAreaMongoose)
       .then((res) => {
-        if (!res) throw new NotFoundDbException();
-        return ArticleAreaMongooseModelDB.parseMongoToArticleArea(res as IArticleAreaMongoose);
+        return ArticleModelMongoose
+          .updateOne(
+            { _id: new Types.ObjectId(idArticle) },
+            { $push: { articleArea: res._id } }
+          );
+      })
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('ArticleArea');
+        return articleAreaMongoose;
       });
   }
 

@@ -5,32 +5,6 @@ import {
 import { faker } from '@faker-js/faker';
 import { constFixListArea } from './constFix';
 
-// Article
-
-function createFixArticle (): Article {
-  return {
-    id: faker.database.mongodbObjectId(),
-    instructs: { [InstructEnum.IRONING]: '100º' },
-    sizes: { sm: 12 },
-    materials: { cotton: 30 },
-    tags: [faker.lorem.word()],
-    variants: [faker.lorem.word()],
-    discolor: faker.datatype.boolean(),
-    articleAreaList: []
-  };
-}
-
-function createFixArticleNoId (): Article {
-  const { id, ...rest } = createFixArticle();
-  return rest;
-}
-
-function createFixListArticle (size = 10): Article[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixArticle());
-}
-
 // Area
 
 function createFixArea (area?: Area): Area {
@@ -77,22 +51,48 @@ function createFixArticleAreaNoId (area?): ArticleArea {
   return rest;
 }
 
-function createArticleAreaListFix (size = 10): ArticleArea[] {
+function createFixListArticleArea (size = 10): ArticleArea[] {
   return Array(size)
     .fill({})
     .map(() => createFixArticleArea());
 }
 
-export {
-  createFixArticle,
-  createFixArticleNoId,
-  createFixListArticle,
+// Article
 
+function createFixArticle (): Article {
+  return {
+    id: faker.database.mongodbObjectId(),
+    instructs: { [InstructEnum.IRONING]: '100º' },
+    sizes: { sm: 12 },
+    materials: { cotton: 30 },
+    tags: [faker.lorem.word()],
+    variants: [faker.lorem.word()],
+    discolor: faker.datatype.boolean(),
+    articleAreaList: createFixListArticleArea()
+  };
+}
+
+function createFixArticleNoId (): Article {
+  const { id, ...rest } = createFixArticle();
+  return rest;
+}
+
+function createFixListArticle (size = 10): Article[] {
+  return Array(size)
+    .fill({})
+    .map(() => createFixArticle());
+}
+
+export {
   createFixArea,
   createFixAreaNoId,
   createFixListArea,
 
   createFixArticleArea,
   createFixArticleAreaNoId,
-  createArticleAreaListFix
+  createFixListArticleArea,
+
+  createFixArticle,
+  createFixArticleNoId,
+  createFixListArticle
 };

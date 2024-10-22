@@ -2,7 +2,6 @@ import { Types } from 'mongoose';
 
 interface IArticleAreaMongoose {
   _id?: Types.ObjectId;
-  article: Types.ObjectId;
   title: string;
   desc: string;
   price: number;

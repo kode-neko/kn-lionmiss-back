@@ -8,6 +8,7 @@ interface IArticleMongoose {
   tags: string[];
   variants: string[];
   discolor: boolean;
+  articleAreaList: Types.ObjectId[];
 }
 
 export default IArticleMongoose;

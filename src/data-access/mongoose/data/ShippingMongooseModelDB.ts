@@ -79,7 +79,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       .then(list => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
   }
 
-  readList({ limit, skip }: SearchParams): Promise<Shipping[]> {
+  readList({ limit, skip }: SearchParams<Shipping>): Promise<Shipping[]> {
     let shippingList: IShippingMongoose[];
     return ShippingModelMongoose
       .find()
