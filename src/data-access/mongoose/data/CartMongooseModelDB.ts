@@ -29,11 +29,10 @@ class CartMongooseModelDB implements IModelDBCart {
 
   }
 
-  public static parseCartToMongoose (cart: Cart, userName: string): ICartMongoose {
+  public static parseCartToMongoose (cart: Cart): ICartMongoose {
     return {
       _id: new Types.ObjectId(cart.id),
-      lines: cart.lines.map((l) => CartMongooseModelDB.parseCartLineToMongoose(l)),
-      user: userName
+      lines: cart.lines.map((l) => CartMongooseModelDB.parseCartLineToMongoose(l))
     };
   }
 
@@ -48,7 +47,10 @@ class CartMongooseModelDB implements IModelDBCart {
   public static parseMongooseToCart (mongoCart: ICartMongoose, articleListMongo: IArticleMongoose[]): Cart {
     return {
       id: mongoCart._id?.toString(),
-      lines: mongoCart.lines.map((l) => CartMongooseModelDB.parseMongooseToCartLine(l, articleListMongo.find((a) => a._id === l.article) as IArticleMongoose))
+      lines: mongoCart.lines.map((l) => CartMongooseModelDB.parseMongooseToCartLine(
+        l,
+        articleListMongo.find((a) => a._id === l.article) as IArticleMongoose
+      ))
     };
   }
 
@@ -56,7 +58,7 @@ class CartMongooseModelDB implements IModelDBCart {
     return {
       id: mongo.id,
       qty: mongo.qty,
-      article: ArticleMongooseModelDB.parseMongooseToArticle(articleMongo)
+      article: ArticleMongooseModelDB.parseMongooseToArticle(articleMongo, [])
     };
   }
 
@@ -64,12 +66,12 @@ class CartMongooseModelDB implements IModelDBCart {
     let cartMongoose: ICartMongoose;
     return CartModelMongoose
       .findById(id)
-      .then((res) => {
+      .then((res) => { // Get Cart
         if (!res) throw new NotFoundDbException();
         cartMongoose = res;
         const articleIds = cartMongoose.lines.map((l) => l.article);
         return ArticleModelMongoose.find({ _id: { $in: articleIds } });
-      })
+      }) // Get Articles for LineCart info
       .then((list) => CartMongooseModelDB.parseMongooseToCart(cartMongoose, list));
   }
 
@@ -81,17 +83,17 @@ class CartMongooseModelDB implements IModelDBCart {
     };
     let user: User;
     return UserModelMongoose.findOne(filterUser)
-      .then((res) => { // Find User to ensure existence
+      .then((res) => { // Get User info
         if (!res) throw new NotFoundDbException('user');
         user = UserMongooseModelDB.parseMongooseToUser(res);
         return CartModelMongoose.create({ lines: [] });
       })
-      .then((res) => { // Create Cart
-        cart = CartMongooseModelDB.parseMongooseToCart(res, []) as Cart;
+      .then((res) => { // Create Cart for User
+        cart = CartMongooseModelDB.parseMongooseToCart(res, []);
         const userNewCart = { ...user, cart };
         return UserModelMongoose.updateOne(filterUser, userNewCart);
       })
-      .then(({ modifiedCount }) => { // Update Cart from user
+      .then(({ modifiedCount }) => { // Cart updated
         if (modifiedCount === 0) throw new NotFoundDbException('user');
         return cart;
       });
@@ -111,11 +113,11 @@ class CartMongooseModelDB implements IModelDBCart {
         return CartModelMongoose
           .updateOne({ _id: new Types.ObjectId(idCart) }, cartMongoose);
       })
-      .then(() => { // Added new Line to Cart
+      .then(() => { // Added new CartLine to Cart
         const articlesIds = cartMongoose.lines.map((l) => l.article);
         return ArticleModelMongoose.find({ _id: { $in: articlesIds } });
       })
-      .then((list) => { // Find Articles from Lines to return a complete Cart object
+      .then((list) => { // Get Articles for LineCart info
         return CartMongooseModelDB.parseMongooseToCart(cartMongoose, list);
       });
   }
@@ -124,13 +126,13 @@ class CartMongooseModelDB implements IModelDBCart {
     const cartLineMongoose = CartMongooseModelDB.parseCartLineToMongoose(cartLine);
     return CartModelMongoose
       .findById(idCart)
-      .then((res) => { // Find Cart to modify
+      .then((res) => { // Find Cart to modify CartLine
         if (!res) throw NotFoundDbException;
         res.lines = res.lines.map((l) => l.id === cartLineMongoose.id ? cartLineMongoose : l);
         return CartModelMongoose
           .updateOne({ _id: new Types.ObjectId(idCart) }, res);
       })
-      .then(({ modifiedCount }) => { // Update Cart with the new line
+      .then(({ modifiedCount }) => { // Update Cart with the new CartLine
         if (modifiedCount === 0) throw new NotFoundDbException('CartLine');
       });
   }
@@ -139,7 +141,7 @@ class CartMongooseModelDB implements IModelDBCart {
     const cartLineMongoose = CartMongooseModelDB.parseCartLineToMongoose(cartLine);
     return CartModelMongoose
       .findById(idCart)
-      .then((res) => { // Find Cart to modify
+      .then((res) => { // Find Cart to modify CartLine
         if (!res) throw NotFoundDbException;
         res.lines = res.lines.filter((l) => l.id !== cartLineMongoose.id);
         return CartModelMongoose

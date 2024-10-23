@@ -6,6 +6,5 @@
           "article" : ObjectId("66db3e857f97b60ae12b4a1e"),
           "qty" : NumberInt(2)
       }
-  ],
-  "user" : "kodeneko"
+  ]
 }

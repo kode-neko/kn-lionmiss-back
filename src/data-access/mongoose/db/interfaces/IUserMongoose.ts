@@ -6,7 +6,7 @@ interface IUserMongo {
   _id?: Types.ObjectId;
   userName: string;
   email: string;
-  cart: Types.ObjectId;
+  cart?: Types.ObjectId;
   shippings: Types.ObjectId[];
   bday: Date;
   sex: string;
