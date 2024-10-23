@@ -10,7 +10,7 @@ interface User {
   id?: string;
   userName: string;
   email: string;
-  cart: Cart;
+  cart?: Cart;
   shippings: Shipping[];
   bday: Date;
   sex: SexEnum;

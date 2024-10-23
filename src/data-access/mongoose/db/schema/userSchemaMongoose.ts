@@ -34,10 +34,7 @@ const userSchemaMongoose = new Schema<IUserMongoose>({
     type: String,
     required: true
   },
-  cart: {
-    type: Schema.Types.ObjectId,
-    required: true
-  },
+  cart: Schema.Types.ObjectId,
   shippings: {
     type: [Schema.Types.ObjectId],
     required: true
