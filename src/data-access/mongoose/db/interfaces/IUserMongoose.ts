@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { UnitsHeightEnum, UnitsWeightEnum } from '@model/index';
 import IAddressMongoose from './IAddressMongoose';
+import ICommentMongoose from './ICommentMongoose';
 
 interface IUserMongo {
   _id?: Types.ObjectId;

@@ -20,10 +20,6 @@ const cartSchemaMongoose = new Schema<ICartMongoose>({
   lines: {
     type: [cartLineSchema],
     required: true
-  },
-  user: {
-    type: String,
-    required: true
   }
 });
 

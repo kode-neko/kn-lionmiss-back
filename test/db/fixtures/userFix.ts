@@ -82,14 +82,14 @@ function createFixMeasures () {
 
 function createFixUser (): User {
   return {
+    id: faker.database.mongodbObjectId(),
     userName: faker.internet.userName(),
     email: faker.internet.email(),
     bday: faker.date.birthdate(),
     sex: faker.helpers.arrayElement(Object.values(SexEnum)),
     area: createFixArea(),
     measures: createFixMeasures(),
-    commentList: createFixListComment(),
-    addressList: createFixListAddress(),
+    addresses: createFixListAddress(),
     favs: createFixListArticle(),
     cart: createFixCart(),
     shippings: [createFixShipping()]

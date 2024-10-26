@@ -4,6 +4,7 @@ import {
 } from './utils';
 import { IUserMeasuresMongoose, IUserMongoose } from '../interfaces';
 import addressSchemaMongoose from './addressSchemaMongoose';
+import commentSchemaMongoose from './commentSchemaMongoose';
 
 const userMeasuresSchemaMongoose = new Schema<IUserMeasuresMongoose>({
   shoulder: Number,
@@ -63,7 +64,7 @@ const userSchemaMongoose = new Schema<IUserMongoose>({
   addresses: {
     type: [addressSchemaMongoose],
     required: true
-  }
+  } 
 });
 
 export default userSchemaMongoose;

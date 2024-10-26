@@ -1,7 +1,6 @@
 import { Article } from '@model/article';
 import Address from './Address';
 import SexEnum from './SexEnum';
-import Comment from './Comment';
 import UserMeasures from './UserMeasures';
 import { Cart, Shipping } from '../cart';
 import Area from '../article/Area';
@@ -17,8 +16,7 @@ interface User {
   area: Area;
   measures: UserMeasures;
   favs: Article[];
-  addressList: Address[];
-  commentList: Comment[];
+  addresses: Address[];
 }
 
 export default User;

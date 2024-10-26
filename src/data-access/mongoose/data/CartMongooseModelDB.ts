@@ -1,7 +1,7 @@
 import {
   Cart, CartLine, User
 } from '@model/index';
-import { Types } from 'mongoose';
+import { RootFilterQuery, Types } from 'mongoose';
 import { IModelDBCart } from '../../interfaces';
 import {
   ArticleModelMongoose,
@@ -11,7 +11,7 @@ import {
 } from '../db';
 import { NotFoundDbException } from '../../error';
 import ArticleMongooseModelDB from './ArticleMongooseModelDB';
-import { IArticleMongoose, ICartLineMongoose } from '../db/interfaces';
+import { IArticleMongoose, ICartLineMongoose, IUserMongoose } from '../db/interfaces';
 import UserMongooseModelDB from './UserMongooseModelDB';
 
 class CartMongooseModelDB implements IModelDBCart {
@@ -40,7 +40,7 @@ class CartMongooseModelDB implements IModelDBCart {
     return {
       id: line.id,
       qty: line.qty,
-      article: new Types.ObjectId(line.article.id)
+      article: new Types.ObjectId(line.article.id as string)
     };
   }
 
@@ -49,7 +49,7 @@ class CartMongooseModelDB implements IModelDBCart {
       id: mongoCart._id?.toString(),
       lines: mongoCart.lines.map((l) => CartMongooseModelDB.parseMongooseToCartLine(
         l,
-        articleListMongo.find((a) => a._id === l.article) as IArticleMongoose
+        articleListMongo.find((a) => a._id?.toString() === l.article.toString()) as IArticleMongoose
       ))
     };
   }
@@ -76,26 +76,26 @@ class CartMongooseModelDB implements IModelDBCart {
   }
 
   newCartUser(idUser: string): Promise<Cart> | NotFoundDbException {
-    let cart: Cart;
-    const filterUser = {
-      $or: [{ _id: idUser },
-        { userName: idUser }]
-    };
-    let user: User;
-    return UserModelMongoose.findOne(filterUser)
+    let cart: ICartMongoose;
+    let filterUser: RootFilterQuery<IUserMongoose>;
+    try {
+      filterUser = {_id: new Types.ObjectId(idUser)}
+    } catch (err) {
+      filterUser = {userName: idUser}
+    }
+    return UserModelMongoose
+      .findOne(filterUser)
       .then((res) => { // Get User info
-        if (!res) throw new NotFoundDbException('user');
-        user = UserMongooseModelDB.parseMongooseToUser(res);
+        if (!res) throw new NotFoundDbException('User');
         return CartModelMongoose.create({ lines: [] });
       })
       .then((res) => { // Create Cart for User
-        cart = CartMongooseModelDB.parseMongooseToCart(res, []);
-        const userNewCart = { ...user, cart };
-        return UserModelMongoose.updateOne(filterUser, userNewCart);
+        cart = res;
+        return UserModelMongoose.updateOne(filterUser, {cart});
       })
       .then(({ modifiedCount }) => { // Cart updated
-        if (modifiedCount === 0) throw new NotFoundDbException('user');
-        return cart;
+        if (modifiedCount === 0) throw new NotFoundDbException('User');
+        return CartMongooseModelDB.parseMongooseToCart(cart, []);
       });
   }
 
