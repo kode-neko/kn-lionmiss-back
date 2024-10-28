@@ -1,3 +1,4 @@
+import { NotFoundDbException } from '@data-access/index';
 import { Cart, User } from '@model/index';
 import {
   describe, expect, test, beforeAll, afterAll
@@ -12,6 +13,7 @@ import {
 import { faker } from '@faker-js/faker';
 import {
   createFixCart,
+  createFixCartLine,
   createFixUser
 } from '../fixtures';
 import CartMongooseModelDB from '../../../src/data-access/mongoose/data/CartMongooseModelDB';
@@ -75,7 +77,7 @@ describe('ArticleMongooseModelDB', () => {
     await client.close();
   });
 
-  test('Read existing', async () => {
+  test('Read existing Cart', async () => {
     const cart = await cartMongooseModel.read(cartExample.id);
     expect(cart).toEqual(cartExample);
   });
@@ -91,5 +93,39 @@ describe('ArticleMongooseModelDB', () => {
     expect(newCart).not.toEqual(userNotCart.cart);
   });
 
+  test('Create CartLine', async () => {
+    const newCartLine = createFixCartLine(5 + '');
+    const expectedCart = await cartMongooseModel.createLine(cartExample.id, newCartLine);
+    const newCartExample = {
+      ...cartExample,
+      lines: [...cartExample.lines, newCartLine]
+    }
+    expect(expectedCart).not.toEqual(newCartExample);
+  });
 
+  test('Update a CartLine', async () => {
+    const modfiedCartLine = {...cartExample.lines[0], qty: 100};
+    expect(async () =>
+      await cartMongooseModel.updateLine(cartExample.id, modfiedCartLine)
+    )
+      .not
+      .toThrow(NotFoundDbException);
+  });
+
+  test('Update not existing CartLine', async () => {
+    const newCartLine = createFixCartLine(5 + '');
+    expect(async () =>  await cartMongooseModel.updateLine(cartExample.id, newCartLine))
+      .toThrow(NotFoundDbException);
+  });
+
+  test('Delete CartLine', async () => {
+    expect(async () => await cartMongooseModel.deleteLine(cartExample.id, 0 + ''))
+      .not
+      .toThrow(NotFoundDbException);
+  });
+
+  test('Delete not existing CartLine', async () => {
+    expect(async () => await cartMongooseModel.deleteLine(cartExample.id, 5 + ''))
+      .toThrow(NotFoundDbException);
+  });
 });

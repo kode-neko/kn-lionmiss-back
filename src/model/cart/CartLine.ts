@@ -1,7 +1,7 @@
 import { Article } from '@model/index';
 
 interface CartLine {
-  id: number;
+  id: string;
   qty: number;
   article: Article;
 }

@@ -3,7 +3,7 @@ import { ICartLineMongoose, ICartMongoose } from '../interfaces';
 
 const cartLineSchema = new Schema<ICartLineMongoose>({
   id: {
-    type: Number,
+    type: String,
     required: true
   },
   article: {

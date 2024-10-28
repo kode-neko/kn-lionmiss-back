@@ -7,9 +7,9 @@ import { createFixArticle } from './articleFix';
 
 // Cart
 
-function createFixCartLine (order: number, article?: Article): CartLine {
+function createFixCartLine (id: string, article?: Article): CartLine {
   return {
-    id: order,
+    id,
     qty: faker.helpers.rangeToNumber({ min: 1, max: 3 }),
     article: article || createFixArticle()
   };
@@ -19,7 +19,7 @@ function createFixCart (cartLinesNum = 4): Cart {
   return {
     id: faker.database.mongodbObjectId(),
     lines: Array(cartLinesNum).fill({})
-      .map((_, i) => createFixCartLine(i, createFixArticle()))
+      .map((_, i) => createFixCartLine(`${i+1}`, createFixArticle()))
   };
 }
 

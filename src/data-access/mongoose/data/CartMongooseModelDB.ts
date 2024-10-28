@@ -137,13 +137,12 @@ class CartMongooseModelDB implements IModelDBCart {
       });
   }
 
-  deleteLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
-    const cartLineMongoose = CartMongooseModelDB.parseCartLineToMongoose(cartLine);
+  deleteLine (idCart: string, idCartLine: string): Promise<void> | NotFoundDbException {
     return CartModelMongoose
       .findById(idCart)
       .then((res) => { // Find Cart to modify CartLine
         if (!res) throw NotFoundDbException;
-        res.lines = res.lines.filter((l) => l.id !== cartLineMongoose.id);
+        res.lines = res.lines.filter((l) => l.id !== idCartLine);
         return CartModelMongoose
           .updateOne({ _id: new Types.ObjectId(idCart) }, res);
       })
