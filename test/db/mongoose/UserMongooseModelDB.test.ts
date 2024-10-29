@@ -99,8 +99,8 @@ describe('UserMongooseModelDB', () => {
   });
 
   test('Read not existing user', async () => {
-    const user = await userMongooseModel.read(faker.database.mongodbObjectId());
-    expect(user).toEqual(userExample);
+    expect(async () => await userMongooseModel.read(faker.database.mongodbObjectId()))
+      .toThrow(NotFoundDbException);
   });
 
 });
