@@ -1,10 +1,11 @@
 export {
   AreaMongooseModelDB,
+  ArticleAreaMongooseModelDB,
   ArticleMongooseModelDB,
-  CommentMongooseModelDB
-
-  /* ShippingMongooseModelDB,
-     UserMongooseModelDB */
+  // CartMongooseModelDB,
+  CommentMongooseModelDB,
+  ShippingMongooseModelDB,
+  // UserMongooseModelDB
 } from './data';
 export {
   IAddressMongoose,
@@ -12,7 +13,11 @@ export {
   IArticleAreaMongoose,
   IArticleMongoose,
   ICartMongoose,
+  ICartLineMongoose,
+  IShippingMongoose,
+  IShippingLineMongoose,
   ICommentMongoose,
   IUserMongoose,
+  IUserMeasuresMongoose,
   initConnMongoose
 } from './db';

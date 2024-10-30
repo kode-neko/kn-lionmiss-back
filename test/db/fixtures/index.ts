@@ -10,7 +10,7 @@ export {
   // Article-Area
   createFixArticleArea,
   createFixArticleAreaNoId,
-  createArticleAreaListFix
+  createFixListArticleArea
 } from './articleFix';
 
 export {
@@ -31,6 +31,7 @@ export {
   // Address
   createFixAddress,
   createFixAddressNoId,
+  createFixListAddress,
   // User
   createFixMeasures,
   createFixUser

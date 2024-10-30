@@ -5,6 +5,58 @@ import {
 import { faker } from '@faker-js/faker';
 import { constFixListArea } from './constFix';
 
+// Area
+
+function createFixArea (area?: Area): Area {
+  const {
+    name, locale, country, symbol
+  }: Area = area || faker.helpers.arrayElement(constFixListArea);
+  return {
+    id: faker.database.mongodbObjectId(),
+    name,
+    locale,
+    country,
+    symbol
+  };
+}
+
+function createFixAreaNoId (area?: Area): Area {
+  const { id, ...rest } = createFixArea(area);
+  return rest;
+}
+
+function createFixListArea (size = 10): Area[] {
+  return Array(size)
+    .fill({})
+    .map(() => createFixArea());
+}
+
+// Article Area
+
+function createFixArticleArea (area?): ArticleArea {
+  return {
+    id: faker.database.mongodbObjectId(),
+    title: faker.lorem.words(),
+    desc: faker.lorem.sentence(),
+    price: faker.number.float({
+      min: 6, max: 100, fractionDigits: 2
+    }),
+    tax: faker.helpers.rangeToNumber({ min: 0, max: 99 }),
+    area: area || createFixArea()
+  };
+}
+
+function createFixArticleAreaNoId (area?): ArticleArea {
+  const { id, ...rest } = createFixArticleArea(area);
+  return rest;
+}
+
+function createFixListArticleArea (size = 10): ArticleArea[] {
+  return Array(size)
+    .fill({})
+    .map(() => createFixArticleArea());
+}
+
 // Article
 
 function createFixArticle (): Article {
@@ -31,65 +83,16 @@ function createFixListArticle (size = 10): Article[] {
     .map(() => createFixArticle());
 }
 
-// Area
-
-function createFixArea (area?: Area): ArticleArea {
-  const {
-    name, country, symbol
-  }: Area = area || faker.helpers.arrayElement(constFixListArea);
-  return {
-    id: faker.database.mongodbObjectId(),
-    name,
-    country,
-    symbol
-  };
-}
-
-function createFixAreaNoId (area?: Area): ArticleArea {
-  const { id, ...rest } = createFixArea(area);
-  return rest;
-}
-
-function createFixListArea (size = 10): ArticleArea[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixArea());
-}
-
-// Article Area
-
-function createFixArticleArea (area?): ArticleArea {
-  return {
-    id: faker.database.mongodbObjectId(),
-    title: faker.lorem.words(),
-    desc: faker.lorem.sentence(),
-    price: faker.commerce.price(),
-    tax: faker.helpers.rangeToNumber({ min: 0, max: 99 }),
-    area: area || createFixArea()
-  };
-}
-
-function createFixArticleAreaNoId (area?): ArticleArea {
-  const { id, ...rest } = createFixArticleArea(area);
-  return rest;
-}
-
-function createArticleAreaListFix (size = 10): ArticleArea[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixArticleArea());
-}
-
 export {
-  createFixArticle,
-  createFixArticleNoId,
-  createFixListArticle,
-
   createFixArea,
   createFixAreaNoId,
   createFixListArea,
 
   createFixArticleArea,
   createFixArticleAreaNoId,
-  createArticleAreaListFix
+  createFixListArticleArea,
+
+  createFixArticle,
+  createFixArticleNoId,
+  createFixListArticle
 };

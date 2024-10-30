@@ -12,6 +12,7 @@ export default [
     plugins: {'@stylistic': stylistic},
     rules: {
       ...stylistic.configs['all-flat'].rules,
+      '@stylistic/js/no-confusing-arrow': ["error", {"onlyOneSimpleParam": true}],
       '@stylistic/dot-location': ["error", "property"],
       '@stylistic/object-curly-spacing': ['error', 'always'],
       '@stylistic/multiline-comment-style': ["error", "bare-block"],

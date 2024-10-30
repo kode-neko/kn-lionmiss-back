@@ -105,23 +105,6 @@ CREATE TABLE article_area(
 	PRIMARY KEY(article, area)
 );
 
-CREATE TABLE article_area_variant(
-	article CHAR(36) NOT NULL,
-	variant VARCHAR(50) NOT NULL,
-	area CHAR(36) NOT NULL,
-	label VARCHAR(50) NOT NULL,
-	
-	FOREIGN KEY (article, variant) REFERENCES article_variant(article, variant)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-
-  FOREIGN KEY (area) REFERENCES area(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	PRIMARY KEY(article, variant, area)
-);
-
 CREATE TABLE article_area_instruct(
 	article CHAR(36) NOT NULL,
 	area CHAR(36) NOT NULL,

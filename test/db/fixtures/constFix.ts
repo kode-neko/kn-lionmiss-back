@@ -4,20 +4,23 @@ import { faker } from '@faker-js/faker';
 const constFixListArea: Area[] = [
   {
     id: faker.database.mongodbObjectId(),
-    name: 'UK',
-    country: 'UK',
-    symbol: '£'
-  },
-  {
-    id: faker.database.mongodbObjectId(),
-    name: 'Sapin',
+    name: 'Spanish',
+    locale: 'es',
     country: 'Spain',
     symbol: '€'
   },
   {
     id: faker.database.mongodbObjectId(),
-    name: 'USA',
-    country: 'USA',
+    name: 'English-UK',
+    locale: 'en-GB',
+    country: 'United Kingdom',
+    symbol: '£'
+  },
+  {
+    id: faker.database.mongodbObjectId(),
+    name: 'English-USA',
+    locale: 'en-US',
+    country: 'United States',
     symbol: '$'
   }
 ];

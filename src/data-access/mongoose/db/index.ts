@@ -5,22 +5,19 @@ export {
   IArticleAreaMongoose,
   IArticleMongoose,
   ICartMongoose,
+  ICartLineMongoose,
+  IShippingMongoose,
+  IShippingLineMongoose,
   ICommentMongoose,
-  IUserMongoose
+  IUserMongoose,
+  IUserMeasuresMongoose
 } from './interfaces';
 export {
-  addressSchemaMongoose,
-  areaSchemaMongoose,
-  articleAreaSchemaMongoose,
-  articleSchemaMongoose,
-  cartSchemaMongoose,
-  commentSchemaMongoose,
-  userSchemaMongoose
-} from './schema';
-export {
+  AreaModelMongoose,
   ArticleAreaModelMongoose,
   ArticleModelMongoose,
   CartModelMongoose,
+  ShippingModelMongoose,
   CommentModelMongoose,
   UserModelMongoose
 } from './models';

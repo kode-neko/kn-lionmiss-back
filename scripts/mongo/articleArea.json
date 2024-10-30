@@ -1,29 +1,19 @@
 [
   {
     "_id" : ObjectId("66db3fc57f97b60ae12b4a21"),
-    "article": ObjectId("66db3e857f97b60ae12b4a1e"),
     "title" : "Vestido noche verano",
     "desc" : "Lorem ipsum dolor sit amet consectetur adipiscing elit vulputate ultrices potenti conubia convallis.",
     "price" : 33.95,
     "tax" : NumberInt(21),
-    "area" : {
-        "name" : "Spain",
-        "country" : "Spain",
-        "symbol" : "€"
-    }
+    "area" : "Spanish"
   },
   {
     "_id" : ObjectId("66f1e45ebbc729d277277a6c"),
-    "article": ObjectId("66db3e857f97b60ae12b4a1e"),
     "title" : "Black night summer dress",
     "desc" : "Lorem ipsum dolor sit amet consectetur adipiscing elit vulputate ultrices potenti conubia convallis.",
     "price" : 33.95,
     "tax" : NumberInt(21),
-    "area" : {
-        "name" : "England",
-        "country" : "England",
-        "symbol" : "$"
-    }
+    "area" : "English-UK"
   }
   
 ]

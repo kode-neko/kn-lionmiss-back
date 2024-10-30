@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import IAddressMongoose from '../interfaces/IAddressMongoose';
+import { IAddressMongoose } from '../interfaces';
 
 const addressSchemaMongoose = new Schema<IAddressMongoose>({
   alias: String,

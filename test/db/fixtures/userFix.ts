@@ -1,6 +1,5 @@
+import { shipping } from '@fixtures/shipping';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// User
-
 import { faker } from '@faker-js/faker';
 import {
   createFixArea, createFixArticle, createFixListArticle
@@ -8,7 +7,7 @@ import {
 import {
   Comment, Address, UnitsHeightEnum, UnitsWeightEnum, SexEnum, User
 } from '@model/index';
-import { createFixCart } from './cartFix';
+import { createFixCart, createFixShipping } from './cartFix';
 
 // Comment
 
@@ -19,7 +18,8 @@ function createFixComment (): Comment {
     text: faker.lorem.words(),
     rating: faker.helpers.rangeToNumber({ min: 0, max: 5 }),
     pics: [],
-    article: createFixArticle()
+    user: faker.internet.userName(),
+    article: faker.database.mongodbObjectId()
   };
 }
 
@@ -38,7 +38,7 @@ function createFixListComment (size = 10): Comment[] {
 
 function createFixAddress (): Address {
   return {
-    id: faker.database.mongodbObjectId,
+    id: faker.database.mongodbObjectId(),
     alias: faker.internet.userName(),
     name: faker.person.firstName(),
     surname: faker.person.lastName(),
@@ -46,14 +46,20 @@ function createFixAddress (): Address {
     city: faker.location.city(),
     state: faker.location.state(),
     country: faker.location.country(),
-    phone: faker.phone.number(),
+    phone: Number(faker.phone.number()),
     obs: faker.lorem.paragraph()
   };
 }
 
-function createFixAddressNoId (): Comment {
+function createFixAddressNoId (): Address {
   const { id, ...rest } = createFixAddress();
   return rest;
+}
+
+function createFixListAddress (size = 3): Address[] {
+  return Array(size)
+    .fill({})
+    .map(() => createFixAddress());
 }
 
 // Measures
@@ -76,16 +82,17 @@ function createFixMeasures () {
 
 function createFixUser (): User {
   return {
+    id: faker.database.mongodbObjectId(),
     userName: faker.internet.userName(),
     email: faker.internet.email(),
     bday: faker.date.birthdate(),
     sex: faker.helpers.arrayElement(Object.values(SexEnum)),
     area: createFixArea(),
     measures: createFixMeasures(),
-    commentList: createFixListComment(),
-    addressList: createFixAddress(),
-    favList: createFixListArticle(),
-    cart: createFixCart()
+    addresses: createFixListAddress(),
+    favs: createFixListArticle(),
+    cart: createFixCart(),
+    shippings: [createFixShipping()]
   };
 }
 
@@ -96,6 +103,7 @@ export {
 
   createFixAddress,
   createFixAddressNoId,
+  createFixListAddress,
 
   createFixMeasures,
   createFixUser
