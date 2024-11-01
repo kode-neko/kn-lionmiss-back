@@ -7,9 +7,9 @@ import { createFixArticle } from './articleFix';
 
 // Cart
 
-function createFixCartLine (order: number, article?: Article): CartLine {
+function createFixCartLine (id: string, article?: Article): CartLine {
   return {
-    id: order,
+    id,
     qty: faker.helpers.rangeToNumber({ min: 1, max: 3 }),
     article: article || createFixArticle()
   };
@@ -18,8 +18,8 @@ function createFixCartLine (order: number, article?: Article): CartLine {
 function createFixCart (cartLinesNum = 4): Cart {
   return {
     id: faker.database.mongodbObjectId(),
-    cartLines: Array(cartLinesNum).fill({})
-      .map((_, i) => createFixCartLine(i))
+    lines: Array(cartLinesNum).fill({})
+      .map((_, i) => createFixCartLine(`${i+1}`, createFixArticle()))
   };
 }
 
@@ -36,11 +36,12 @@ function createFixShipping (): Shipping {
     idTracking: faker.lorem.words(),
     idShipping: faker.lorem.words(),
     state: {},
-    payment: PaymentEnum.CARD
+    payment: PaymentEnum.CARD,
+    lines: []
   };
 }
 
-function createFixShippingNoId (): Cart {
+function createFixShippingNoId (): Shipping {
   const { id, ...rest } = createFixShipping();
   return rest;
 }

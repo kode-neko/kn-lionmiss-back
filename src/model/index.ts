@@ -10,7 +10,8 @@ export {
   CartLine,
   PaymentEnum,
   ShipStateEnum,
-  Shipping
+  Shipping,
+  ShippingLine
 } from './cart';
 
 export {
@@ -23,4 +24,4 @@ export {
   UserMeasures
 } from './user';
 
-export {SearchParams, UserLogin} from './app';
+export { SearchParams, UserLogin } from './app';

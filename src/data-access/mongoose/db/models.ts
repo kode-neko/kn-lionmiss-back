@@ -1,12 +1,19 @@
 import { model } from 'mongoose';
 import {
+  areaSchemaMongoose,
   articleAreaSchemaMongoose,
   articleSchemaMongoose,
   cartSchemaMongoose,
   commentSchemaMongoose,
+  shippingSchemaMongoose,
   userSchemaMongoose
 } from './schema';
 
+const AreaModelMongoose = model(
+  'area',
+  areaSchemaMongoose,
+  'area'
+);
 const ArticleAreaModelMongoose = model(
   'articleArea',
   articleAreaSchemaMongoose,
@@ -22,6 +29,11 @@ const CartModelMongoose = model(
   cartSchemaMongoose,
   'cart'
 );
+const ShippingModelMongoose = model(
+  'shipping',
+  shippingSchemaMongoose,
+  'shipping'
+);
 const CommentModelMongoose = model(
   'comment',
   commentSchemaMongoose,
@@ -34,9 +46,11 @@ const UserModelMongoose = model(
 );
 
 export {
+  AreaModelMongoose,
   ArticleAreaModelMongoose,
   ArticleModelMongoose,
   CartModelMongoose,
+  ShippingModelMongoose,
   CommentModelMongoose,
   UserModelMongoose
 };

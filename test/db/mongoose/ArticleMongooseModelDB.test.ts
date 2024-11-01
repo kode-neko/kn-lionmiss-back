@@ -8,15 +8,12 @@ import {
   ArticleMongooseModelDB
 } from '@data-access/mongoose/index';
 import {
-  Collection, Db, MongoClient,
-  ObjectId
+  Collection, Db, MongoClient
 } from 'mongodb';
-import {
-  createArticleFixMongo,
-  createArticleListFixMongo,
-  createArticleNoIdFixMongo
-} from '../fixtures/utilsFixMongo';
 import { faker } from '@faker-js/faker';
+import {
+  createFixArticle, createFixArticleNoId, createFixListArticle
+} from '../fixtures';
 
 const {
   DB,
@@ -46,7 +43,7 @@ describe('ArticleMongooseModelDB', () => {
   });
 
   beforeEach(async () => {
-    const articleList = createArticleListFixMongo();
+    const articleList = createFixListArticle();
     await collArticle.insertMany(articleList.map((a) => ArticleMongooseModelDB.parseArticleToMongoose(a)));
     artExample = articleList[0];
   });
@@ -61,7 +58,7 @@ describe('ArticleMongooseModelDB', () => {
   });
 
   test('Read existing', async () => {
-    const article = await articleMongooseModel.read(artExample.id as string);
+    const article = await articleMongooseModel.read(artExample.id);
     expect(article).toEqual(artExample);
   });
 
@@ -77,14 +74,14 @@ describe('ArticleMongooseModelDB', () => {
   });
 
   test('Create', async () => {
-    const newArt = createArticleNoIdFixMongo();
+    const newArt = createFixArticleNoId();
     const { id, ...newArtId } = await articleMongooseModel.create(newArt);
     expect({ id, ...newArt }).toEqual({ id, ...newArtId });
   });
 
   test('Update existing', async () => {
-    const art = createArticleFixMongo();
-    collArticle.insertOne(ArticleMongooseModelDB.parseArticleToMongoose(art));
+    const art = createFixArticle();
+    await collArticle.insertOne(ArticleMongooseModelDB.parseArticleToMongoose(art));
     art.tags = [faker.lorem.word()];
     expect(async () => await articleMongooseModel.update(art))
       .not
@@ -92,14 +89,14 @@ describe('ArticleMongooseModelDB', () => {
   });
 
   test('Update not existing', async () => {
-    const art = createArticleFixMongo();
+    const art = createFixArticle();
     expect(async () => await articleMongooseModel.update(art))
       .rejects
       .toThrow(NotFoundDbException);
   });
 
   test('Delete existing', async () => {
-    const art = createArticleFixMongo();
+    const art = createFixArticle();
     await collArticle.insertOne(ArticleMongooseModelDB.parseArticleToMongoose(art));
     expect(async () => await articleMongooseModel.delete(art.id))
       .not

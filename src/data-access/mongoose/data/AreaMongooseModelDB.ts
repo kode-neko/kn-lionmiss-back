@@ -1,56 +1,94 @@
-import { Area } from '@model/index';
-import { IModelDBArticleArea } from '../../interfaces';
-import IAreaMongo from '../db/interfaces/IAreaMongoose';
-import { ArticleAreaModelMongoose } from '../db';
+import { NotFoundDbException } from '@data-access/index';
+import { Area, SearchParams } from '@model/index';
+import { AreaModelMongoose, IAreaMongoose } from '../db';
+import { Types } from 'mongoose';
+import { IModelDBArea } from '../../interfaces';
 
-class AreaMongoModelDB implements IModelDBArticleArea {
+class AreaMongooseModelDB implements IModelDBArea {
 
-  private static instance: IModelDBArticleArea;
+  private static instance: AreaMongooseModelDB;
 
-  public static getIntance (): IModelDBArticleArea {
-    if (!AreaMongoModelDB.instance) {
-      AreaMongoModelDB.instance = new AreaMongoModelDB();
+  public static getIntance (): AreaMongooseModelDB {
+    if (!AreaMongooseModelDB.instance) {
+      AreaMongooseModelDB.instance = new AreaMongooseModelDB();
     }
-    return AreaMongoModelDB.instance;
+    return AreaMongooseModelDB.instance;
   }
 
   private constructor () {
 
   }
 
-  private static parseAreaToMongo (area: Area): IAreaMongo {
-    return { ...area };
+  public static parseAreaToMongoose (area: Area): IAreaMongoose {
+    return {
+      _id: new Types.ObjectId(area.id),
+      name: area.name,
+      locale: area.locale,
+      country: area.country,
+      symbol: area.symbol
+    };
   }
 
-  private static parseMongoToArea (mongo: IAreaMongo): Area {
-    return { ...mongo };
+  public static parseMongooseToArea (mongo: IAreaMongoose): Area {
+    return {
+      id: mongo._id?.toString(),
+      name: mongo.name,
+      locale: mongo.locale,
+      country: mongo.country,
+      symbol: mongo.symbol
+    };
   }
 
-  read (id: string): Promise<Area> {
-    return ArticleAreaModelMongoose.aggregate([
-      { $match: { 'area.name': id } },
-      { $group: { _id: '$area' } },
-      {
-        $project: {
-          _id: 0,
-          area: '$_id'
-        }
-      }
-    ]).then((list) => AreaMongoModelDB.parseMongoToArea(list.shift()));
+  read (id: string): Promise<Area> | NotFoundDbException {
+    return AreaModelMongoose
+      .findById(id)
+      .then((res) => {
+        if (!res) throw new NotFoundDbException();
+        return AreaMongooseModelDB.parseMongooseToArea(res as IAreaMongoose);
+      });
   }
 
-  readList (): Promise<Area[]> {
-    return ArticleAreaModelMongoose.aggregate([
-      { $group: { _id: '$area' } },
-      {
-        $project: {
-          _id: 0,
-          area: '$_id'
-        }
-      }
-    ]).then((list) => list.map((res) => AreaMongoModelDB.parseMongoToArea(res.area)));
+  readByProps (obj: Partial<Area>): Promise<Area> | NotFoundDbException {
+    return AreaModelMongoose
+      .findOne(obj)
+      .then((res) => {
+        if (!res) throw new NotFoundDbException();
+        return AreaMongooseModelDB.parseMongooseToArea(res as IAreaMongoose);
+      });
+  }
+
+  readList ({ limit, skip }: SearchParams<Area>): Promise<Area[]> {
+    return AreaModelMongoose
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .then((list) => list.map((a) => AreaMongooseModelDB
+        .parseMongooseToArea(a)));
+  }
+
+  create (obj: Area): Promise<Area> {
+    return AreaModelMongoose
+      .create(AreaMongooseModelDB.parseAreaToMongoose(obj))
+      .then((res) => AreaMongooseModelDB.parseMongooseToArea(res));
+  }
+
+  update (obj: Area): Promise<void> | NotFoundDbException {
+    const { _id, ...rest } = AreaMongooseModelDB.parseAreaToMongoose(obj);
+    return AreaModelMongoose
+      .updateOne({ _id }, rest)
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException();
+      });
+  }
+
+  delete (id: string): Promise<void> | NotFoundDbException {
+    return AreaModelMongoose
+      .deleteMany({ _id: new Types.ObjectId(id) })
+      .then(({ deletedCount }) => {
+        if (deletedCount === 0) throw new NotFoundDbException();
+      });
   }
 
 }
 
-export default AreaMongoModelDB;
+export default AreaMongooseModelDB;

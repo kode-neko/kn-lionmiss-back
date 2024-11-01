@@ -1,29 +1,30 @@
 import { Types } from 'mongoose';
-import IAddressMongo from './IAddressMongo';
-import ICommentMongo from './ICommentMongo';
 import { UnitsHeightEnum, UnitsWeightEnum } from '@model/index';
+import IAddressMongoose from './IAddressMongoose';
+import ICommentMongoose from './ICommentMongoose';
 
 interface IUserMongo {
   _id?: Types.ObjectId;
   userName: string;
   email: string;
+  cart?: Types.ObjectId;
+  shippings: Types.ObjectId[];
   bday: Date;
   sex: string;
-  addresses: IAddressMongo[];
-  commentList: ICommentMongo[];
-  favs: Types.ObjectId[];
-  cart: Types.ObjectId;
+  area: string;
   measures: {
-    shoulder: number;
-    chest: number;
-    waist: number;
-    hips: number;
-    foot: number;
-    height: number;
-    weight: number;
+    shoulder?: number;
+    chest?: number;
+    waist?: number;
+    hips?: number;
+    foot?: number;
+    height?: number;
+    weight?: number;
     unitsHeight: UnitsHeightEnum;
     unitsWeight: UnitsWeightEnum;
   };
+  favs: Types.ObjectId[];
+  addresses: IAddressMongoose[];
 }
 
 export default IUserMongo;

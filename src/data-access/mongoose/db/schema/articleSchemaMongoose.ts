@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 import { enumInstruct } from './utils';
-import IArticleMongoose from '../interfaces/IArticleMongoose';
+import { IArticleMongoose } from '../interfaces';
 
 const articleSchemaMongoose = new Schema<IArticleMongoose>({
   instructs: {
@@ -29,6 +29,10 @@ const articleSchemaMongoose = new Schema<IArticleMongoose>({
   },
   discolor: {
     type: Boolean,
+    required: true
+  },
+  articleAreaList: {
+    type: [Schema.Types.ObjectId],
     required: true
   }
 }, { id: true });

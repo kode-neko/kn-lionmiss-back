@@ -1,6 +1,6 @@
-import { Area } from '@model/index';
+import { ArticleArea } from '@model/index';
 import IModelDB from './IModelDB';
 
-type IModelDBArticleArea = Pick<IModelDB<Area>, 'read' | 'readList'>;
+type IModelDBArticleArea = IModelDB<ArticleArea>
 
 export default IModelDBArticleArea;

@@ -82,7 +82,7 @@ CREATE TABLE article_instruct(
 CREATE TABLE area(
 	id CHAR(36) PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
-	country VARCHAR(100) NOT NULL
+	country VARCHAR(100) NOT NULL,
 	symbol VARCHAR(1) NOT NULL
 );
 
@@ -105,45 +105,9 @@ CREATE TABLE article_area(
 	PRIMARY KEY(article, area)
 );
 
-CREATE TABLE article_area_variant(
-	article CHAR(36) NOT NULL,
-	variant VARCHAR(50) NOT NULL,
-	area CHAR(36) NOT NULL,
-	label VARCHAR(50) NOT NULL,
-	
-	FOREIGN KEY (article, variant) REFERENCES article_variant(article, variant)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-
-  FOREIGN KEY (area) REFERENCES area(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	PRIMARY KEY(article, variant, area)
-);
-
-CREATE TABLE article_area_instruct(
-	article CHAR(36) NOT NULL,
-	area CHAR(36) NOT NULL,
-	title TINYTEXT NOT NULL,
-	descrip TEXT,
-	price DECIMAL(6,2) UNSIGNED NOT NULL,
-	tax DECIMAL(4, 2) UNSIGNED NOT NULL,
-	
-	FOREIGN KEY (article) REFERENCES article(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	FOREIGN KEY (area) REFERENCES area(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	PRIMARY KEY(article, area)
-);
-
-
 CREATE TABLE user(
-	email VARCHAR(255) PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY,
+	email VARCHAR(255) UNIQUE NOT NULL,
 	userName VARCHAR(100) UNIQUE NOT NULL,
 	bday DATE NOT NULL,
 	sex ENUM('female', 'male'),
@@ -156,13 +120,13 @@ CREATE TABLE user(
 
 CREATE TABLE comment(
 	id CHAR(36) PRIMARY KEY,
-	user VARCHAR(255) NOT NULL,
+	user CHAR(36) NOT NULL,
 	article CHAR(36) NOT NULL,
 	title TINYTEXT NOT NULL,
 	text TEXT NOT NULL,
 	rating TINYINT(1) UNSIGNED NOT NULL,
 	
-	FOREIGN KEY (user) REFERENCES user(email)
+	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
@@ -186,7 +150,7 @@ CREATE TABLE comment_pics(
 
 CREATE TABLE address(
 	id CHAR(36) PRIMARY KEY,
-	user VARCHAR(255) NOT NULL,
+	user CHAR(36) NOT NULL,
 	alias VARCHAR(50) NOT NULL,
 	name VARCHAR(100) NOT NULL,
 	surname VARCHAR(100) NOT NULL,
@@ -197,17 +161,17 @@ CREATE TABLE address(
 	phone TINYINT(23) UNSIGNED NOT NULL,
 	obs TEXT,
 
-	FOREIGN KEY (user) REFERENCES user(email)
+	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
 
 
 CREATE TABLE user_favs(
-	user VARCHAR(255) NOT NULL,
+	user CHAR(36) NOT NULL,
 	article CHAR(36) NOT NULL,
 
-	FOREIGN KEY (user) REFERENCES user(email)
+	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
@@ -220,7 +184,7 @@ CREATE TABLE user_favs(
 
 CREATE TABLE measures(
 	id CHAR(36) PRIMARY KEY,
-	user VARCHAR(255) NOT NULL,
+	user CHAR(36) NOT NULL,
 	shoulder TINYINT(23) UNSIGNED,
 	chest TINYINT(23) UNSIGNED,
 	waist TINYINT(23) UNSIGNED,
@@ -231,23 +195,18 @@ CREATE TABLE measures(
 	unitsHeight ENUM('cm', 'inch'),
 	unitsWeight ENUM('kg', 'lb'),
 
-	FOREIGN KEY (user) REFERENCES user(email)
+	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
 
 CREATE TABLE cart(
-	id CHAR(36) PRIMARY KEY,
-	user VARCHAR(255) NOT NULL,
-
-	FOREIGN KEY (user) REFERENCES user(email)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
+	id CHAR(36) PRIMARY KEY
 );
 
 CREATE TABLE cart_line(
+	id TINYINT(3) NOT NULL,
 	cart CHAR(36) NOT NULL,
-	line TINYINT(3) NOT NULL,
 	article CHAR(36) NOT NULL,
 	qty TINYINT(2) NOT NULL,
 
@@ -259,16 +218,17 @@ CREATE TABLE cart_line(
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
-	PRIMARY KEY(cart, line)
+	PRIMARY KEY(id, cart)
 );
 
 CREATE TABLE shipping(
 	id CHAR(36) PRIMARY KEY,
+	user CHAR(36) NOT NULL
 	idTracking VARCHAR(36) NOT NULL,
 	idPayment VARCHAR(36) NOT NULL,
 	payment ENUM('transfer', 'card', 'crypto', 'paypal') NOT NULL,
 
-	FOREIGN KEY (id) REFERENCES cart(id)
+	FOREIGN KEY (id) REFERENCES user(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
@@ -297,7 +257,22 @@ CREATE TABLE shipping_state(
 );
 
 
+CREATE TABLE shipping_line(
+	id CHAR(36) NOT NULL,
+	shipping CHAR(36) NOT NULL,
+	article CHAR(36) NOT NULL,
+	qty TINYINT(2) NOT NULL,
 
+	FOREIGN KEY (shipping) REFERENCES shipping(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(id, shipping)
+);
 
 
 

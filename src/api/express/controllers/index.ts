@@ -17,6 +17,7 @@ export {
 
 export {
   getCart,
+  postCart,
   postCartLine,
   putCartLine,
   deleteCartLine

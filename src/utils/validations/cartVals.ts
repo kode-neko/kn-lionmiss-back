@@ -11,7 +11,7 @@ const CartLineValSchema = z.object({
 
 const CartValSchema = z.object({
   id: z.string().nullable(),
-  cartLines: z.array(CartLineValSchema)
+  lines: z.array(CartLineValSchema)
 });
 
 const ShipStateEnumValSchema = z.nativeEnum(ShipStateEnum);

@@ -6,15 +6,5 @@
           "article" : ObjectId("66db3e857f97b60ae12b4a1e"),
           "qty" : NumberInt(2)
       }
-  ],
-  "shipping" : {
-      "idTracking" : "11-111-111",
-      "idPayment" : "23999878222221",
-      "state" : {
-          "orderRecieved" : ISODate("2021-02-25T10:03:46.000+0000"),
-          "processing" : ISODate("2021-02-25T10:03:46.000+0000")
-      },
-      "payment" : "crypto"
-  },
-  "user" : "kodeneko"
+  ]
 }
