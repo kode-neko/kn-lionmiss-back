@@ -31,13 +31,19 @@ async function createClientPool () {
   return client;
 }
 
-async function getClientDb () {
-  if (conn) return [client,
-    db];
+async function createConn () {
+  if (conn) return;
   conn = await ENV === 'dev'
     ? createClient()
     : createClientPool();
   db = conn.db(DB);
 }
 
-export { getClientDb };
+function getClientDb () {
+  return [
+    client,
+    db
+  ];
+}
+
+export { createConn, getClientDb };
