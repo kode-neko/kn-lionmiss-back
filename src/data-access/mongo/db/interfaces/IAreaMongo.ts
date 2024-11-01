@@ -1,6 +1,10 @@
-import { Area } from '@model/index';
 import { ObjectId } from 'mongodb';
 
-type IAreaMongo = Omit<Area, 'id'>;
+interface IAreaMongo {
+  _id?: ObjectId;
+  name: string;
+  country: string;
+  symbol: string;
+}
 
 export default IAreaMongo;
