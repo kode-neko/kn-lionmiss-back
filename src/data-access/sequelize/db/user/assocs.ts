@@ -41,6 +41,9 @@ function initUserAssoc () {
       onUpdate: 'CASCADE'
     }
   );
+
+  // User - Articles [N:M]
+  
   UserSeq.belongsToMany(
     ArticleSeq,
     {

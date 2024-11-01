@@ -1,6 +1,7 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
+import { UserSeq } from './UserSeq';
 
 class UserMeasuresSeq extends Model { }
 
@@ -29,7 +30,14 @@ function initUserMeasuresSeq (sequelize: Sequelize) {
           'kb',
           'lb'
         )
-      }
+      },
+      userId: {
+        type: DataTypes.UUID,
+        references: {
+          model: UserSeq,
+          key: 'id'
+        }
+      },
     },
     {
       sequelize: sequelize,

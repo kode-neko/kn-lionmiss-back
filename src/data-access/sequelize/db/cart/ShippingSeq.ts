@@ -1,7 +1,7 @@
 import {
   DataTypes, Model, Sequelize
 } from 'sequelize';
-import {CartSeq} from './CartSeq';
+import { UserSeq } from '../user/UserSeq';
 
 class ShippingSeq extends Model { }
 
@@ -10,11 +10,7 @@ function initShippingSeq (sequelize: Sequelize) {
     {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true,
-        references: {
-          model: CartSeq,
-          key: 'id'
-        }
+        primaryKey: true
       },
       idTracking: {type: DataTypes.STRING},
       idPayment: {type: DataTypes.STRING},
@@ -26,7 +22,14 @@ function initShippingSeq (sequelize: Sequelize) {
           'paypal'
         ),
         allowNull: false
-      }
+      },
+      userId: {
+        type: DataTypes.UUID,
+        references: {
+          model: UserSeq,
+          key: 'id'
+        }
+      },
     },
     {
       sequelize: sequelize,
