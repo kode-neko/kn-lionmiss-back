@@ -55,7 +55,10 @@ async function initDbSeq () {
     port: Number(PORT_MARIA),
     database: DB,
     username: USER_ADMIN,
-    password: PASS_USER_ADMIN
+    password: PASS_USER_ADMIN,
+    dialectOptions: {
+      connectTimeout: 3000
+    },
   });
   initSchema(adminSeqConn);
   await adminSeqConn.sync();

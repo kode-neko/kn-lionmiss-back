@@ -7,6 +7,10 @@ class UserSeq extends Model { }
 function initUserSeq (sequelize: Sequelize) {
   UserSeq.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true
+      },
       userName: {
         type: DataTypes.STRING,
         allowNull: false
