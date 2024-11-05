@@ -8,6 +8,11 @@ class CartLineSeq extends Model { }
 function initCartLineSeq (sequelize: Sequelize) {
   CartLineSeq.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false
+      },
       cartId: {
         type: DataTypes.UUID,
         primaryKey: true,
@@ -15,12 +20,6 @@ function initCartLineSeq (sequelize: Sequelize) {
           model: CartSeq,
           key: 'id'
         }
-      },
-      line: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        allowNull: false
-
       },
       qty: {
         type: DataTypes.INTEGER,

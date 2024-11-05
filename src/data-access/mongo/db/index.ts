@@ -1,9 +1,13 @@
 export {
-  IAddressMongo,
   IAreaMongo,
   IArticleAreaMongo,
   IArticleMongo,
+  ICartLineMongo,
   ICartMongo,
-  ICommentMongo,
+  IShippingLineMongo,
+  IShippingMongo,
+  IUserMeasuresMongo,
+  IAddressMongo,
   IUserMongo
 } from './interfaces';
+export { createConn, getClientDb } from './utils';

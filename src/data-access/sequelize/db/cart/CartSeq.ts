@@ -13,19 +13,19 @@ function initCartSeq (sequelize: Sequelize) {
         primaryKey: true
       },
       userId: {
-        type: DataTypes.STRING,
-        primaryKey: true,
+        type: DataTypes.UUID,
         references: {
           model: UserSeq,
-          key: 'email'
+          key: 'id'
         }
-      }
+      },
     },
     {
       sequelize: sequelize,
       freezeTableName: true,
       modelName: 'cart'
-    }
+    },
+    
   );
 }
 
