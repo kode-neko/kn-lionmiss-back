@@ -1,7 +1,7 @@
-export { default as AreaMongooseModelDB } from './AreaMongooseModelDB';
-export { default as ArticleAreaMongooseModelDB } from './ArticleAreaMongooseModelDB';
-export { default as ArticleMongooseModelDB } from './ArticleMongooseModelDB';
-// export { default as CartMongooseModelDB } from './CartMongooseModelDB';
-export { default as CommentMongooseModelDB } from './CommentMongooseModelDB';
-export { default as ShippingMongooseModelDB } from './ShippingMongooseModelDB';
-// export { default as UserMongooseModelDB } from './UserMongooseModelDB';
+export { default as AreaMongoModelDB } from './AreaMongoModelDB';
+export { default as ArticleAreaMongoModelDB } from './ArticleAreaMongoModelDB';
+export { default as ArticleMongoModelDB } from './ArticleMongoModelDB';
+export { default as CartMongoModelDB } from './CartMongoModelDB';
+export { default as CommentMongoModelDB } from './CommentMongoModelDB';
+export { default as ShippingMongoModelDB } from './ShippingMongoModelDB';
+export { default as UserMongoModelDB } from './UserMongoModelDB';
