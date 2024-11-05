@@ -10,7 +10,7 @@ interface IArticleMongo {
   tags: string[];
   variants: string[];
   discolor: boolean;
-  articleAreaList: IArticleAreaMongo['_id'];
+  articleAreaList: IArticleAreaMongo['_id'][];
 }
 
 export default IArticleMongo;

@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 
 let conn;
 
@@ -13,8 +13,8 @@ const {
 
 const urlConnect = `mongodb://${USER}:${PASS_USER}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
 
-let client;
-let db;
+let client: MongoClient;
+let db: Db;
 
 async function createClient () {
   const client = new MongoClient(urlConnect);
@@ -39,7 +39,7 @@ async function createConn () {
   db = conn.db(DB);
 }
 
-function getClientDb () {
+function getClientDb (): [MongoClient, Db] {
   return [
     client,
     db

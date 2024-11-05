@@ -4,7 +4,7 @@ export {
   ArticleMongooseModelDB,
   // CartMongooseModelDB,
   CommentMongooseModelDB,
-  ShippingMongooseModelDB,
+  ShippingMongooseModelDB
   // UserMongooseModelDB
 } from './data';
 export {

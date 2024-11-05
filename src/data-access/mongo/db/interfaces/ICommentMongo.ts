@@ -4,6 +4,7 @@ import IUserMongo from './IUserMongo';
 
 interface ICommentMongo {
   _id?: ObjectId;
+  title: string;
   article: IArticleMongo['_id'];
   user: IUserMongo['_id'];
   text: string;

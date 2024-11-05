@@ -3,7 +3,7 @@ import IModelDB from './IModelDB';
 import { NotFoundDbException } from '../error';
 
 interface IModelDBArea extends IModelDB<Area> {
-  readByProps(obj: Partial<Area>): Promise<Area> | NotFoundDbException;
+  readByProps(obj: Omit<Area, 'id'>): Promise<Area> | NotFoundDbException;
 }
 
 export default IModelDBArea;

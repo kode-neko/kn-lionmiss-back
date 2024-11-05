@@ -4,6 +4,7 @@ import {
 import { ObjectId } from 'mongodb';
 import IArticleMongo from './IArticleMongo';
 import IAreaMongo from './IAreaMongo';
+import ICartMongo from './ICartMongo';
 
 interface IUserMeasuresMongo {
   shoulder: string;
@@ -31,16 +32,16 @@ interface IAddressMongo {
 
 interface IUserMongo {
   _id?: ObjectId;
-  username: string;
+  userName: string;
   email: string;
-  cart: string;
+  cart: ICartMongo['_id'];
   shippings: string;
   bday: Date;
   sex: SexEnum;
   area: IAreaMongo['name'];
   measures: IUserMeasuresMongo;
   favs: IArticleMongo['_id'][];
-  addresses: IAddressMongo;
+  addresses: IAddressMongo[];
 }
 
 export default IUserMongo;

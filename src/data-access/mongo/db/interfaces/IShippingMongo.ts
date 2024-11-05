@@ -11,7 +11,7 @@ interface IShippingLineMongo {
 interface IShippingMongo {
   _id?: ObjectId;
   idTracking: string;
-  idPayment: string;
+  idShipping: string;
   state: Partial<Record<ShipStateEnum, Date>>;
   payment: string;
   lines: IShippingLineMongo[];
