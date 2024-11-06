@@ -106,26 +106,25 @@ class UserMongooseModelDB implements IModelDBUser {
     let cartMongoose: ICartMongoose;
     let articleMongooseList: IArticleMongoose[];
     return UserModelMongoose
-      .findOne({
+      .findOne({ // Find User
         $or: [{ _id: id },
           { userName: id }]
       })
-      .then((res) => { // Find User
+      .then((res) => { // Find Cart
         if (!res) throw new NotFoundDbException('User');
         userMongoose = res;
         return CartModelMongoose.findById(userMongoose.cart);
       })
-      .then((res) => { // Find Cart
+      .then((res) => { // Find Articles
         if (res) cartMongoose = res;
         const idsArticles = cartMongoose.lines.map((l) => new Types.ObjectId(l.article));
         return ArticleModelMongoose.find({ _id: { $in: idsArticles } });
       })
-      .then((list) => { // Find Articles
+      .then((list) => { // Find Area
         articleMongooseList = list;
-        return AreaModelMongoose.findOne({ name: userMongoose.userName });
+        return AreaModelMongoose.findOne({ name: userMongoose.area });
       })
-      .then((res) => { // Find Area
-        if (!res) throw new NotFoundDbException('Area');
+      .then((res) => { // Return complete User
         return UserMongooseModelDB.parseMongooseToUser(userMongoose, res, cartMongoose, articleMongooseList);
       });
   }

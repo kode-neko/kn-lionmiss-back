@@ -122,26 +122,26 @@ class UserMongoModelDB implements IModelDBUser {
     let articleMongoList: IArticleMongo[];
 
     return this.collUser
-      .findOne({
+      .findOne({ // Find User
         $or: [{ _id: new ObjectId(id) },
           { userName: id }]
       })
-      .then((res) => {
+      .then((res) => { // Find Cart
         if (!res) throw new NotFoundDbException('User');
         userMongo = res;
         return this.collCart.findOne({ _id: new ObjectId(userMongo._id) });
       })
-      .then((res) => {
+      .then((res) => { // Find Articles
         if (res) cartMongo = res;
         const idsArticles = cartMongo.lines.map((l) => new ObjectId(l.article));
         return this.collArt.find({ _id: { $in: idsArticles } });
       })
       .then((list) => list.toArray())
-      .then((list) => {
+      .then((list) => { // Find Area
         articleMongoList = list;
         return this.collArea.findOne({ name: userMongo.area });
       })
-      .then((res) => {
+      .then((res) => { // Return complete User
         UserMongoModelDB.parseMongoToUser(userMongo, res as IAreaMongo, cartMongo, articleMongoList);
       });
   }

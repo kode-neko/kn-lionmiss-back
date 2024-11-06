@@ -1,5 +1,5 @@
 import {
-  Shipping, ShippingLine, SearchParams, Article
+  Shipping, ShippingLine, SearchParams
 } from '@model/index';
 import { Types } from 'mongoose';
 import { IModelDBShipping } from '../../interfaces';
@@ -30,7 +30,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
 
   public static parseShippingToMongoose (shipping: Shipping): IShippingMongoose {
     return {
-      _id: new Types.ObjectId(shipping.id),
+      _id: new Types.ObjectId(shipping.id as string),
       idTracking: shipping.idTracking,
       idShipping: shipping.idShipping,
       state: shipping.state,
@@ -43,7 +43,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
     return {
       id: shippingLine.id,
       qty: shippingLine.qty,
-      article: new Types.ObjectId(shippingLine.article.id)
+      article: new Types.ObjectId(shippingLine.article.id as string)
     };
   }
 

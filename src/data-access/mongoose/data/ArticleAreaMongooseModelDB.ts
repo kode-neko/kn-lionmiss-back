@@ -27,7 +27,7 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
 
   public static parseArticleAreaToMongoose (articleArea: ArticleArea): IArticleAreaMongoose {
     return {
-      _id: new Types.ObjectId(articleArea.id),
+      _id: new Types.ObjectId(articleArea.id as string),
       title: articleArea.title,
       desc: articleArea.desc,
       price: articleArea.price,
@@ -71,12 +71,12 @@ class ArticleAreaMongooseModelDB implements IModelDBArticleArea {
       .find()
       .skip(skip)
       .limit(limit)
-      .then((list) => {
+      .then((list) => { // Find ArticleArea
         articleAreaMongoList = list;
         const areaNameList = list.map((aa) => aa.area);
         return AreaModelMongoose.find({ name: { $in: areaNameList } });
       })
-      .then((list) => {
+      .then((list) => { // Find Areas
         return articleAreaMongoList.map((aa) => ArticleAreaMongooseModelDB.parseMongooseToArticleArea(
           aa,
           list.find((a) => a.name === aa.area) as IAreaMongoose

@@ -77,13 +77,13 @@ class ArticleAreaMongoModelDB implements IModelDBArticleArea {
     return this.collArtArea
       .find({}, { limit, skip })
       .toArray()
-      .then((list) => {
+      .then((list) => { // Find ArticleArea
         articleAreaMongoList = list;
         const areaNameList = list.map((aa) => aa.area);
         return this.collArea.find({ name: { $in: areaNameList } });
       })
       .then((list) => list.toArray())
-      .then((list) => {
+      .then((list) => { // Find Areas
         return articleAreaMongoList.map((aa) => ArticleAreaMongoModelDB.parseMongoToArticleArea(
           aa,
           list.find((a) => a.name === aa.area) as IAreaMongo
