@@ -1,5 +1,11 @@
 {
+  "typescript.preferences.useAliasesForRenames": true,
   "eslint.options": {
-    "overrideConfigFile": "config/eslint.config.mjs"
+    "overrideConfigFile": "./config/eslint.config.mjs",
   },
+  "jestrunner.configPath": "./config/jest.config.ts",
+  "jestrunner.debugOptions": {
+    "envFile": "${workspaceRoot}/config/env/.env.dev"
+  },
+  "jestrunner.jestCommand": "npx dotenvx run -f ./config/env/.env.dev -- npx jest --runInBand --testTimeout=10000"
 }

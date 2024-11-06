@@ -1,8 +1,8 @@
 import CartLine from './CartLine';
 
 interface Cart {
-  id: string;
-  cartLines: CartLine[];
+  id?: string;
+  lines: CartLine[];
 }
 
 export default Cart;

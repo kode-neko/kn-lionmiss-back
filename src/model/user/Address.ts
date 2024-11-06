@@ -1,6 +1,6 @@
 interface Address {
-  id: string;
-  alais: string;
+  id?: string;
+  alias: string;
   name: string;
   surname: string;
   address: string;

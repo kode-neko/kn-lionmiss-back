@@ -1,5 +1,5 @@
-INSERT INTO lionmiss.area (id,name,country) VALUES
-	 ('1','Spain','Spain');
+INSERT INTO lionmiss.area (id,name,country, symbol) VALUES
+	 ('1','Spain','Spain', '€');
 INSERT INTO lionmiss.article (id,discolor) VALUES
 	 ('1',0),
 	 ('10',0),
@@ -138,13 +138,13 @@ INSERT INTO lionmiss.article_variant (article,variant) VALUES
 	 ('7','green'),
 	 ('7','red'),
 	 ('7','yellow');
-INSERT INTO lionmiss.cart (id,`user`) VALUES
-	 ('1','kodeneko@user.es');
-INSERT INTO lionmiss.cart_line (cart,line,article,qty) VALUES
-	 ('1',1,'2',1),
-	 ('1',2,'3',2);
+INSERT INTO lionmiss.cart (id) VALUES
+	 ('1');
+INSERT INTO lionmiss.cart_line (id,cart,article,qty) VALUES
+	 ('1','1','2',1),
+	 ('2','1','3',2);
 INSERT INTO lionmiss.comment (id,`user`,article,title,`text`,rating) VALUES
-	 ('1','kodeneko@user.es','8','Lorem ipsum dolor','Lorem ipsum dolor sit amet consectetur adipiscing elit, sed congue conubia at suspendisse mus turpis dignissim, quam penatibus est facilisi ante pharetra. Erat fusce tristique odio nec vulputate volutpat, blandit bibendum semper nunc lacus imperdiet eros, integer ridiculus nascetur dui nisl.',4);
+	 ('1','1','8','Lorem ipsum dolor','Lorem ipsum dolor sit amet consectetur adipiscing elit, sed congue conubia at suspendisse mus turpis dignissim, quam penatibus est facilisi ante pharetra. Erat fusce tristique odio nec vulputate volutpat, blandit bibendum semper nunc lacus imperdiet eros, integer ridiculus nascetur dui nisl.',4);
 INSERT INTO lionmiss.comment_pics (comment,pic) VALUES
 	 ('1','20120419130822.png');
 INSERT INTO lionmiss.instruct (name) VALUES
@@ -153,9 +153,11 @@ INSERT INTO lionmiss.instruct (name) VALUES
 	 ('spining'),
 	 ('whasing');
 INSERT INTO lionmiss.measures (id,`user`,shoulder,chest,waist,hips,foot,height,weight,unitsHeight,unitsWeight) VALUES
-	 ('1','kodeneko@user.es',42,96,78,100,42,177,66,'cm','kg');
-INSERT INTO lionmiss.shipping (id,idTracking,idPayment,payment) VALUES
-	 ('1','222-333-444','555-666-7777','card');
+	 ('1','1',42,96,78,100,42,177,66,'cm','kg');
+INSERT INTO lionmiss.address (id,`user`,alias,name,surname,address,city,state,country,phone,obs) VALUES
+('1','1','casa','Elena','Nito del Bosque','C/ Flor 33','Villa Jardín','Torrevieja','Alicante','Spain','+34699874525', 'Velit sint veniam deserunt sint est incididunt in exercitation nisi.');
+INSERT INTO lionmiss.shipping (id,user,idTracking,idPayment,payment) VALUES
+	 ('1','1','222-333-444','555-666-7777','card');
 INSERT INTO lionmiss.tag (name) VALUES
 	 ('bottom'),
 	 ('dress'),
@@ -169,9 +171,13 @@ INSERT INTO lionmiss.tag (name) VALUES
 	 ('top');
 INSERT INTO lionmiss.tag (name) VALUES
 	 ('trouser');
-INSERT INTO lionmiss.`user` (email,userName,bday,sex,area) VALUES
-	 ('kodeneko@user.es','kdoeneko','1990-09-18','female', 1),
-	 ('test@test.es','test','1990-01-12','male', 1);
+INSERT INTO lionmiss.shipping_line (id,shipping,article,qty) VALUES
+	 ('1','1','1',2);
+INSERT INTO lionmiss.shipping_line (id,shipping,article,qty) VALUES
+	 ('2','1','2',2);
+INSERT INTO lionmiss.`user` (id,email,userName,bday,sex,area) VALUES
+	 ('1','kodeneko@user.es','kdoeneko','1990-09-18','female', 1),
+	 ('2','test@test.es','test','1990-01-12','male', 1);
 INSERT INTO lionmiss.user_favs (`user`,article) VALUES
-	 ('kodeneko@user.es','1'),
-	 ('kodeneko@user.es','8');
+	 ('1','1'),
+	 ('1','8');

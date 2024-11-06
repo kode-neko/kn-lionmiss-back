@@ -1,7 +1,9 @@
 interface Area {
-  id: string;
+  id?: string;
   name: string;
+  locale: string;
   country: string;
+  symbol: string;
 }
 
 export default Area;
