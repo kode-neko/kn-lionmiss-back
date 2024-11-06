@@ -22,7 +22,7 @@ const genConf = {
   database: DB
 };
 
-async function createConn () {
+async function createConnDb () {
   return await createConnection({ ...genConf });
 }
 
@@ -33,15 +33,17 @@ function createPoolDb () {
   });
 }
 
-async function getConn (): Promise<Connection | PoolConnection> {
+async function createConn () {
   if (!conn && ENV == 'prod') {
     conn = await createPoolDb().getConnection();
   } else if (!conn && ENV == 'dev') {
-    conn = await createConn();
+    conn = await createConnDb();
   }
   return conn;
 }
 
-export {
-  createConn, createPoolDb, getConn
-};
+async function getConn (): Promise<Connection | PoolConnection> {
+  return conn;
+}
+
+export { createConn, getConn };
