@@ -104,36 +104,52 @@ class CartMongoModelDB implements IModelDBCart {
   }
 
   createLine (idCart: string, cartLine: CartLine): Promise<Cart> | NotFoundDbException {
+    let cartMongo: ICartMongo;
+    const lineMongo = CartMongoModelDB.parseCartLineToMongo(cartLine);
     const idCartFilter = { _id: new ObjectId(idCart) };
     return this.collCart
-      .findOne(idCartFilter)
-      .then((res) => {
+      .findOne(idCartFilter) // Find Cart
+      .then((res) => { // Update CartLine
         if (!res) throw new NotFoundDbException('Cart');
-        const lineMongo = CartMongoModelDB.parseCartLineToMongo(cartLine);
+        cartMongo = res;
         return this.collCart.updateOne(idCartFilter, { $push: { lines: lineMongo } });
-      });
+      })
+      .then(({ modifiedCount }) => { // Find Articles
+        if (modifiedCount === 0) return NotFoundDbException('CartLine');
+        cartMongo.lines.push(lineMongo);
+        const idsArticles = cartMongo.lines.map((l) => l.article as ObjectId);
+        return this.collArt.find({ _id: { $in: idsArticles } });
+      })
+      .then((list) => list.toArray()) // Return Cart with all CartLines
+      .then((list) => CartMongoModelDB.parseMongoToCart(cartMongo, list));
   }
 
   updateLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
     const idCartFilter = { _id: new ObjectId(idCart) };
     return this.collCart
-      .findOne(idCartFilter)
-      .then((res) => {
+      .findOne(idCartFilter) // Find Cart
+      .then((res) => { // Update CartLine
         if (!res) throw new NotFoundDbException('Cart');
-        const lineMongo = CartMongoModelDB.parseCartLineToMongo(cartLine);
         const filter = { ...idCartFilter, 'lines.id': cartLine.id };
+        const lineMongo = CartMongoModelDB.parseCartLineToMongo(cartLine);
         return this.collCart.updateOne(filter, { $set: { 'lines.$': lineMongo } });
+      })
+      .then(({ modifiedCount }) => { // Confirm updated CartLine
+        if (modifiedCount === 0) throw new NotFoundDbException('CartLine');
       });
   }
 
   deleteLine (idCart: string, idCartLine: string): Promise<void> | NotFoundDbException {
     const idCartFilter = { _id: new ObjectId(idCart) };
     return this.collCart
-      .findOne(idCartFilter)
-      .then((res) => {
+      .findOne(idCartFilter) // Find Cart
+      .then((res) => { // Delete CartLine
         if (!res) throw new NotFoundDbException('Cart');
         const filter = { ...idCartFilter, 'lines.id': idCartLine };
         return this.collCart.deleteOne(filter);
+      })
+      .then(({ deletedCount }) => { // Confirm deleted CartLine
+        if (deletedCount === 0) throw new NotFoundDbException('CartLine');
       });
   }
 

@@ -141,10 +141,12 @@ class ArticleMongoModelDB implements IModelDBArticle {
   }
 
   createInfoArea (idArticle: string, articleArea: ArticleArea): Promise<ArticleArea> {
+    let areaMongo: IAreaMongo;
     return this.collArea
       .findOne({ name: articleArea.area.name })
       .then((res) => {
         if (!res) throw new NotFoundDbException('Area');
+        areaMongo = res;
         return this.collArt.findOne({ _id: new ObjectId(idArticle) });
       })
       .then((res) => {
@@ -153,7 +155,9 @@ class ArticleMongoModelDB implements IModelDBArticle {
         return this.collArtArea.insertOne(articleAreaMongo);
       })
       .then(({ insertedId }) => {
-        return { id: insertedId, ...articleArea };
+        return {
+          id: insertedId, ...articleArea, area: areaMongo
+        };
       });
   }
 

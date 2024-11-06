@@ -5,7 +5,10 @@ import { Types } from 'mongoose';
 import { IModelDB, IModelDBArticle } from '../../interfaces';
 import {
   AreaModelMongoose,
-  ArticleAreaModelMongoose, ArticleModelMongoose, IAreaMongoose, IArticleAreaMongoose, IArticleMongoose
+  ArticleAreaModelMongoose,
+  ArticleModelMongoose,
+  IAreaMongoose,
+  IArticleMongoose
 } from '../db';
 import { IdRequiredDbException, NotFoundDbException } from '../../error';
 import ArticleAreaMongooseModelDB from './ArticleAreaMongooseModelDB';
@@ -34,7 +37,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       tags: article.tags,
       variants: article.variants,
       discolor: article.discolor,
-      articleAreaList: article.articleAreaList.map((aa) => new Types.ObjectId(aa.id))
+      articleAreaList: article.articleAreaList.map((aa) => new Types.ObjectId(aa.id as string))
     };
   }
 
@@ -94,44 +97,50 @@ class ArticleMongooseModelDB implements IModelDBArticle {
   }
 
   readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
-    let artAreaMongoose: IArticleAreaMongoose;
     return ArticleModelMongoose
-      .findById(idArticle)
-      .then((res) => { // Find Article
-        if (!res) throw new NotFoundDbException('Article');
-        return ArticleAreaModelMongoose
-          .findOne({ _id: { $in: res.articleAreaList } });
-      })
-      .then((res) => { // Find ArticleArea
-        if (!res) throw new NotFoundDbException('ArticleArea');
-        artAreaMongoose = res;
-        return AreaModelMongoose
-          .findOne({ name: { $in: nameArea } });
-      })
-      .then((res) => { // Find Area
-        if (!res) throw new NotFoundDbException('Area');
-        return ArticleAreaMongooseModelDB
-          .parseMongooseToArticleArea(artAreaMongoose, res);
+      .aggregate([
+        {
+          $lookup: {
+            from: 'articleArea',
+            localField: 'articleArea',
+            foreignField: '_id',
+            as: 'articleArea'
+          }
+        },
+        { $unwind: '$articleArea' },
+        {
+          $lookup: {
+            from: 'area',
+            localField: 'articleArea.area',
+            foreignField: 'name',
+            as: 'area'
+          }
+        },
+        { $unwind: '$area' },
+        { $match: { $and: [{ ['area.name']: nameArea, _id: new Types.ObjectId(idArticle) }] } }
+      ])
+      .then((list) => {
+        if (list.length === 0) throw new NotFoundDbException('ArticleArea');
+        const { articleArea, area } = list[0];
+        return ArticleAreaMongooseModelDB.parseMongooseToArticleArea(articleArea, area);
       });
   }
 
   createInfoArea (idArticle: string, articleArea: ArticleArea): Promise<ArticleArea> {
-    const articleAreaMongoose = ArticleAreaMongooseModelDB.parseArticleAreaToMongoose(articleArea);
-    let artAreaMongoose: IArticleAreaMongoose;
-    return ArticleAreaModelMongoose
-      .create(articleAreaMongoose)
-      .then((res) => { // Create ArticleArea
-        artAreaMongoose = res;
-        return ArticleModelMongoose
-          .updateOne(
-            { _id: new Types.ObjectId(idArticle) },
-            { $push: { articleArea: artAreaMongoose._id } }
-          );
+    let areaMongoose;
+    return AreaModelMongoose
+      .find({ name: articleArea.area.name })
+      .then((res) => {
+        if (!res) throw new NotFoundDbException('Area');
+        areaMongoose = res;
+        return ArticleModelMongoose.findById(idArticle);
       })
-      .then(({ modifiedCount }) => { // Modified Article
-        if (modifiedCount === 0) throw new NotFoundDbException('ArticleArea');
-        return { ...articleArea, id: artAreaMongoose._id?.toString() };
-      });
+      .then((res) => {
+        if (!res) throw new NotFoundDbException('Article');
+        const artAreaMongoose = ArticleAreaMongooseModelDB.parseArticleAreaToMongoose(articleArea);
+        return ArticleAreaModelMongoose.create(artAreaMongoose);
+      })
+      .then((res) => ArticleAreaMongooseModelDB.parseMongooseToArticleArea(res, areaMongoose));
   }
 
   updateInfoArea (articleArea: ArticleArea): Promise<void> {
