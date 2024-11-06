@@ -42,7 +42,7 @@ async function createConn () {
   return conn;
 }
 
-async function getConn (): Promise<Connection | PoolConnection> {
+function getConn (): Connection | PoolConnection {
   return conn;
 }
 
