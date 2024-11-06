@@ -1,4 +1,6 @@
-import { createConnection, createPool } from 'mariadb';
+import {
+  Connection, createConnection, createPool, PoolConnection
+} from 'mariadb';
 
 const {
   ENV,
@@ -10,7 +12,7 @@ const {
   DB_CONN_LIMIT
 } = process.env;
 
-let conn;
+let conn: Connection | PoolConnection;
 
 const genConf = {
   host: HOST_MARIA,
@@ -31,7 +33,7 @@ function createPoolDb () {
   });
 }
 
-async function getConn () {
+async function getConn (): Promise<Connection | PoolConnection> {
   if (!conn && ENV == 'prod') {
     conn = await createPoolDb().getConnection();
   } else if (!conn && ENV == 'dev') {
