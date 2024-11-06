@@ -20,8 +20,8 @@ const genConf = {
   database: DB
 };
 
-function createConn () {
-  return createConnection({ ...genConf });
+async function createConn () {
+  return await createConnection({ ...genConf });
 }
 
 function createPoolDb () {
@@ -31,11 +31,11 @@ function createPoolDb () {
   });
 }
 
-function getConn () {
+async function getConn () {
   if (!conn && ENV == 'prod') {
-    conn = createPoolDb().getConnection();
+    conn = await createPoolDb().getConnection();
   } else if (!conn && ENV == 'dev') {
-    conn = createConn();
+    conn = await createConn();
   }
   return conn;
 }
