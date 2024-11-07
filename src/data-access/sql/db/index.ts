@@ -1,3 +1,6 @@
 export {
-  createConn, getConn, parseObjToStrCrit
+  createConn,
+  getConn,
+  parseObjToStrCrit,
+  prepareInsertStatement
 } from './utils';

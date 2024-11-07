@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Connection, createConnection, createPool, PoolConnection
 } from 'mariadb';
@@ -46,18 +47,33 @@ function getConn (): Connection | PoolConnection {
   return conn;
 }
 
+function prepareValStatement (key: string, val: any): string {
+  const res: string = '';
+  if (typeof val === 'string' || val instanceof Date) val = `${key}='${val}'`;
+  else if (typeof val === 'number') val = `${key}=${val}`;
+  return res;
+}
+
 function parseObjToStrCrit (obj: any): string {
   const list = Object.entries(obj);
   const strList = list.map(([k,
-    v]) => {
-    let val: string = '';
-    if (typeof v === 'string' || v instanceof Date) val = `${k}='${v}'`;
-    else if (typeof v === 'number') val = `${k}=${v}`;
-    return val;
-  });
+    v]) => prepareValStatement(k, v));
   return strList.join(' AND ');
 }
 
+function prepareInsertStatement (obj: any): [string, string] {
+  const keys = Object.keys(obj);
+  const values = Object.entries(obj).map(([k,
+    v]) => prepareValStatement(k, v));
+  const keysStr = keys.join(',');
+  const valuesStr = values.join(',');
+  return [keysStr,
+    valuesStr];
+}
+
 export {
-  createConn, getConn, parseObjToStrCrit
+  createConn,
+  getConn,
+  parseObjToStrCrit,
+  prepareInsertStatement
 };
