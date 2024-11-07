@@ -46,4 +46,18 @@ function getConn (): Connection | PoolConnection {
   return conn;
 }
 
-export { createConn, getConn };
+function parseObjToStrCrit (obj: any): string {
+  const list = Object.entries(obj);
+  const strList = list.map(([k,
+    v]) => {
+    let val: string = '';
+    if (typeof v === 'string' || v instanceof Date) val = `${k}='${v}'`;
+    else if (typeof v === 'number') val = `${k}=${v}`;
+    return val;
+  });
+  return strList.join(' AND ');
+}
+
+export {
+  createConn, getConn, parseObjToStrCrit
+};

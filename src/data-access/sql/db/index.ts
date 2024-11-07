@@ -1,5 +1,3 @@
 export {
-  createConn,
-  createPoolDb,
-  getConn
+  createConn, getConn, parseObjToStrCrit
 } from './utils';
