@@ -1,9 +1,12 @@
 export {
-  IAddressMongo,
   IAreaMongo,
   IArticleAreaMongo,
   IArticleMongo,
+  ICartLineMongo,
   ICartMongo,
-  ICommentMongo,
+  IShippingLineMongo,
+  IShippingMongo,
+  IUserMeasuresMongo,
+  IAddressMongo,
   IUserMongo
 } from './db';

@@ -1,10 +1,13 @@
-import { ArticleArea } from '@model/index';
 import { ObjectId } from 'mongodb';
 import IAreaMongo from './IAreaMongo';
 
-interface IArticleAreaMongo extends Omit<ArticleArea, 'id'> {
+interface IArticleAreaMongo {
   _id?: ObjectId;
-  area: IAreaMongo;
+  title: string;
+  desc: string;
+  price: number;
+  tax: number;
+  area: IAreaMongo['name'];
 }
 
 export default IArticleAreaMongo;

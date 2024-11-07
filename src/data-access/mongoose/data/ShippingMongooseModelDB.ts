@@ -35,7 +35,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       idShipping: shipping.idShipping,
       state: shipping.state,
       payment: shipping.payment,
-      lines: shipping.lines.map(l => ShippingMongooseModelDB.parseShippingLineToMongoose(l)) 
+      lines: shipping.lines.map((l) => ShippingMongooseModelDB.parseShippingLineToMongoose(l))
     };
   }
 
@@ -54,7 +54,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       idShipping: shippingMongo.idShipping,
       state: shippingMongo.state,
       payment: shippingMongo.payment,
-      lines: shippingMongo.lines.map(l => ShippingMongooseModelDB.parseMongooseToShippingLine(l, articleListMongo.find(a => a._id?.toString() === l.article._id?.toString()) as IArticleMongoose))
+      lines: shippingMongo.lines.map((l) => ShippingMongooseModelDB.parseMongooseToShippingLine(l, articleListMongo.find((a) => a._id?.toString() === l.article._id?.toString()) as IArticleMongoose))
     };
   }
 
@@ -66,44 +66,44 @@ class ShippingMongooseModelDB implements IModelDBShipping {
     };
   }
 
-  read(id: string): NotFoundDbException | Promise<Shipping> {
+  read (id: string): NotFoundDbException | Promise<Shipping> {
     let shipping: IShippingMongoose;
     return ShippingModelMongoose
       .findById(id)
       .then((res) => {
         if (!res) throw new NotFoundDbException();
         shipping = res;
-        const articlesIds = shipping.lines.map(l => l.article);
-        return ArticleModelMongoose.find({_id: {$in: articlesIds}})
+        const articlesIds = shipping.lines.map((l) => l.article);
+        return ArticleModelMongoose.find({ _id: { $in: articlesIds } });
       })
-      .then(list => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
+      .then((list) => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
   }
 
-  readList({ limit, skip }: SearchParams<Shipping>): Promise<Shipping[]> {
+  readList ({ limit, skip }: SearchParams<Shipping>): Promise<Shipping[]> {
     let shippingList: IShippingMongoose[];
     return ShippingModelMongoose
       .find()
       .skip(skip)
       .limit(limit)
       .then((list) => {
-        const articleIds = list.flatMap(s => s.lines.map(l => l.article))
+        const articleIds = list.flatMap((s) => s.lines.map((l) => l.article));
         return ArticleModelMongoose
-        .find({_id: {$in: articleIds}})
+          .find({ _id: { $in: articleIds } });
       })
-      .then(list => {
-        return shippingList.map(s => ShippingMongooseModelDB.parseMongooseToShipping(s, list)) 
+      .then((list) => {
+        return shippingList.map((s) => ShippingMongooseModelDB.parseMongooseToShipping(s, list));
       });
   }
 
-  create(obj: Shipping): Promise<Shipping> {
+  create (obj: Shipping): Promise<Shipping> {
     let shipping;
     return ShippingModelMongoose
       .create(ShippingMongooseModelDB.parseShippingToMongoose(obj))
       .then((res) => {
-        shipping = res
-        const articleIds = shipping.lines.map(l => l.article)
+        shipping = res;
+        const articleIds = shipping.lines.map((l) => l.article);
         return ArticleModelMongoose
-          .find({_id: {$in: articleIds}})
+          .find({ _id: { $in: articleIds } });
       })
       .then((list) => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
   }
