@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Area, SearchParams } from '@model/index';
 import { NotFoundDbException } from '@data-access/index';
@@ -7,17 +8,17 @@ import {
   getConn, parseObjToStrCrit, prepareInsertStatement
 } from '../db/utils';
 
-class AreaSlModelDB implements IModelDBArea {
+class AreaSqlModelDB implements IModelDBArea {
 
   private conn: Connection | PoolConnection;
 
-  private static instance: AreaSlModelDB;
+  private static instance: AreaSqlModelDB;
 
-  public static getIntance (): AreaSlModelDB {
-    if (!AreaSlModelDB.instance) {
-      AreaSlModelDB.instance = new AreaSlModelDB();
+  public static getIntance (): AreaSqlModelDB {
+    if (!AreaSqlModelDB.instance) {
+      AreaSqlModelDB.instance = new AreaSqlModelDB();
     }
-    return AreaSlModelDB.instance;
+    return AreaSqlModelDB.instance;
   }
 
   private constructor () {
@@ -38,7 +39,7 @@ class AreaSlModelDB implements IModelDBArea {
     return this.conn.query('SELECT * FROM area WHERE id = ?', [id])
       .then(([row]) => {
         if (row === 0) throw NotFoundDbException('Area');
-        return AreaSlModelDB.parseSqlToArea(row);
+        return AreaSqlModelDB.parseSqlToArea(row);
       });
   }
 
@@ -47,7 +48,7 @@ class AreaSlModelDB implements IModelDBArea {
     return this.conn.query('SELECT * FROM area WHERE ?', [criterials])
       .then(([row]) => {
         if (row === 0) throw NotFoundDbException('Area');
-        return AreaSlModelDB.parseSqlToArea(row);
+        return AreaSqlModelDB.parseSqlToArea(row);
       });
   }
 
@@ -55,7 +56,7 @@ class AreaSlModelDB implements IModelDBArea {
     return this.conn.query('SELECT * FROM area LIMIT ? OFFSET ?', [limit,
       skip])
       .then((list) => {
-        return list.map((a) => AreaSlModelDB.parseSqlToArea(a));
+        return list.map((a) => AreaSqlModelDB.parseSqlToArea(a));
       });
   }
 
@@ -66,7 +67,7 @@ class AreaSlModelDB implements IModelDBArea {
     return this.conn.query('INSERT INTO area (?) VALUES * (?)', [fields,
       values])
       .then((list) => {
-        return list.map((a) => AreaSlModelDB.parseSqlToArea(a));
+        return list.map((a) => AreaSqlModelDB.parseSqlToArea(a));
       });
   }
 
@@ -77,7 +78,7 @@ class AreaSlModelDB implements IModelDBArea {
     return this.conn.query('UPDATE area SET ? WHERE ?', [objModi,
       idCrit])
       .then((list) => {
-        return list.map((a) => AreaSlModelDB.parseSqlToArea(a));
+        return list.map((a) => AreaSqlModelDB.parseSqlToArea(a));
       });
   }
 
@@ -85,10 +86,10 @@ class AreaSlModelDB implements IModelDBArea {
     const idCrit = parseObjToStrCrit(id);
     return this.conn.query('DELETE FROM area WHERE ?', [idCrit])
       .then((list) => {
-        return list.map((a) => AreaSlModelDB.parseSqlToArea(a));
+        return list.map((a) => AreaSqlModelDB.parseSqlToArea(a));
       });
   }
 
 }
 
-export default AreaSlModelDB;
+export default AreaSqlModelDB;

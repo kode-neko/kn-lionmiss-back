@@ -1,134 +1,68 @@
-import { NotFoundDbException } from '@data-access/index';
-import {
-  Shipping, ShippingLine, SearchParams
-} from '@model/index';
-import {
-  Collection, Db, MongoClient,
-  ObjectId
-} from 'mongodb';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Shipping, ShippingLine } from '@model/index';
+import { NotFoundDbException } from '../../error';
+import { Connection, PoolConnection } from 'mariadb';
 import { IModelDBShipping } from '../../interfaces';
-import {
-  getClientDb, IArticleMongo, IShippingLineMongo, IShippingMongo
-} from '../db';
-import ArticleMongoModelDB from './ArticleMongoModelDB';
+import { getConn } from '../db/utils';
+import ArticleSqlModelDB from './ArticleSqlModelDB';
 
-class ShippingMongoModelDB implements IModelDBShipping {
+class ShippingSqlModelDB implements IModelDBShipping {
 
-  private client: MongoClient;
-
-  private db: Db;
-
-  private collShipping: Collection<IShippingMongo>;
-
-  private collArt: Collection<IArticleMongo>;
+  private conn: Connection | PoolConnection;
 
   private static instance: IModelDBShipping;
 
   public static getIntance (): IModelDBShipping {
-    if (!ShippingMongoModelDB.instance) {
-      ShippingMongoModelDB.instance = new ShippingMongoModelDB();
+    if (!ShippingSqlModelDB.instance) {
+      ShippingSqlModelDB.instance = new ShippingSqlModelDB();
     }
-    return ShippingMongoModelDB.instance;
+    return ShippingSqlModelDB.instance;
   }
 
   private constructor () {
-    [this.client,
-      this.db] = getClientDb();
-    this.collShipping = this.db.collection<IShippingMongo>('cart');
-    this.collArt = this.db.collection<IArticleMongo>('cart');
+    this.conn = getConn();
   }
 
-  public static parseShippingToMongo (shipping: Shipping): IShippingMongo {
+  public static parseSqlToShipping (shippingSql: any, articleListSql: any[]): Shipping {
     return {
-      _id: new ObjectId(shipping.id as string),
-      idTracking: shipping.idTracking,
-      idShipping: shipping.idShipping,
-      state: shipping.state,
-      payment: shipping.payment,
-      lines: shipping.lines.map((l) => ShippingMongoModelDB.parseShippingLineToMongo(l))
+      id: shippingSql._id?._id.toString(),
+      idTracking: shippingSql.idTracking,
+      idShipping: shippingSql.idShipping,
+      state: shippingSql.state,
+      payment: shippingSql.payment,
+      lines: shippingSql.lines.map((l) => ShippingSqlModelDB.parseSqlToShippingLine(l, articleListSql.find((a) => a._id?.toString() === l.article?.toString()) as any))
     };
   }
 
-  public static parseShippingLineToMongo (shippingLine: ShippingLine): IShippingLineMongo {
+  public static parseSqlToShippingLine (shippingLineSql: any, articleSql: any): ShippingLine {
     return {
-      id: shippingLine.id,
-      qty: shippingLine.qty,
-      article: new ObjectId(shippingLine.article.id as string)
-    };
-  }
-
-  public static parseMongoToShipping (shippingMongo: IShippingMongo, articleListMongo: IArticleMongo[]): Shipping {
-    return {
-      id: shippingMongo._id?._id.toString(),
-      idTracking: shippingMongo.idTracking,
-      idShipping: shippingMongo.idShipping,
-      state: shippingMongo.state,
-      payment: shippingMongo.payment,
-      lines: shippingMongo.lines.map((l) => ShippingMongoModelDB.parseMongoToShippingLine(l, articleListMongo.find((a) => a._id?.toString() === l.article?.toString()) as IArticleMongo))
-    };
-  }
-
-  public static parseMongoToShippingLine (shippingLineMongo: IShippingLineMongo, articleMongo: IArticleMongo): ShippingLine {
-    return {
-      id: shippingLineMongo.id,
-      qty: shippingLineMongo.qty,
-      article: ArticleMongoModelDB.parseMongoToArticle(articleMongo, [])
+      id: shippingLineSql.id,
+      qty: shippingLineSql.qty,
+      article: ArticleSqlModelDB.parseSqlToArticle(articleSql, [])
     };
   }
 
   read (id: string): NotFoundDbException | Promise<Shipping> {
-    let shippinMongo: IShippingMongo;
-    return this.collShipping
-      .findOne({ _id: new ObjectId(id) })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Shipping');
-        shippinMongo = res;
-        const articleListMongo = res.lines.map((l) => new ObjectId(l.article));
-        return this.collArt.find({ _id: { $in: articleListMongo } });
-      })
-      .then((list) => list.toArray())
-      .then((list) => ShippingMongoModelDB.parseMongoToShipping(shippinMongo, list));
+    throw new Error('Method not implemented.');
   }
 
-  readList ({ limit, skip }: SearchParams<Shipping>): Promise<Shipping[]> {
-    let shippingList: IShippingMongo[];
-    return this.collShipping
-      .find({}, { skip, limit })
-      .toArray()
-      .then((list) => {
-        shippingList = list;
-        const articleListMongo = list.flatMap((s) => s.lines.map((l) => new ObjectId(l.article)));
-        return this.collArt.find({ _id: { $in: articleListMongo } });
-      })
-      .then((list) => {
-        return shippingList.map((s) => ShippingMongoModelDB.parseMongoToShipping(s, list));
-      });
+  readList (searchParams?: any): Promise<Shipping[]> {
+    throw new Error('Method not implemented.');
   }
 
   create (obj: Shipping): Promise<Shipping> {
-    const shippingMongo = ShippingMongoModelDB.parseShippingToMongo(obj);
-    return this.collShipping
-      .insertOne(shippingMongo)
-      .then(({ insertedId: id }) => ({ id, ...obj }));
+    throw new Error('Method not implemented.');
   }
 
   update (obj: Shipping): Promise<void> | NotFoundDbException {
-    const { _id, ...rest } = ShippingMongoModelDB.parseShippingToMongo(obj);
-    this.collShipping
-      .updateOne({ _id }, rest)
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('Shipping');
-      });
+    throw new Error('Method not implemented.');
   }
 
   delete (id: string): Promise<void> | NotFoundDbException {
-    this.collShipping
-      .deleteOne({ _id: new ObjectId(id) })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('Shipping');
-      });
+    throw new Error('Method not implemented.');
   }
 
 }
 
-export default ShippingMongoModelDB;
+export default ShippingSqlModelDB;

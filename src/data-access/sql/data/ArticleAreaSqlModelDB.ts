@@ -1,121 +1,60 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NotFoundDbException } from '@data-access/index';
-import { ArticleArea, SearchParams } from '@model/index';
-import {
-  Collection, Db, MongoClient, ObjectId
-} from 'mongodb';
+import { ArticleArea } from '@model/index';
+import { Connection, PoolConnection } from 'mariadb';
 import { IModelDBArticleArea } from '../../interfaces';
-import {
-  getClientDb, IAreaMongo, IArticleAreaMongo
-} from '../db';
-import AreaMongoModelDB from './AreaMongoModelDB';
+import { getConn } from '../db/utils';
+import AreaSqlModelDB from './AreaSqlModelDB';
 
-class ArticleAreaMongoModelDB implements IModelDBArticleArea {
+class ArticleAreaSqlModelDB implements IModelDBArticleArea {
 
-  private client: MongoClient;
+  private conn: Connection | PoolConnection;
 
-  private db: Db;
+  private static instance: ArticleAreaSqlModelDB;
 
-  private collArtArea: Collection<IArticleAreaMongo>;
-
-  private collArea: Collection<IAreaMongo>;
-
-  private static instance: ArticleAreaMongoModelDB;
-
-  public static getIntance (): ArticleAreaMongoModelDB {
-    if (!ArticleAreaMongoModelDB.instance) {
-      ArticleAreaMongoModelDB.instance = new ArticleAreaMongoModelDB();
+  public static getIntance (): ArticleAreaSqlModelDB {
+    if (!ArticleAreaSqlModelDB.instance) {
+      ArticleAreaSqlModelDB.instance = new ArticleAreaSqlModelDB();
     }
-    return ArticleAreaMongoModelDB.instance;
+    return ArticleAreaSqlModelDB.instance;
   }
 
   private constructor () {
-    [this.client,
-      this.db] = getClientDb();
-    this.collArtArea = this.db.collection<IArticleAreaMongo>('articleArea');
-    this.collArea = this.db.collection<IAreaMongo>('area');
+    this.conn = getConn();
   }
 
-  public static parseArticleAreaToMongo (articleArea: ArticleArea): IArticleAreaMongo {
+  public static parseSqlToArticleArea (articleAreaSql: any, areaSql: any): ArticleArea {
     return {
-      _id: new ObjectId(articleArea.id as string),
-      title: articleArea.title,
-      desc: articleArea.desc,
-      price: articleArea.price,
-      tax: articleArea.tax,
-      area: articleArea.area.name
+      id: articleAreaSql._id?.toString(),
+      title: articleAreaSql.title,
+      desc: articleAreaSql.desc,
+      price: articleAreaSql.price,
+      tax: articleAreaSql.tax,
+      area: AreaSqlModelDB.parseSqlToArea(areaSql)
     };
   }
 
-  public static parseMongoToArticleArea (articleAreaMongo: IArticleAreaMongo, areaMongo: IAreaMongo): ArticleArea {
-    return {
-      id: articleAreaMongo._id?.toString(),
-      title: articleAreaMongo.title,
-      desc: articleAreaMongo.desc,
-      price: articleAreaMongo.price,
-      tax: articleAreaMongo.tax,
-      area: AreaMongoModelDB.parseMongoToArea(areaMongo)
-    };
+  read (id: string): NotFoundDbException | Promise<ArticleArea> {
+    throw new Error('Method not implemented.');
   }
 
-  read (id: string): Promise<ArticleArea> | NotFoundDbException {
-    let articleAreaMongo: IArticleAreaMongo;
-    return this.collArtArea
-      .findOne({ _id: new ObjectId(id) })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('ArticleArea');
-        articleAreaMongo = res;
-        return this.collArea.findOne({ name: articleAreaMongo.area });
-      })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Area');
-        return ArticleAreaMongoModelDB.parseMongoToArticleArea(articleAreaMongo, res);
-      });
-  }
-
-  readList ({ limit, skip }: SearchParams<ArticleArea>): Promise<ArticleArea[]> {
-    let articleAreaMongoList: IArticleAreaMongo[];
-    return this.collArtArea
-      .find({}, { limit, skip })
-      .toArray()
-      .then((list) => {
-        articleAreaMongoList = list;
-        const areaNameList = list.map((aa) => aa.area);
-        return this.collArea.find({ name: { $in: areaNameList } });
-      })
-      .then((list) => list.toArray())
-      .then((list) => {
-        return articleAreaMongoList.map((aa) => ArticleAreaMongoModelDB.parseMongoToArticleArea(
-          aa,
-          list.find((a) => a.name === aa.area) as IAreaMongo
-        ));
-      });
+  readList (searchParams?: any): Promise<ArticleArea[]> {
+    throw new Error('Method not implemented.');
   }
 
   create (obj: ArticleArea): Promise<ArticleArea> {
-    const articleAreaMongo = ArticleAreaMongoModelDB.parseArticleAreaToMongo(obj);
-    const areaMongo = AreaMongoModelDB.parseAreaToMongo(obj.area);
-    return this.collArtArea
-      .insertOne(articleAreaMongo)
-      .then(({ insertedId: id }) => ArticleAreaMongoModelDB.parseMongoToArticleArea({ id, ...obj }, areaMongo));
+    throw new Error('Method not implemented.');
   }
 
   update (obj: ArticleArea): Promise<void> | NotFoundDbException {
-    const { _id, ...rest } = ArticleAreaMongoModelDB.parseArticleAreaToMongo(obj);
-    return this.collArtArea
-      .updateOne({ _id }, rest)
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('ArticleArea');
-      });
+    throw new Error('Method not implemented.');
   }
 
   delete (id: string): Promise<void> | NotFoundDbException {
-    return this.collArtArea
-      .deleteOne({ _id: new ObjectId(id) })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('ArticleArea');
-      });
+    throw new Error('Method not implemented.');
   }
 
 }
 
-export default ArticleAreaMongoModelDB;
+export default ArticleAreaSqlModelDB;

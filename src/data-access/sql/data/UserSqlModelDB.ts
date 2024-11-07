@@ -1,108 +1,57 @@
-import { NotFoundDbException } from '@data-access/index';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   User, SexEnum, Address
 } from '@model/index';
-import {
-  Collection, Db, MongoClient,
-  ObjectId
-} from 'mongodb';
+import { Connection, PoolConnection } from 'mariadb';
+import { NotFoundDbException } from '../../error';
 import { IModelDBUser } from '../../interfaces';
-import {
-  getClientDb,
-  IAddressMongo,
-  IAreaMongo,
-  IArticleMongo, ICartMongo, IUserMongo
-} from '../db';
-import CartMongoModelDB from './CartMongoModelDB';
+import { getConn } from '../db/utils';
+import CartSqlModelDB from './CartSqlModelDB';
 
-class UserMongoModelDB implements IModelDBUser {
+class UserSqlModelDB implements IModelDBUser {
 
-  private client: MongoClient;
-
-  private db: Db;
-
-  private collUser: Collection<IUserMongo>;
-
-  private collCart: Collection<ICartMongo>;
-
-  private collArt: Collection<IArticleMongo>;
-
-  private collArea: Collection<IAreaMongo>;
+  private conn: Connection | PoolConnection;
 
   private static instance: IModelDBUser;
 
   public static getIntance (): IModelDBUser {
-    if (!UserMongoModelDB.instance) {
-      UserMongoModelDB.instance = new UserMongoModelDB();
+    if (!UserSqlModelDB.instance) {
+      UserSqlModelDB.instance = new UserSqlModelDB();
     }
-    return UserMongoModelDB.instance;
+    return UserSqlModelDB.instance;
   }
 
   private constructor () {
-    [this.client,
-      this.db] = getClientDb();
-    this.collUser = this.db.collection<IUserMongo>('user');
-    this.collCart = this.db.collection<ICartMongo>('cart');
-    this.collArt = this.db.collection<IArticleMongo>('article');
-    this.collArea = this.db.collection<IAreaMongo>('area');
+    this.conn = getConn();
   }
 
-  public static parseUserToMongo (user: User): IUserMongo {
-    return {
-      _id: new ObjectId(user.id as string),
-      userName: user.userName,
-      email: user.email,
-      cart: new ObjectId(user.cart?.id as string),
-      shippings: user.shippings.map((s) => new ObjectId(s.id as string)),
-      bday: user.bday,
-      sex: user.sex,
-      area: user.area.name,
-      measures: { ...user.measures },
-      favs: user.favs.map((s) => new ObjectId(s.id as string)),
-      addresses: user.addresses.map((a) => UserMongoModelDB.parseAddressToMongo(a))
-    };
-  }
-
-  public static parseMongoToUser (
-    mongo: IUserMongo,
-    areaMongo: IAreaMongo,
-    cartMongo?: ICartMongo,
-    cartArticleListMongo?: IArticleMongo[]
+  public static parseSqlToUser (
+    mongo: any,
+    areaSql: any,
+    cartSql?: any,
+    cartArticleListSql?: any[]
   ): User {
     return {
       id: mongo._id?.toString(),
       userName: mongo.userName,
       email: mongo.email,
-      cart: cartMongo &&
-        CartMongoModelDB.parseMongoToCart(
-          cartMongo,
-          cartArticleListMongo || []
+      cart: cartSql &&
+        CartSqlModelDB.parseSqlToCart(
+          cartSql,
+          cartArticleListSql || []
         ),
       shippings: [],
       bday: mongo.bday,
       sex: SexEnum[mongo.sex],
-      area: areaMongo,
+      area: areaSql,
       measures: mongo.measures,
       favs: [],
-      addresses: mongo.addresses.map((a) => UserMongoModelDB.parseMongoToAddress(a))
+      addresses: mongo.addresses.map((a) => UserSqlModelDB.parseSqlToAddress(a))
     };
   }
 
-  public static parseAddressToMongo (address: Address): IAddressMongo {
-    return {
-      alias: address.alias,
-      name: address.name,
-      surname: address.surname,
-      address: address.address,
-      city: address.city,
-      state: address.state,
-      country: address.country,
-      phone: address.phone,
-      obs: address.obs
-    };
-  }
-
-  public static parseMongoToAddress (mongo: IAddressMongo): Address {
+  public static parseSqlToAddress (mongo: any): Address {
     return {
       alias: mongo.alias,
       name: mongo.name,
@@ -116,36 +65,10 @@ class UserMongoModelDB implements IModelDBUser {
     };
   }
 
-  read (id: string): Promise<User> | NotFoundDbException {
-    let userMongo: IUserMongo;
-    let cartMongo: ICartMongo;
-    let articleMongoList: IArticleMongo[];
-
-    return this.collUser
-      .findOne({
-        $or: [{ _id: new ObjectId(id) },
-          { userName: id }]
-      })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('User');
-        userMongo = res;
-        return this.collCart.findOne({ _id: new ObjectId(userMongo._id) });
-      })
-      .then((res) => {
-        if (res) cartMongo = res;
-        const idsArticles = cartMongo.lines.map((l) => new ObjectId(l.article));
-        return this.collArt.find({ _id: { $in: idsArticles } });
-      })
-      .then((list) => list.toArray())
-      .then((list) => {
-        articleMongoList = list;
-        return this.collArea.findOne({ name: userMongo.area });
-      })
-      .then((res) => {
-        UserMongoModelDB.parseMongoToUser(userMongo, res as IAreaMongo, cartMongo, articleMongoList);
-      });
+  read (id: string): NotFoundDbException | Promise<User> {
+    throw new Error('Method not implemented.');
   }
 
 }
 
-export default UserMongoModelDB;
+export default UserSqlModelDB;

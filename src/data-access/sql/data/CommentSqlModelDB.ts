@@ -1,49 +1,29 @@
-import { Comment, SearchParams } from '@model/index';
-import {
-  Collection, Db, MongoClient,
-  ObjectId
-} from 'mongodb';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Comment } from '@model/index';
+import { Connection, PoolConnection } from 'mariadb';
+import { NotFoundDbException } from '../../error';
 import { IModelDBComment } from '../../interfaces';
-import { ICommentMongo } from '../db/interfaces';
-import { getClientDb } from '../db';
-import { IdRequiredDbException, NotFoundDbException } from '../../error';
+import { getConn } from '../db/utils';
 
-class CommentMongoModelDB implements IModelDBComment {
+class CommentSqlModelDB implements IModelDBComment {
 
-  private client: MongoClient;
-
-  private db: Db;
-
-  private collComment: Collection<ICommentMongo>;
+  private conn: Connection | PoolConnection;
 
   private static instance: IModelDBComment;
 
   public static getIntance (): IModelDBComment {
-    if (!CommentMongoModelDB.instance) {
-      CommentMongoModelDB.instance = new CommentMongoModelDB();
+    if (!CommentSqlModelDB.instance) {
+      CommentSqlModelDB.instance = new CommentSqlModelDB();
     }
-    return CommentMongoModelDB.instance;
+    return CommentSqlModelDB.instance;
   }
 
   private constructor () {
-    [this.client,
-      this.db] = getClientDb();
-    this.collComment = this.db.collection<ICommentMongo>('cart');
+    this.conn = getConn();
   }
 
-  public static parseCommentToMongo (comment: Comment): ICommentMongo {
-    return {
-      _id: new ObjectId(comment.id as string),
-      title: comment.title,
-      text: comment.text,
-      rating: comment.rating,
-      pics: comment.pics,
-      article: new ObjectId(comment.article as string),
-      user: comment.user
-    };
-  }
-
-  public static parseMongoToComment (mongoComment: ICommentMongo): Comment {
+  public static parseSqlToComment (mongoComment: any): Comment {
     return {
       id: mongoComment._id?.toString(),
       title: mongoComment.title,
@@ -55,48 +35,26 @@ class CommentMongoModelDB implements IModelDBComment {
     };
   }
 
-  read (id: string): Promise<Comment> | NotFoundDbException {
-    return this.collComment
-      .findOne({ _id: new ObjectId(id) })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Comment');
-        return CommentMongoModelDB.parseMongoToComment(res);
-      });
+  read (id: string): NotFoundDbException | Promise<Comment> {
+    throw new Error('Method not implemented.');
   }
 
-  readList ({ limit, skip }: SearchParams<Comment>): Promise<Comment[]> {
-    return this.collComment
-      .find({}, { limit, skip })
-      .toArray()
-      .then((list) => {
-        return list.map((c) => CommentMongoModelDB.parseMongoToComment(c));
-      });
+  readList (searchParams?: any): Promise<Comment[]> {
+    throw new Error('Method not implemented.');
   }
 
   create (obj: Comment): Promise<Comment> {
-    const commentMongo = CommentMongoModelDB.parseCommentToMongo(obj);
-    return this.collComment
-      .insertOne(commentMongo)
-      .then(({ insertedId: id }) => ({ id, ...obj }));
+    throw new Error('Method not implemented.');
   }
 
   update (obj: Comment): Promise<void> | NotFoundDbException {
-    if (!obj.id) throw new IdRequiredDbException();
-    return this.collComment
-      .updateOne({ _id: new ObjectId(obj.id as string) }, obj)
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('Comment');
-      });
+    throw new Error('Method not implemented.');
   }
 
   delete (id: string): Promise<void> | NotFoundDbException {
-    return this.collComment
-      .deleteOne({ _id: new ObjectId(id as string) })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('Comment');
-      });
+    throw new Error('Method not implemented.');
   }
 
 }
 
-export default CommentMongoModelDB;
+export default CommentSqlModelDB;
