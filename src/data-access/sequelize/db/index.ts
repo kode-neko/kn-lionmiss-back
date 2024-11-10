@@ -20,6 +20,9 @@ export {
   UserFavsSeq
 } from './user';
 export {
-  initDbSeq,
-  getConnSeq
+  createConnSeq,
+  createConnAdminSeq,
+  initSchemaSeq,
+  getConnSeq,
+  getClassSeq
 } from './utils';

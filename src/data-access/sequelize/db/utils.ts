@@ -8,9 +8,8 @@ import {
 import {
   initCartAssoc, initCartLineSeq, initCartSeq, initShippingSeq
 } from './cart';
-import { Sequelize } from 'sequelize';
-
-let seqConn: Sequelize;
+import { Dialect, Sequelize } from 'sequelize';
+import { IModelDBType } from '../../interfaces';
 
 function initSchema (seqConn: Sequelize) {
   // Article blok
@@ -39,6 +38,7 @@ function initSchema (seqConn: Sequelize) {
 }
 
 const {
+  ENV,
   DB,
   USER_ADMIN,
   USER,
@@ -48,38 +48,76 @@ const {
   PORT_MARIA
 } = process.env;
 
-async function initDbSeq () {
-  const adminSeqConn = new Sequelize({
-    dialect: 'mariadb',
-    host: HOST_MARIA,
-    port: Number(PORT_MARIA),
-    database: DB,
-    username: USER_ADMIN,
-    password: PASS_USER_ADMIN,
-    dialectOptions: {
-      connectTimeout: 3000
-    },
-  });
-  initSchema(adminSeqConn);
-  await adminSeqConn.sync();
-  adminSeqConn.close();
+let conn: Sequelize;
+
+const genOpts = {
+  dialect: 'mariadb' as Dialect,
+  host: HOST_MARIA,
+  port: Number(PORT_MARIA),
+  database: DB,
+  dialectOptions: { connectTimeout: 3000 }
+};
+
+const pollOpts = {
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+};
+
+const credAdmin = {
+  username: USER_ADMIN,
+  password: PASS_USER_ADMIN
+};
+
+const credUser = {
+  username: USER,
+  password: PASS_USER
+};
+
+function createConn (): Sequelize {
+  return new Sequelize({ ...credUser, ...genOpts });
 }
 
-async function getConnSeq () {
-  if (!seqConn) {
-    seqConn = new Sequelize({
-      dialect: 'mariadb',
-      host: HOST_MARIA,
-      port: Number(PORT_MARIA),
-      database: DB,
-      username: USER,
-      password: PASS_USER
-    });
-  }
-  return seqConn;
+function createPool (): Sequelize {
+  return new Sequelize({
+    ...credUser,
+    ...genOpts,
+    ...pollOpts
+  });
+}
+
+async function createConnSeq (): Promise<void> {
+  if (conn) return;
+  conn = await ENV === 'dev'
+    ? createConn()
+    : createPool();
+}
+
+function createConnAdminSeq () {
+  return new Sequelize({ ...credAdmin, ...genOpts });
+}
+
+async function initSchemaSeq (): Promise<void> {
+  const conAdmin = createConnAdminSeq();
+  initSchema(conAdmin);
+  await conn.sync();
+}
+
+function getConnSeq (): Sequelize {
+  return conn;
+}
+
+function getClassSeq (className: string): IModelDBType {
+  return eval('new ' + className + 'SeqModelDB();');
 }
 
 export {
-  initDbSeq,
-  getConnSeq
+  createConnSeq,
+  createConnAdminSeq,
+  initSchemaSeq,
+  getConnSeq,
+  getClassSeq
 };

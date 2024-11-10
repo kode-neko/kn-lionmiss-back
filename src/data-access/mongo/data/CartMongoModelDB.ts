@@ -6,7 +6,7 @@ import { CartLine } from '@model/cart';
 import { Cart } from '@model/index';
 import { IModelDBCart } from '../../interfaces';
 import {
-  getClientDb,
+  getConnMongo,
   IArticleMongo, ICartLineMongo, ICartMongo,
   IUserMongo
 } from '../db';
@@ -36,7 +36,7 @@ class CartMongoModelDB implements IModelDBCart {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collCart = this.db.collection<ICartMongo>('cart');
     this.collArt = this.db.collection<IArticleMongo>('article');
     this.collUser = this.db.collection<IUserMongo>('user');

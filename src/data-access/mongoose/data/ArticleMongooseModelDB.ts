@@ -1,20 +1,20 @@
 import {
   Article, ArticleArea, SearchParams
 } from '@model/index';
+import { IModelDBArticle } from '../../interfaces';
+import { IArticleAreaMongoose, IArticleMongoose } from '../db/interfaces';
 import { Types } from 'mongoose';
-import { IModelDB, IModelDBArticle } from '../../interfaces';
-import {
-  AreaModelMongoose,
-  ArticleAreaModelMongoose, ArticleModelMongoose, IAreaMongoose, IArticleAreaMongoose, IArticleMongoose
-} from '../db';
 import { IdRequiredDbException, NotFoundDbException } from '../../error';
+import {
+  AreaModelMongoose, ArticleAreaModelMongoose, ArticleModelMongoose
+} from '../db/models';
 import ArticleAreaMongooseModelDB from './ArticleAreaMongooseModelDB';
 
 class ArticleMongooseModelDB implements IModelDBArticle {
 
-  private static instance: IModelDB<Article>;
+  private static instance: IModelDBArticle;
 
-  public static getIntance (): IModelDB<Article> {
+  public static getIntance (): IModelDBArticle {
     if (!ArticleMongooseModelDB.instance) {
       ArticleMongooseModelDB.instance = new ArticleMongooseModelDB();
     }
@@ -27,7 +27,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
 
   public static parseArticleToMongoose (article: Article): IArticleMongoose {
     return {
-      _id: new Types.ObjectId(article.id),
+      _id: new Types.ObjectId(article.id as string),
       instructs: new Map(Object.entries(article.instructs)),
       sizes: new Map(Object.entries(article.sizes)),
       materials: new Map(Object.entries(article.materials)),

@@ -2,4 +2,4 @@ export {
   createConnSql,
   getConnSql,
   getClassSql
-} from './utils';
+} from './db';

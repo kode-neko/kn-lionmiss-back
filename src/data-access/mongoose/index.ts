@@ -2,22 +2,12 @@ export {
   AreaMongooseModelDB,
   ArticleAreaMongooseModelDB,
   ArticleMongooseModelDB,
-  // CartMongooseModelDB,
+  CartMongooseModelDB,
   CommentMongooseModelDB,
-  ShippingMongooseModelDB
-  // UserMongooseModelDB
+  ShippingMongooseModelDB,
+  UserMongooseModelDB
 } from './data';
 export {
-  IAddressMongoose,
-  IAreaMongoose,
-  IArticleAreaMongoose,
-  IArticleMongoose,
-  ICartMongoose,
-  ICartLineMongoose,
-  IShippingMongoose,
-  IShippingLineMongoose,
-  ICommentMongoose,
-  IUserMongoose,
-  IUserMeasuresMongoose,
-  initConnMongoose
+  createConnMongoose,
+  getConnMongoose
 } from './db';

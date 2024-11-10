@@ -5,7 +5,7 @@ import {
 } from 'mongodb';
 import { IModelDBArticleArea } from '../../interfaces';
 import {
-  getClientDb, IAreaMongo, IArticleAreaMongo
+  getConnMongo, IAreaMongo, IArticleAreaMongo
 } from '../db';
 import AreaMongoModelDB from './AreaMongoModelDB';
 
@@ -30,7 +30,7 @@ class ArticleAreaMongoModelDB implements IModelDBArticleArea {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collArtArea = this.db.collection<IArticleAreaMongo>('articleArea');
     this.collArea = this.db.collection<IAreaMongo>('area');
   }

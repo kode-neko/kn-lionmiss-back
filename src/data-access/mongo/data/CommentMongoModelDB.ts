@@ -5,7 +5,7 @@ import {
 } from 'mongodb';
 import { IModelDBComment } from '../../interfaces';
 import { ICommentMongo } from '../db/interfaces';
-import { getClientDb } from '../db';
+import { getConnMongo } from '../db';
 import { IdRequiredDbException, NotFoundDbException } from '../../error';
 
 class CommentMongoModelDB implements IModelDBComment {
@@ -27,7 +27,7 @@ class CommentMongoModelDB implements IModelDBComment {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collComment = this.db.collection<ICommentMongo>('cart');
   }
 

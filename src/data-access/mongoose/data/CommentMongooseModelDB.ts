@@ -1,14 +1,15 @@
 import { Comment, SearchParams } from '@model/index';
 import { Types } from 'mongoose';
-import { IModelDB } from '../../interfaces';
-import { CommentModelMongoose, ICommentMongoose } from '../db';
+import { IModelDBComment } from '../../interfaces';
+import { ICommentMongoose } from '../db/interfaces';
 import { NotFoundDbException } from '../../error';
+import { CommentModelMongoose } from '../db/models';
 
-class CommentMongooseModelDB implements IModelDB<Comment> {
+class CommentMongooseModelDB implements IModelDBComment {
 
-  private static instance: IModelDB<Comment>;
+  private static instance: IModelDBComment;
 
-  public static getIntance (): IModelDB<Comment> {
+  public static getIntance (): IModelDBComment {
     if (!CommentMongooseModelDB.instance) {
       CommentMongooseModelDB.instance = new CommentMongooseModelDB();
     }
@@ -21,12 +22,12 @@ class CommentMongooseModelDB implements IModelDB<Comment> {
 
   public static parseCommentToMongoose (comment: Comment): ICommentMongoose {
     return {
-      _id: new Types.ObjectId(comment.id),
+      _id: new Types.ObjectId(comment.id as string),
       title: comment.title,
       text: comment.text,
       rating: comment.rating,
       pics: comment.pics,
-      article: new Types.ObjectId(comment.article),
+      article: new Types.ObjectId(comment.article as string),
       user: comment.user
     };
   }

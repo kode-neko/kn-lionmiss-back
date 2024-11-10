@@ -1,8 +1,9 @@
-import { NotFoundDbException } from '@data-access/index';
 import { Area, SearchParams } from '@model/index';
-import { AreaModelMongoose, IAreaMongoose } from '../db';
-import { Types } from 'mongoose';
 import { IModelDBArea } from '../../interfaces';
+import { IAreaMongoose } from '../db/interfaces';
+import { NotFoundDbException } from '../../error';
+import { AreaModelMongoose } from '../db/models';
+import { Types } from 'mongoose';
 
 class AreaMongooseModelDB implements IModelDBArea {
 
@@ -21,7 +22,7 @@ class AreaMongooseModelDB implements IModelDBArea {
 
   public static parseAreaToMongoose (area: Area): IAreaMongoose {
     return {
-      _id: new Types.ObjectId(area.id),
+      _id: new Types.ObjectId(area.id as string),
       name: area.name,
       locale: area.locale,
       country: area.country,

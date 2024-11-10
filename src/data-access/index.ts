@@ -6,6 +6,10 @@ export {
   IModelDBCart,
   IModelDBComment,
   IModelDBShipping,
-  IModelDBUser
+  IModelDBUser,
+  IModelDBType
 } from './interfaces';
-export { NotFoundDbException } from './error';
+export {
+  NotFoundDbException,
+  IdRequiredDbException
+} from './error';

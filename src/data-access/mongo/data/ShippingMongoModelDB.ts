@@ -8,7 +8,7 @@ import {
 } from 'mongodb';
 import { IModelDBShipping } from '../../interfaces';
 import {
-  getClientDb, IArticleMongo, IShippingLineMongo, IShippingMongo
+  getConnMongo, IArticleMongo, IShippingLineMongo, IShippingMongo
 } from '../db';
 import ArticleMongoModelDB from './ArticleMongoModelDB';
 
@@ -33,7 +33,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collShipping = this.db.collection<IShippingMongo>('cart');
     this.collArt = this.db.collection<IArticleMongo>('cart');
   }

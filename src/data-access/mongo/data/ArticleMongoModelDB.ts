@@ -8,7 +8,7 @@ import {
 } from 'mongodb';
 import { IModelDBArticle } from '../../interfaces';
 import {
-  getClientDb, IAreaMongo, IArticleAreaMongo, IArticleMongo
+  getConnMongo, IAreaMongo, IArticleAreaMongo, IArticleMongo
 } from '../db';
 import { IdRequiredDbException } from '../../error';
 import ArticleAreaMongoModelDB from './ArticleAreaMongoModelDB';
@@ -36,7 +36,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collArt = this.db.collection<IArticleMongo>('article');
     this.collArea = this.db.collection<IAreaMongo>('area');
   }

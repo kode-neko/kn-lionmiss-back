@@ -1,4 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Db, MongoClient } from 'mongodb';
+import { IModelDBType } from '../../interfaces';
+import {
+  AreaMongoModelDB,
+  ArticleAreaMongoModelDB,
+  ArticleMongoModelDB,
+  CartMongoModelDB,
+  CommentMongoModelDB,
+  ShippingMongoModelDB,
+  UserMongoModelDB
+} from '../data';
 
 let conn;
 
@@ -8,7 +19,9 @@ const {
   USER,
   PASS_USER,
   HOST_MONGO,
-  PORT_MONGO
+  PORT_MONGO,
+  DB_POOL,
+  DB_POOL_MIN
 } = process.env;
 
 const urlConnect = `mongodb://${USER}:${PASS_USER}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
@@ -16,22 +29,22 @@ const urlConnect = `mongodb://${USER}:${PASS_USER}@${HOST_MONGO}:${PORT_MONGO}/$
 let client: MongoClient;
 let db: Db;
 
-async function createClient () {
+async function createClient (): Promise<MongoClient> {
   const client = new MongoClient(urlConnect);
   await client.connect();
   return client;
 }
 
-async function createClientPool () {
+async function createClientPool (): Promise<MongoClient> {
   const client = new MongoClient(
     urlConnect,
-    { minPoolSize: 2, maxPoolSize: 10 }
+    { minPoolSize: Number(DB_POOL_MIN), maxPoolSize: Number(DB_POOL) }
   );
   await client.connect();
   return client;
 }
 
-async function createConn () {
+async function createConnMongo (): Promise<void> {
   if (conn) return;
   conn = await ENV === 'dev'
     ? createClient()
@@ -39,11 +52,19 @@ async function createConn () {
   db = conn.db(DB);
 }
 
-function getClientDb (): [MongoClient, Db] {
+function getConnMongo (): [MongoClient, Db] {
   return [
     client,
     db
   ];
 }
 
-export { createConn, getClientDb };
+function getClassMongo (className: string): IModelDBType {
+  return eval('new ' + className + 'MongoModelDB();');
+}
+
+export {
+  createConnMongo,
+  getConnMongo,
+  getClassMongo
+};

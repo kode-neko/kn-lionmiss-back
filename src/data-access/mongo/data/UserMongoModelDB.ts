@@ -8,7 +8,7 @@ import {
 } from 'mongodb';
 import { IModelDBUser } from '../../interfaces';
 import {
-  getClientDb,
+  getConnMongo,
   IAddressMongo,
   IAreaMongo,
   IArticleMongo, ICartMongo, IUserMongo
@@ -40,7 +40,7 @@ class UserMongoModelDB implements IModelDBUser {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collUser = this.db.collection<IUserMongo>('user');
     this.collCart = this.db.collection<ICartMongo>('cart');
     this.collArt = this.db.collection<IArticleMongo>('article');

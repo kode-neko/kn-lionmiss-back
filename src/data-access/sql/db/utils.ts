@@ -1,7 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import {
-  Connection, createConnection, createPool, PoolConnection
+  Connection,
+  createConnection,
+  createPool,
+  PoolConnection
 } from 'mariadb';
+import { IModelDBType } from '../../interfaces';
+import {
+  AreaSqlModelDB,
+  ArticleAreaSqlModelDB,
+  ArticleSqlModelDB,
+  CartSqlModelDB,
+  CommentSqlModelDB,
+  ShippingSqlModelDB,
+  UserSqlModelDB
+} from '../data';
 
 const {
   ENV,
@@ -10,7 +24,8 @@ const {
   PASS_USER,
   HOST_MARIA,
   PORT_MARIA,
-  DB_CONN_LIMIT
+  DB_POOL_MIN,
+  DB_POOL
 } = process.env;
 
 let conn: Connection | PoolConnection;
@@ -23,57 +38,36 @@ const genConf = {
   database: DB
 };
 
-async function createConnDb () {
+async function createConn (): Promise<Connection> {
   return await createConnection({ ...genConf });
 }
 
-function createPoolDb () {
-  return createPool({
+async function createPoolConn (): Promise<PoolConnection> {
+  return await createPool({
     ...genConf,
-    connectionLimit: Number(DB_CONN_LIMIT)
-  });
+    minimumIdle: Number(DB_POOL_MIN),
+    connectionLimit: Number(DB_POOL)
+  }).getConnection();
 }
 
-async function createConn () {
+async function createConnSql (): Promise<void> {
   if (!conn && ENV == 'prod') {
-    conn = await createPoolDb().getConnection();
+    conn = await createPoolConn();
   } else if (!conn && ENV == 'dev') {
-    conn = await createConnDb();
+    conn = await createConn();
   }
+}
+
+function getConnSql (): Connection | PoolConnection {
   return conn;
 }
 
-function getConn (): Connection | PoolConnection {
-  return conn;
-}
-
-function prepareValStatement (key: string, val: any): string {
-  const res: string = '';
-  if (typeof val === 'string' || val instanceof Date) val = `${key}='${val}'`;
-  else if (typeof val === 'number') val = `${key}=${val}`;
-  return res;
-}
-
-function parseObjToStrCrit (obj: any): string {
-  const list = Object.entries(obj);
-  const strList = list.map(([k,
-    v]) => prepareValStatement(k, v));
-  return strList.join(' AND ');
-}
-
-function prepareInsertStatement (obj: any): [string, string] {
-  const keys = Object.keys(obj);
-  const values = Object.entries(obj).map(([k,
-    v]) => prepareValStatement(k, v));
-  const keysStr = keys.join(',');
-  const valuesStr = values.join(',');
-  return [keysStr,
-    valuesStr];
+function getClassSql (className: string): IModelDBType {
+  return eval('new ' + className + 'SqlModelDB();');
 }
 
 export {
-  createConn,
-  getConn,
-  parseObjToStrCrit,
-  prepareInsertStatement
+  createConnSql,
+  getConnSql,
+  getClassSql
 };

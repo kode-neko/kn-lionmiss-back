@@ -6,7 +6,7 @@ import { NotFoundDbException } from '@data-access/index';
 import { Area, SearchParams } from '@model/index';
 import { IAreaMongo } from '../db/interfaces';
 import { IModelDBArea } from '../../interfaces';
-import { getClientDb } from '../db/utils';
+import { getConnMongo } from '../db';
 
 class AreaMongoModelDB implements IModelDBArea {
 
@@ -27,7 +27,7 @@ class AreaMongoModelDB implements IModelDBArea {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collArea = this.db.collection<IAreaMongo>('area');
   }
 
