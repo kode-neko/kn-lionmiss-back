@@ -1,28 +1,41 @@
 import { Request, Response } from 'express';
+import { getCart } from '../../../data-access';
+import { errorResponse } from './utils';
 
-function getCart (req: Request, res: Response) {
-  res.status(200).send({ created: 'getCart' });
-}
-
-function postCart (req: Request, res: Response) {
-  res.status(200).send({ created: 'getCart' });
+function getCartId (req: Request, res: Response) {
+  const { id } = req.params;
+  return getCart()
+    .read(id)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
 }
 
 function postCartLine (req: Request, res: Response) {
-  res.status(201).send({ created: 'postCartLine' });
+  const { idCart, cartLine } = req.body;
+  return getCart()
+    .createLine(idCart, cartLine)
+    .then((list) => res.status(200).send(list))
+    .catch((err) => errorResponse(err, res));
 }
 
 function putCartLine (req: Request, res: Response) {
-  res.status(200).send({ created: 'putCartLine' });
+  const { idCart, cartLine } = req.body;
+  return getCart()
+    .updateLine(idCart, cartLine)
+    .then(() => res.status(200))
+    .catch((err) => errorResponse(err, res));
 }
 
 function deleteCartLine (req: Request, res: Response) {
-  res.status(200).send({ created: 'deleteCartLine' });
+  const { idCart, numLine } = req.body;
+  return getCart()
+    .deleteLine(idCart, numLine)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
 }
 
 export {
-  getCart,
-  postCart,
+  getCartId,
   postCartLine,
   putCartLine,
   deleteCartLine

@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import {
-  getCart,
-  postCart,
   postCartLine,
   putCartLine,
   deleteCartLine
@@ -13,10 +11,9 @@ import {
 
 const router = Router();
 
-router.get('/:id', validationIdMid, getCart);
-router.post('/:idUser', validationIdMid, postCart);
-router.post('/:id/line', validationBodyMidCreateFunc('cartLine'), postCartLine);
-router.put('/:id/line', validationIdMid, validationBodyMidCreateFunc('cartLine'), putCartLine);
-router.delete('/:id/line/:id', validationIdMid, deleteCartLine);
+router.get('/:id', validationIdMid, getCartId);
+router.post('/line', validationBodyMidCreateFunc('cartLine'), postCartLine);
+router.put('/line', validationIdMid, validationBodyMidCreateFunc('cartLine'), putCartLine);
+router.delete('/:idCart/line/:numLine', validationIdMid, deleteCartLine);
 
 export default router;

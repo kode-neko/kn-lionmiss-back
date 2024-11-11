@@ -1,5 +1,4 @@
-import { CartLine } from '@model/cart';
-import { Cart } from '@model/article';
+import { Cart, CartLine } from '@model/cart';
 import IModelDB from './IModelDB';
 import { NotFoundDbException } from '../error';
 
