@@ -6,7 +6,7 @@ import {
 } from './routers';
 
 // Env bars
-const {HOST_API, PORT_API} = process.env;
+const { HOST_API, PORT_API } = process.env;
 
 // Create server app...
 const app = express();

@@ -12,7 +12,7 @@ import {
   ShippingValSchema,
   UserValSchema,
   CartLineValSchema
-} from '@utils/validations';
+} from './validations';
 
 function validationIdCreateFunc (idName: string) {
   return (req: Request, res: Response, next: NextFunction) => {
