@@ -1,24 +1,25 @@
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
+import { getUser } from '../../../data-access';
+import { errorResponse } from './utils';
 
 function getUserId (req: Request, res: Response) {
-  res.status(200).send({created: 'getUserId'});
+  const { username } = req.params;
+  return getUser()
+    .read(username)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
 }
 
 function postUserLogin (req: Request, res: Response) {
-  res.status(201).send({created: 'postUserLogin'});
+  return res.status(201).send({ created: 'postUserLogin' });
 }
 
 function postUserLogout (req: Request, res: Response) {
-  res.status(200).send({created: 'postUserLogout'});
-}
-
-function getUserIdCart (req: Request, res: Response) {
-  res.status(200).send({created: 'getUserIdCart'});
+  return res.status(200).send({ created: 'postUserLogout' });
 }
 
 export {
   getUserId,
   postUserLogin,
-  postUserLogout,
-  getUserIdCart
+  postUserLogout
 };
