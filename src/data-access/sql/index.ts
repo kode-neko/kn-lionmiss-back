@@ -1,5 +1,5 @@
 export {
   createConnSql,
   getConnSql,
-  getClassSql
+  getModelSql
 } from './db';

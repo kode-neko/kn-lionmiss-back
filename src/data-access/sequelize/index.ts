@@ -11,5 +11,6 @@ export {
   createConnSeq,
   createConnAdminSeq,
   initSchemaSeq,
-  getConnSeq
+  getConnSeq,
+  getModelSeq
 } from './db';

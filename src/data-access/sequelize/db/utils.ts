@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   initAreaSeq, initArticleAreaSeq, initArticleInstructSeq, initArticleMaterialsSeq, initArticleSeq, initArticleSizesSeq, initArticleVariantSeq,
   initArticleAssocs
@@ -10,6 +11,15 @@ import {
 } from './cart';
 import { Dialect, Sequelize } from 'sequelize';
 import { IModelDBType } from '../../interfaces';
+import {
+  AreaSeqModelDB,
+  ArticleAreaSeqModelDB,
+  ArticleSeqModelDB,
+  CartSeqModelDB,
+  CommentSeqModelDB,
+  ShippingSeqModelDB,
+  UserSeqModelDB
+} from '../data';
 
 function initSchema (seqConn: Sequelize) {
   // Article blok
@@ -110,8 +120,16 @@ function getConnSeq (): Sequelize {
   return conn;
 }
 
-function getClassSeq (className: string): IModelDBType {
-  return eval('new ' + className + 'SeqModelDB();');
+function getModelSeq (modelName: string): IModelDBType {
+  const AreaSeqModel = AreaSeqModelDB;
+  const ArticleAreaSeqModel = ArticleAreaSeqModelDB;
+  const ArticleSeqModel = ArticleSeqModelDB;
+  const CartSeqModel = CartSeqModelDB;
+  const CommentSeqModel = CommentSeqModelDB;
+  const ShippingSeqModel = ShippingSeqModelDB;
+  const UserSeqModel = UserSeqModelDB;
+
+  return eval(`${modelName}ModelSeq`).getInstance();
 }
 
 export {
@@ -119,5 +137,5 @@ export {
   createConnAdminSeq,
   initSchemaSeq,
   getConnSeq,
-  getClassSeq
+  getModelSeq
 };

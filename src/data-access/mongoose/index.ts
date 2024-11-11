@@ -9,5 +9,6 @@ export {
 } from './data';
 export {
   createConnMongoose,
-  getConnMongoose
+  getConnMongoose,
+  getModelMongoose
 } from './db';

@@ -59,12 +59,20 @@ function getConnMongo (): [MongoClient, Db] {
   ];
 }
 
-function getClassMongo (className: string): IModelDBType {
-  return eval('new ' + className + 'MongoModelDB();');
+function getModelMongo (modelName: string): IModelDBType {
+  const AreaMongoModel = AreaMongoModelDB;
+  const ArticleAreaMongoModel = ArticleAreaMongoModelDB;
+  const ArticleMongoModel = ArticleMongoModelDB;
+  const CartMongoModel = CartMongoModelDB;
+  const CommentMongoModel = CommentMongoModelDB;
+  const ShippingMongoModel = ShippingMongoModelDB;
+  const UserMongoModel = UserMongoModelDB;
+
+  return eval(`${modelName}MongoModel`).getIntance();
 }
 
 export {
   createConnMongo,
   getConnMongo,
-  getClassMongo
+  getModelMongo
 };

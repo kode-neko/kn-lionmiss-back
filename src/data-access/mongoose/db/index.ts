@@ -1,7 +1,7 @@
 export {
   createConnMongoose,
   getConnMongoose,
-  getClassMongoose
+  getModelMongoose
 } from './utils';
 export {
   IAddressMongoose,

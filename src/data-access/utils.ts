@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   IModelDBArea,
   IModelDBArticle,
@@ -8,10 +7,10 @@ import {
   IModelDBShipping,
   IModelDBUser
 } from './interfaces';
-import { createConnMongo, getConnMongo } from './mongo/db/utils';
-import { createConnMongoose, getConnMongoose } from './mongoose/db/utils';
-import { createConnSql, getConnSql } from './sql/db/utils';
-import { createConnSeq, getConnSeq } from './sequelize/db/utils';
+import { createConnMongo, getModelMongo as gmMongo } from './mongo/db/utils';
+import { createConnMongoose, getModelMongoose as gmMongoose } from './mongoose/db/utils';
+import { createConnSql, getModelSql as gmSql } from './sql/db/utils';
+import { createConnSeq, getModelSeq as gmSeq } from './sequelize/db/utils';
 
 type ModelType =
   IModelDBArea |
@@ -22,10 +21,10 @@ type ModelType =
   IModelDBShipping |
   IModelDBUser;
 
-const { MODEL_DATA } = process.env;
+const { DATA_ACCESS } = process.env;
 
-async function createConnection (): Promise<void> {
-  switch (MODEL_DATA) {
+async function createConn (): Promise<void> {
+  switch (DATA_ACCESS) {
     case 'mongo':
       await createConnMongo();
       break;
@@ -44,39 +43,46 @@ async function createConnection (): Promise<void> {
 }
 
 function getArea (): IModelDBArea {
-  return getClass('Area') as IModelDBArea;
+  return getClassModelDb('Area') as IModelDBArea;
 }
 
 function getArticle (): IModelDBArticle {
-  return getClass('Article') as IModelDBArticle;
+  return getClassModelDb('Article') as IModelDBArticle;
 }
 
 function getArticleArea (): IModelDBArticleArea {
-  return getClass('ArticleArea') as IModelDBArticleArea;
+  return getClassModelDb('ArticleArea') as IModelDBArticleArea;
 }
 
 function getCart (): IModelDBCart {
-  return getClass('Cart') as IModelDBCart;
+  return getClassModelDb('Cart') as IModelDBCart;
 }
 
 function getComment (): IModelDBComment {
-  return getClass('Comment') as IModelDBComment;
+  return getClassModelDb('Comment') as IModelDBComment;
 }
 
 function getShipping (): IModelDBShipping {
-  return getClass('Shipping') as IModelDBShipping;
+  return getClassModelDb('Shipping') as IModelDBShipping;
 }
 
 function getUser (): IModelDBUser {
-  return getClass('User') as IModelDBUser;
+  return getClassModelDb('User') as IModelDBUser;
 }
 
-function getClass (className: string): ModelType {
-  return eval(`get${MODEL_DATA}`)(className);
+function getClassModelDb (modelName: string): ModelType {
+  const getModelMongo = gmMongo;
+  const getModelMongoose = gmMongoose;
+  const getModelSql = gmSql;
+  const getModelSeq = gmSeq;
+
+  const dataAccess = DATA_ACCESS as string;
+  const dataAccessFirstUpper = dataAccess.replace(/^./, dataAccess[0].toUpperCase());
+  return eval(`getModel${dataAccessFirstUpper}`)(modelName);
 }
 
 export {
-  createConnection,
+  createConn,
   getArea,
   getArticle,
   getArticleArea,

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 import {
   Connection,
   createConnection,
@@ -62,12 +61,20 @@ function getConnSql (): Connection | PoolConnection {
   return conn;
 }
 
-function getClassSql (className: string): IModelDBType {
-  return eval('new ' + className + 'SqlModelDB();');
+function getModelSql (modelName: string): IModelDBType {
+  const AreaSqlModel = AreaSqlModelDB;
+  const ArticleAreaSqlModel = ArticleAreaSqlModelDB;
+  const ArticleSqlModel = ArticleSqlModelDB;
+  const CartSqlModel = CartSqlModelDB;
+  const CommentSqlModel = CommentSqlModelDB;
+  const ShippingSqlModel = ShippingSqlModelDB;
+  const UserSqlModel = UserSqlModelDB;
+
+  return eval(`${modelName}SqlModel`).getInstance();
 }
 
 export {
   createConnSql,
   getConnSql,
-  getClassSql
+  getModelSql
 };

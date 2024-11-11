@@ -24,5 +24,5 @@ export {
   createConnAdminSeq,
   initSchemaSeq,
   getConnSeq,
-  getClassSeq
+  getModelSeq
 } from './utils';
