@@ -1,7 +1,6 @@
 import {
   Collection, Db, MongoClient, ObjectId
 } from 'mongodb';
-import { NotFoundDbException } from '@data-access/index';
 import { CartLine } from '@model/cart';
 import { Cart } from '@model/index';
 import { IModelDBCart } from '../../interfaces';
@@ -91,6 +90,7 @@ class CartMongoModelDB implements IModelDBCart {
 
   newCartUser (idUser: string): Promise<Cart> | NotFoundDbException {
     let userMongo: IUserMongo;
+    let idCart: ObjectId;
     const userFilter = { _id: new ObjectId(idUser) };
     return this.collUser
       .findOne(userFilter)
@@ -99,19 +99,35 @@ class CartMongoModelDB implements IModelDBCart {
         userMongo = res;
         return this.collCart.insertOne({ lines: [] });
       })
-      .then(({ insertedId: idCart }) => this.collUser // Inserted new Cart for User
-        .updateOne(userFilter, { ...userMongo, cart: new ObjectId(idCart) }));
+      .then(({ insertedId: id }) => { // Inserted new Cart for User
+        idCart = id;
+        return this.collUser
+          .updateOne(userFilter, { ...userMongo, cart: new ObjectId(id) });
+      })
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('User');
+        return { id: idCart.toString(), lines: [] };
+      });
   }
 
   createLine (idCart: string, cartLine: CartLine): Promise<Cart> | NotFoundDbException {
     const idCartFilter = { _id: new ObjectId(idCart) };
+    let cartMongo: ICartMongo;
     return this.collCart
       .findOne(idCartFilter)
       .then((res) => {
         if (!res) throw new NotFoundDbException('Cart');
+        cartMongo = res;
         const lineMongo = CartMongoModelDB.parseCartLineToMongo(cartLine);
         return this.collCart.updateOne(idCartFilter, { $push: { lines: lineMongo } });
-      });
+      })
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('Cartline');
+        const articlesIds = cartMongo.lines.map((l) => new ObjectId(l.article));
+        return this.collArt.find({ _id: { $in: articlesIds } });
+      })
+      .then((list) => list.toArray())
+      .then((list) => CartMongoModelDB.parseMongoToCart(cartMongo, list));
   }
 
   updateLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
@@ -123,6 +139,9 @@ class CartMongoModelDB implements IModelDBCart {
         const lineMongo = CartMongoModelDB.parseCartLineToMongo(cartLine);
         const filter = { ...idCartFilter, 'lines.id': cartLine.id };
         return this.collCart.updateOne(filter, { $set: { 'lines.$': lineMongo } });
+      })
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('CartLine');
       });
   }
 
@@ -134,6 +153,9 @@ class CartMongoModelDB implements IModelDBCart {
         if (!res) throw new NotFoundDbException('Cart');
         const filter = { ...idCartFilter, 'lines.id': idCartLine };
         return this.collCart.deleteOne(filter);
+      })
+      .then(({ deletedCount }) => {
+        if (deletedCount === 0) throw new NotFoundDbException('CartLine');
       });
   }
 

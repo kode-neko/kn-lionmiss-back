@@ -5,7 +5,7 @@ import { NotFoundDbException } from '@data-access/index';
 import { Cart } from '@model/index';
 import { Connection, PoolConnection } from 'mariadb';
 import { IModelDBCart } from '../../interfaces';
-import { getConn } from '../db/utils';
+import { getConnSql } from '../db/utils';
 import ArticleSqlModelDB from './ArticleSqlModelDB';
 
 class CartSqlModelDB implements IModelDBCart {
@@ -22,7 +22,7 @@ class CartSqlModelDB implements IModelDBCart {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToCart (mongoCart: any, articleListSql: any[]): Cart {
@@ -47,11 +47,11 @@ class CartSqlModelDB implements IModelDBCart {
     throw new Error('Method not implemented.');
   }
 
-  createLine (idCart: string, cartLine: NotFoundDbException): Promise<Cart> | NotFoundDbException {
+  createLine (idCart: string, cartLine: CartLine): Promise<Cart> | NotFoundDbException {
     throw new Error('Method not implemented.');
   }
 
-  updateLine (idCart: string, cartLine: NotFoundDbException): Promise<void> | NotFoundDbException {
+  updateLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
     throw new Error('Method not implemented.');
   }
 

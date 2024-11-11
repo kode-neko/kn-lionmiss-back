@@ -54,7 +54,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     };
   }
 
-  public static parseMongoToArticle (mongo: IArticleMongo, artAreaList: Article[]): Article {
+  public static parseMongoToArticle (mongo: IArticleMongo, artAreaList: IArticleAreaMongo[]): Article {
     return {
       id: mongo._id?.toString(),
       instructs: mongo.instructs,
@@ -63,7 +63,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       tags: mongo.tags,
       variants: mongo.variants,
       discolor: mongo.discolor,
-      articleAreaList: artAreaList
+      articleAreaList: []
     };
   }
 
@@ -88,7 +88,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     const articleMongo = ArticleMongoModelDB.parseArticleToMongo(obj);
     return this.collArt
       .insertOne(articleMongo)
-      .then(({ insertedId: id }) => ArticleMongoModelDB.parseMongoToArticle({ id, ...obj }, []));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as Article));
   }
 
   update (obj: Article): Promise<void> | NotFoundDbException {
@@ -134,7 +134,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       ])
       .toArray()
       .then((list) => {
-        if (list.length === 0) throw NotFoundDbException('ArticleArea');
+        if (list.length === 0) throw new NotFoundDbException('ArticleArea');
         const { articleArea, area } = list[0];
         return ArticleAreaMongoModelDB.parseMongoToArticleArea(articleArea as IArticleAreaMongo, area as IAreaMongo);
       });
@@ -153,13 +153,13 @@ class ArticleMongoModelDB implements IModelDBArticle {
         return this.collArtArea.insertOne(articleAreaMongo);
       })
       .then(({ insertedId }) => {
-        return { id: insertedId, ...articleArea };
+        return { ...articleArea, id: insertedId.toString() };
       });
   }
 
   updateInfoArea (articleArea: ArticleArea): Promise<void> {
     if (!articleArea.id) throw new IdRequiredDbException();
-    const { _id, ...rest } = ArticleMongoModelDB.parseArticleToMongo(articleArea);
+    const { _id, ...rest } = ArticleAreaMongoModelDB.parseArticleAreaToMongo(articleArea);
     return this.collArtArea
       .updateOne({ _id }, rest)
       .then(({ modifiedCount }) => {

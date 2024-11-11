@@ -1,7 +1,7 @@
 import { Article } from '@model/index';
 
 interface ShippingLine {
-  id: number;
+  id: string;
   qty: number;
   article?: Article;
 }

@@ -11,8 +11,6 @@ import {
   UserMongoModelDB
 } from '../data';
 
-let conn;
-
 const {
   ENV,
   DB,
@@ -45,11 +43,11 @@ async function createClientPool (): Promise<MongoClient> {
 }
 
 async function createConnMongo (): Promise<void> {
-  if (conn) return;
-  conn = await ENV === 'dev'
-    ? createClient()
-    : createClientPool();
-  db = conn.db(DB);
+  if (client) return;
+  client = ENV === 'dev'
+    ? await createClient()
+    : await createClientPool();
+  db = client.db(DB);
 }
 
 function getConnMongo (): [MongoClient, Db] {

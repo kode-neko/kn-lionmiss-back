@@ -6,7 +6,7 @@ interface IAddressMongoose {
   city: string;
   state: string;
   country: string;
-  phone: number;
+  phone: string;
   obs: string;
 }
 

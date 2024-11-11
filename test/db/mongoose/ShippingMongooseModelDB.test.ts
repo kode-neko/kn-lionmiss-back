@@ -1,59 +1,35 @@
-import { Article, ArticleArea, Shipping } from '@model/index';
-import {
-  describe, expect, test, beforeAll, afterAll
-} from '@jest/globals';
-import { NotFoundDbException } from '@data-access/index';
-import {
-  initConnMongoose
-} from '@data-access/mongoose/index';
+import { Shipping } from '@model/index';
 import {
   Collection, Db, MongoClient
 } from 'mongodb';
+import { ShippingMongooseModelDB } from '../../../src/data-access/mongoose/data';
+import { createConnMongo, getConnMongo } from '../../../src/data-access/mongo/db';
+import { createConnMongoose } from '../../../src/data-access/mongoose/db/utils';
+import { createFixShipping } from '../fixtures';
+import { NotFoundDbException } from '../../../src/data-access/error';
 import { faker } from '@faker-js/faker';
-import {
-  createFixArticle, createFixArticleArea, createFixArticleAreaNoId, createFixArticleNoId, createFixListArticle,
-  createFixListArticleArea,
-  createFixShipping
-} from '../fixtures';
-import { AreaMongooseModelDB, ShippingMongooseModelDB, ArticleMongooseModelDB } from '../../../src/data-access/mongoose';
-import { ArticleAreaModelMongoose } from '../../../src/data-access/mongoose/db';
-
-const {
-  DB,
-  USER_ADMIN,
-  PASS_USER_ADMIN,
-  HOST_MONGO,
-  PORT_MONGO
-} = process.env;
 
 describe('ShippingMongooseModelDB', () => {
   let client: MongoClient;
   let db: Db;
   let collShipping: Collection;
-  let collArticle: Collection;
-  let collArea: Collection;
   let shippingExample: Shipping;
   const shippingMongooseModel = ShippingMongooseModelDB.getIntance();
 
   beforeAll(async () => {
-    // Mongoose
-    const url = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
-    client = new MongoClient(url);
-    await client.connect();
+    // Mongo
+    await createConnMongo();
+    [client, db] = getConnMongo();
     db = client.db('lionmiss');
     collShipping = await db.createCollection('shipping');
-    collArticle = await db.createCollection('article');
-    collArea = await db.createCollection('area');
 
-    // Mongooseose
-    await initConnMongoose();
+    // Mongoose
+    await createConnMongoose();
   });
 
   beforeEach(async () => {
     const shippingList = [createFixShipping(), createFixShipping()];
-    const shippingListMongoose = shippingList.map(s =>
-      ShippingMongooseModelDB.parseShippingToMongoose(s)
-    );
+    const shippingListMongoose = shippingList.map((s) => ShippingMongooseModelDB.parseShippingToMongoose(s));
     shippingExample = { ...shippingList[0] };
     await collShipping.insertMany(shippingListMongoose);
   });
@@ -63,9 +39,7 @@ describe('ShippingMongooseModelDB', () => {
   });
 
   afterAll(async () => {
-    await db.dropCollection('shipping');
-    await db.dropCollection('article');
-    await db.dropCollection('area');
+    await db.dropCollection('shipping'); s;
     await client.close();
   });
 

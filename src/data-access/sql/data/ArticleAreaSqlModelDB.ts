@@ -4,7 +4,7 @@ import { NotFoundDbException } from '@data-access/index';
 import { ArticleArea } from '@model/index';
 import { Connection, PoolConnection } from 'mariadb';
 import { IModelDBArticleArea } from '../../interfaces';
-import { getConn } from '../db/utils';
+import { getConnSql } from '../db/utils';
 import AreaSqlModelDB from './AreaSqlModelDB';
 
 class ArticleAreaSqlModelDB implements IModelDBArticleArea {
@@ -21,7 +21,7 @@ class ArticleAreaSqlModelDB implements IModelDBArticleArea {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToArticleArea (articleAreaSql: any, areaSql: any): ArticleArea {

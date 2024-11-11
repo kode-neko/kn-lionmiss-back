@@ -93,10 +93,9 @@ class ArticleAreaMongoModelDB implements IModelDBArticleArea {
 
   create (obj: ArticleArea): Promise<ArticleArea> {
     const articleAreaMongo = ArticleAreaMongoModelDB.parseArticleAreaToMongo(obj);
-    const areaMongo = AreaMongoModelDB.parseAreaToMongo(obj.area);
     return this.collArtArea
       .insertOne(articleAreaMongo)
-      .then(({ insertedId: id }) => ArticleAreaMongoModelDB.parseMongoToArticleArea({ id, ...obj }, areaMongo));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as ArticleArea));
   }
 
   update (obj: ArticleArea): Promise<void> | NotFoundDbException {

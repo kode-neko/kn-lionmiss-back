@@ -1,31 +1,16 @@
 import { NotFoundDbException } from '@data-access/index';
 import { Cart, User } from '@model/index';
 import {
-  describe, expect, test, beforeAll, afterAll
-} from '@jest/globals';
-import {
-  initConnMongoose,
-  ArticleMongooseModelDB
-} from '@data-access/mongoose/index';
-import {
   Collection, Db, MongoClient
 } from 'mongodb';
-import { faker } from '@faker-js/faker';
 import {
-  createFixCart,
-  createFixCartLine,
-  createFixUser
+  ArticleMongooseModelDB, CartMongooseModelDB, UserMongooseModelDB
+} from '../../../src/data-access/mongoose/data';
+import { createConnMongo, getConnMongo } from '../../../src/data-access/mongo/db';
+import {
+  createFixCart, createFixCartLine, createFixUser
 } from '../fixtures';
-import CartMongooseModelDB from '../../../src/data-access/mongoose/data/CartMongooseModelDB';
-import UserMongooseModelDB from '../../../src/data-access/mongoose/data/UserMongooseModelDB';
-
-const {
-  DB,
-  USER_ADMIN,
-  PASS_USER_ADMIN,
-  HOST_MONGO,
-  PORT_MONGO
-} = process.env;
+import { createConnMongoose } from '../../../src/data-access/mongoose/db/utils';
 
 describe('ArticleMongooseModelDB', () => {
   let client: MongoClient;
@@ -38,22 +23,21 @@ describe('ArticleMongooseModelDB', () => {
   const cartMongooseModel = CartMongooseModelDB.getIntance();
 
   beforeAll(async () => {
-    // Mongoose
-    const url = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
-    client = new MongoClient(url);
-    await client.connect();
+    // Mongo
+    await createConnMongo();
+    [client, db] = getConnMongo();
     db = client.db('lionmiss');
     collCart = await db.createCollection('cart');
     collArticle = await db.createCollection('article');
     collUser = await db.createCollection('user');
 
-    // Mongooseose
-    await initConnMongoose();
+    // Mongoose
+    await createConnMongoose();
   });
 
   beforeEach(async () => {
     const cartList = [createFixCart(), createFixCart()];
-    const articleList = cartList.flatMap(c => c.lines.map(l => l.article));
+    const articleList = cartList.flatMap((c) => c.lines.map((l) => l.article));
     const user = createFixUser();
     user.cart = { ...cartList[0] };
     cartExample = { ...cartList[0] };
@@ -99,22 +83,20 @@ describe('ArticleMongooseModelDB', () => {
     const newCartExample = {
       ...cartExample,
       lines: [...cartExample.lines, newCartLine]
-    }
+    };
     expect(expectedCart).not.toEqual(newCartExample);
   });
 
   test('Update a CartLine', async () => {
-    const modfiedCartLine = {...cartExample.lines[0], qty: 100};
-    expect(async () =>
-      await cartMongooseModel.updateLine(cartExample.id, modfiedCartLine)
-    )
+    const modfiedCartLine = { ...cartExample.lines[0], qty: 100 };
+    expect(async () => await cartMongooseModel.updateLine(cartExample.id, modfiedCartLine))
       .not
       .toThrow(NotFoundDbException);
   });
 
   test('Update not existing CartLine', async () => {
     const newCartLine = createFixCartLine(5 + '');
-    expect(async () =>  await cartMongooseModel.updateLine(cartExample.id, newCartLine))
+    expect(async () => await cartMongooseModel.updateLine(cartExample.id, newCartLine))
       .toThrow(NotFoundDbException);
   });
 

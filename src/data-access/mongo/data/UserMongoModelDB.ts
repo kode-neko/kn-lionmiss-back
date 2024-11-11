@@ -1,6 +1,6 @@
 import { NotFoundDbException } from '@data-access/index';
 import {
-  User, SexEnum, Address
+  User, SexEnum, Address, UnitsHeightEnum, UnitsWeightEnum
 } from '@model/index';
 import {
   Collection, Db, MongoClient,
@@ -11,7 +11,7 @@ import {
   getConnMongo,
   IAddressMongo,
   IAreaMongo,
-  IArticleMongo, ICartMongo, IUserMongo
+  IArticleMongo, ICartMongo, IUserMeasuresMongo, IUserMongo
 } from '../db';
 import CartMongoModelDB from './CartMongoModelDB';
 
@@ -57,7 +57,7 @@ class UserMongoModelDB implements IModelDBUser {
       bday: user.bday,
       sex: user.sex,
       area: user.area.name,
-      measures: { ...user.measures },
+      measures: { ...user.measures } as IUserMeasuresMongo,
       favs: user.favs.map((s) => new ObjectId(s.id as string)),
       addresses: user.addresses.map((a) => UserMongoModelDB.parseAddressToMongo(a))
     };
@@ -82,7 +82,17 @@ class UserMongoModelDB implements IModelDBUser {
       bday: mongo.bday,
       sex: SexEnum[mongo.sex],
       area: areaMongo,
-      measures: mongo.measures,
+      measures: {
+        shoulder: mongo.measures.shoulder,
+        chest: mongo.measures.chest,
+        waist: mongo.measures.waist,
+        hips: mongo.measures.hips,
+        foot: mongo.measures.foot,
+        height: mongo.measures.height,
+        weight: mongo.measures.weight,
+        unitsHeight: UnitsHeightEnum[mongo.measures.unitsHeight],
+        unitsWeight: UnitsWeightEnum[mongo.measures.unitsWeight]
+      },
       favs: [],
       addresses: mongo.addresses.map((a) => UserMongoModelDB.parseMongoToAddress(a))
     };
@@ -142,7 +152,7 @@ class UserMongoModelDB implements IModelDBUser {
         return this.collArea.findOne({ name: userMongo.area });
       })
       .then((res) => {
-        UserMongoModelDB.parseMongoToUser(userMongo, res as IAreaMongo, cartMongo, articleMongoList);
+        return UserMongoModelDB.parseMongoToUser(userMongo, res as IAreaMongo, cartMongo, articleMongoList);
       });
   }
 

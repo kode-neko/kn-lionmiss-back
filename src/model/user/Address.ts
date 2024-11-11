@@ -7,7 +7,7 @@ interface Address {
   city: string;
   state: string;
   country: string;
-  phone: number;
+  phone: string;
   obs: string;
 }
 

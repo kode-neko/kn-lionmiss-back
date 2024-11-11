@@ -39,7 +39,7 @@ class CommentMongoModelDB implements IModelDBComment {
       rating: comment.rating,
       pics: comment.pics,
       article: new ObjectId(comment.article as string),
-      user: comment.user
+      user: new ObjectId(comment.user as string)
     };
   }
 
@@ -50,7 +50,7 @@ class CommentMongoModelDB implements IModelDBComment {
       text: mongoComment.text,
       rating: mongoComment.rating,
       pics: mongoComment.pics,
-      user: mongoComment.user,
+      user: mongoComment.user?.toString(),
       article: mongoComment.article?.toString()
     };
   }
@@ -77,7 +77,7 @@ class CommentMongoModelDB implements IModelDBComment {
     const commentMongo = CommentMongoModelDB.parseCommentToMongo(obj);
     return this.collComment
       .insertOne(commentMongo)
-      .then(({ insertedId: id }) => ({ id, ...obj }));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() }));
   }
 
   update (obj: Comment): Promise<void> | NotFoundDbException {

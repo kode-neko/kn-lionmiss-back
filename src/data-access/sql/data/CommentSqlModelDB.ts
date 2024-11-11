@@ -4,7 +4,7 @@ import { Comment } from '@model/index';
 import { Connection, PoolConnection } from 'mariadb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBComment } from '../../interfaces';
-import { getConn } from '../db/utils';
+import { getConnSql } from '../db/utils';
 
 class CommentSqlModelDB implements IModelDBComment {
 
@@ -20,7 +20,7 @@ class CommentSqlModelDB implements IModelDBComment {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToComment (mongoComment: any): Comment {

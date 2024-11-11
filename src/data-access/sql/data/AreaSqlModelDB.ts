@@ -4,9 +4,8 @@ import { Area, SearchParams } from '@model/index';
 import { NotFoundDbException } from '@data-access/index';
 import { IModelDBArea } from '../../interfaces';
 import { Connection, PoolConnection } from 'mariadb';
-import {
-  getConn, parseObjToStrCrit, prepareInsertStatement
-} from '../db/utils';
+import { getConnSql } from '../db/utils';
+import { parseObjToStrCrit, prepareInsertStatement } from './utils';
 
 class AreaSqlModelDB implements IModelDBArea {
 
@@ -22,7 +21,7 @@ class AreaSqlModelDB implements IModelDBArea {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToArea (sql: any): Area {
@@ -38,7 +37,7 @@ class AreaSqlModelDB implements IModelDBArea {
   read (id: string): Promise<Area> | NotFoundDbException {
     return this.conn.query('SELECT * FROM area WHERE id = ?', [id])
       .then(([row]) => {
-        if (row === 0) throw NotFoundDbException('Area');
+        if (row === 0) throw new NotFoundDbException('Area');
         return AreaSqlModelDB.parseSqlToArea(row);
       });
   }
@@ -47,7 +46,7 @@ class AreaSqlModelDB implements IModelDBArea {
     const criterials = parseObjToStrCrit(obj);
     return this.conn.query('SELECT * FROM area WHERE ?', [criterials])
       .then(([row]) => {
-        if (row === 0) throw NotFoundDbException('Area');
+        if (row === 0) throw new NotFoundDbException('Area');
         return AreaSqlModelDB.parseSqlToArea(row);
       });
   }

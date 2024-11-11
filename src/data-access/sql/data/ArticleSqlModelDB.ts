@@ -5,7 +5,7 @@ import {
   Article, SearchParams, ArticleArea
 } from '@model/index';
 import { IModelDBArticle } from '../../interfaces';
-import { getConn } from '../db/utils';
+import { getConnSql } from '../db/utils';
 import { Connection, PoolConnection } from 'mariadb';
 
 class ArticleSqlModelDB implements IModelDBArticle {
@@ -22,7 +22,7 @@ class ArticleSqlModelDB implements IModelDBArticle {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToArticle (article: any, artAreaList: any[]): Article {

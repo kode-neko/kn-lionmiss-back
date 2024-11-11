@@ -81,7 +81,7 @@ class AreaMongoModelDB implements IModelDBArea {
     const objMongo: IAreaMongo = AreaMongoModelDB.parseAreaToMongo(obj);
     return this.collArea
       .insertOne(objMongo)
-      .then(({ insertedId: id }) => ({ id, ...obj } as Area));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as Area));
   }
 
   update (obj: Area): Promise<void> | NotFoundDbException {

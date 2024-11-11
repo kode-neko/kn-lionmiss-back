@@ -1,3 +1,17 @@
+import {
+  User, SexEnum, Address
+} from '@model/index';
+import { IModelDBUser } from '../../interfaces';
+import {
+  IAddressMongoose, IAreaMongoose, IArticleMongoose, ICartMongoose, IShippingMongoose, IUserMongoose
+} from '../db/interfaces';
+import CartMongooseModelDB from './CartMongooseModelDB';
+import ShippingMongooseModelDB from './ShippingMongooseModelDB';
+import { NotFoundDbException } from '../../error';
+import {
+  AreaModelMongoose, ArticleModelMongoose, CartModelMongoose, UserModelMongoose
+} from '../db/models';
+import { Types } from 'mongoose';
 
 class UserMongooseModelDB implements IModelDBUser {
 
@@ -35,8 +49,8 @@ class UserMongooseModelDB implements IModelDBUser {
     areaMongoose: IAreaMongoose,
     cartMongoose?: ICartMongoose,
     shippingMongoose?: IShippingMongoose[],
-    cartArticleListMongoose = [],
-    shippingArticleListMongoose = []
+    cartArticleListMongoose?: IArticleMongoose[],
+    shippingArticleListMongoose?: IArticleMongoose[]
   ): User {
     return {
       id: mongo._id?.toString(),
@@ -45,12 +59,12 @@ class UserMongooseModelDB implements IModelDBUser {
       cart: cartMongoose &&
         CartMongooseModelDB.parseMongooseToCart(
           cartMongoose,
-          cartArticleListMongoose
+          cartArticleListMongoose || []
         ),
       shippings: shippingMongoose &&
         shippingMongoose.map((s) => ShippingMongooseModelDB.parseMongooseToShipping(
           s,
-          shippingArticleListMongoose
+          shippingArticleListMongoose || []
         )),
       bday: mongo.bday,
       sex: SexEnum[mongo.sex],
@@ -91,7 +105,7 @@ class UserMongooseModelDB implements IModelDBUser {
 
   read (id: string): Promise<User> | NotFoundDbException {
     let userMongoose: IUserMongoose;
-    let cartMongoose: ICartMongoose | null;
+    let cartMongoose: ICartMongoose;
     let articleMongooseList: IArticleMongoose[];
     return UserModelMongoose
       .findOne({
@@ -104,17 +118,18 @@ class UserMongooseModelDB implements IModelDBUser {
         return CartModelMongoose.findById(userMongoose.cart);
       })
       .then((res) => { // Find Cart
+        if (!res) throw new NotFoundDbException('Cart');
         cartMongoose = res;
         const idsArticles = cartMongoose?.lines.map((l) => new Types.ObjectId(l.article));
         return ArticleModelMongoose.find({ _id: { $in: idsArticles } });
       })
-      .then((list) => { // Find Articles
+      .then((list) => { // Find Articles from Cart
         articleMongooseList = list;
         return AreaModelMongoose.findOne({ name: userMongoose.userName });
       })
       .then((res) => { // Find Area
         if (!res) throw new NotFoundDbException('Area');
-        return UserMongooseModelDB.parseMongooseToUser(userMongoose, res);
+        return UserMongooseModelDB.parseMongooseToUser(userMongoose, res, cartMongoose, [], articleMongooseList);
       });
   }
 
