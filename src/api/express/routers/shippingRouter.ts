@@ -18,7 +18,7 @@ const router = Router();
 router.get('/:id', validationIdMid, getShippingId);
 router.post('/list', validationSearchParamsMid, postShippingList);
 router.post('/', validationIdBodyMid, validationBodyMidCreateFunc('shipping'), postShipping);
-router.put('/:id', validationBodyMidCreateFunc('shipping'), putShipping);
+router.put('/', validationBodyMidCreateFunc('shipping'), putShipping);
 router.delete('/:id', validationIdMid, deleteShipping);
 
 export default router;
