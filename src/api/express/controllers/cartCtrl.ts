@@ -10,6 +10,14 @@ function getCartId (req: Request, res: Response) {
     .catch((err) => errorResponse(err, res));
 }
 
+function postCartNewUser (req: Request, res: Response) {
+  const { username } = req.params;
+  return getCart()
+    .newCartUser(username)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
+}
+
 function postCartLine (req: Request, res: Response) {
   const { idCart, cartLine } = req.body;
   return getCart()
@@ -36,6 +44,7 @@ function deleteCartLine (req: Request, res: Response) {
 
 export {
   getCartId,
+  postCartNewUser,
   postCartLine,
   putCartLine,
   deleteCartLine

@@ -9,6 +9,7 @@ export {
 
 export {
   getCartId,
+  postCartNewUser,
   postCartLine,
   putCartLine,
   deleteCartLine

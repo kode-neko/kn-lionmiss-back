@@ -3,7 +3,8 @@ import {
   getCartId,
   postCartLine,
   putCartLine,
-  deleteCartLine
+  deleteCartLine,
+  postCartNewUser
 } from '../controllers';
 import {
   validationBodyMidCreateFunc,
@@ -13,6 +14,7 @@ import {
 const router = Router();
 
 router.get('/:id', validationIdMid, getCartId);
+router.post('/new/user/:username', validationIdMid, postCartNewUser);
 router.post('/line', validationBodyMidCreateFunc('cartLine'), postCartLine);
 router.put('/line', validationIdMid, validationBodyMidCreateFunc('cartLine'), putCartLine);
 router.delete('/:idCart/line/:numLine', validationIdMid, deleteCartLine);
