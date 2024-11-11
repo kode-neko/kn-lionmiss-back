@@ -40,7 +40,7 @@ class AreaMongooseModelDB implements IModelDBArea {
     };
   }
 
-  read (id: string): Promise<Area> | NotFoundDbException {
+  read (id: string): Promise<Area | NotFoundDbException> {
     return AreaModelMongoose
       .findById(id)
       .then((res) => {
@@ -49,7 +49,7 @@ class AreaMongooseModelDB implements IModelDBArea {
       });
   }
 
-  readByProps (obj: Partial<Area>): Promise<Area> | NotFoundDbException {
+  readByProps (obj: Partial<Area>): Promise<Area | NotFoundDbException> {
     return AreaModelMongoose
       .findOne(obj)
       .then((res) => {
@@ -73,7 +73,7 @@ class AreaMongooseModelDB implements IModelDBArea {
       .then((res) => AreaMongooseModelDB.parseMongooseToArea(res));
   }
 
-  update (obj: Area): Promise<void> | NotFoundDbException {
+  update (obj: Area): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = AreaMongooseModelDB.parseAreaToMongoose(obj);
     return AreaModelMongoose
       .updateOne({ _id }, rest)
@@ -82,7 +82,7 @@ class AreaMongooseModelDB implements IModelDBArea {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return AreaModelMongoose
       .deleteMany({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {

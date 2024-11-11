@@ -55,7 +55,7 @@ class CommentMongoModelDB implements IModelDBComment {
     };
   }
 
-  read (id: string): Promise<Comment> | NotFoundDbException {
+  read (id: string): Promise<Comment | NotFoundDbException> {
     return this.collComment
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
@@ -80,7 +80,7 @@ class CommentMongoModelDB implements IModelDBComment {
       .then(({ insertedId: id }) => ({ ...obj, id: id.toString() }));
   }
 
-  update (obj: Comment): Promise<void> | NotFoundDbException {
+  update (obj: Comment): Promise<void | NotFoundDbException> {
     if (!obj.id) throw new IdRequiredDbException();
     return this.collComment
       .updateOne({ _id: new ObjectId(obj.id as string) }, obj)
@@ -89,7 +89,7 @@ class CommentMongoModelDB implements IModelDBComment {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collComment
       .deleteOne({ _id: new ObjectId(id as string) })
       .then(({ deletedCount }) => {

@@ -103,7 +103,7 @@ class UserMongooseModelDB implements IModelDBUser {
     };
   }
 
-  read (id: string): Promise<User> | NotFoundDbException {
+  read (id: string): Promise<User | NotFoundDbException> {
     let userMongoose: IUserMongoose;
     let cartMongoose: ICartMongoose;
     let articleMongooseList: IArticleMongoose[];

@@ -31,11 +31,11 @@ class ShippingSeqModelDB implements IModelDBShipping {
     throw new Error('Method not implemented.');
   }
 
-  update (obj: Shipping): Promise<void> | NotFoundDbException {
+  update (obj: Shipping): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 

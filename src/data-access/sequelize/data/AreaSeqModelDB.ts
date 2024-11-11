@@ -19,7 +19,7 @@ class AreaSeqModelDB implements IModelDBArea {
 
   }
 
-  readByProps (obj: Omit<Area, 'id'>): Promise<Area> | NotFoundDbException {
+  readByProps (obj: Omit<Area, 'id'>): Promise<Area | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
@@ -35,11 +35,11 @@ class AreaSeqModelDB implements IModelDBArea {
     throw new Error('Method not implemented.');
   }
 
-  update (obj: Area): Promise<void> | NotFoundDbException {
+  update (obj: Area): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 

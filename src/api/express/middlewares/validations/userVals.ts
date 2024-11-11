@@ -26,8 +26,8 @@ const CommentValSchema = z.object({
   id: z.string().nullable(),
   title: z.string(),
   cont: z.string(),
-  rating: z.number().min(0).
-    max(5),
+  rating: z.number().min(0)
+    .max(5),
   pics: z.array(z.string()),
   article: z.string()
 });
@@ -57,9 +57,9 @@ const UserValSchema = z.object({
   cart: CartValSchema
 });
 
-const LoginValSchema = UserValSchema.
-  pick({ userName: true }).
-  extend({ pass: z.string() });
+const LoginValSchema = UserValSchema
+  .pick({ userName: true })
+  .extend({ pass: z.string() });
 
 export {
   SexEnumValSchema,

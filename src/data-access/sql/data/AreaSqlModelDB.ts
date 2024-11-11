@@ -34,7 +34,7 @@ class AreaSqlModelDB implements IModelDBArea {
     };
   }
 
-  read (id: string): Promise<Area> | NotFoundDbException {
+  read (id: string): Promise<Area | NotFoundDbException> {
     return this.conn.query('SELECT * FROM area WHERE id = ?', [id])
       .then(([row]) => {
         if (row === 0) throw new NotFoundDbException('Area');
@@ -42,7 +42,7 @@ class AreaSqlModelDB implements IModelDBArea {
       });
   }
 
-  readByProps (obj: Omit<Area, 'id'>): Promise<Area> | NotFoundDbException {
+  readByProps (obj: Omit<Area, 'id'>): Promise<Area | NotFoundDbException> {
     const criterials = parseObjToStrCrit(obj);
     return this.conn.query('SELECT * FROM area WHERE ?', [criterials])
       .then(([row]) => {
@@ -70,7 +70,7 @@ class AreaSqlModelDB implements IModelDBArea {
       });
   }
 
-  update (obj: Area): Promise<void> | NotFoundDbException {
+  update (obj: Area): Promise<void | NotFoundDbException> {
     const { id, ...rest } = obj;
     const idCrit = parseObjToStrCrit(id);
     const objModi = prepareInsertStatement(rest);
@@ -81,7 +81,7 @@ class AreaSqlModelDB implements IModelDBArea {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     const idCrit = parseObjToStrCrit(id);
     return this.conn.query('DELETE FROM area WHERE ?', [idCrit])
       .then((list) => {

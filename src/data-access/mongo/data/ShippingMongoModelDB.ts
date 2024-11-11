@@ -113,7 +113,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
       .then(({ insertedId: id }) => ({ ...obj, id: id.toString() }));
   }
 
-  update (obj: Shipping): Promise<void> | NotFoundDbException {
+  update (obj: Shipping): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = ShippingMongoModelDB.parseShippingToMongo(obj);
     return this.collShipping
       .updateOne({ _id }, rest)
@@ -122,7 +122,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collShipping
       .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {

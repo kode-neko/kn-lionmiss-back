@@ -51,7 +51,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
     };
   }
 
-  read (id: string): Promise<Article> | NotFoundDbException {
+  read (id: string): Promise<Article | NotFoundDbException> {
     return ArticleModelMongoose
       .findById(id)
       .then((res) => {
@@ -75,7 +75,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       .then((res) => ArticleMongooseModelDB.parseMongooseToArticle(res, []));
   }
 
-  update (obj: Article): Promise<void> | NotFoundDbException {
+  update (obj: Article): Promise<void | NotFoundDbException> {
     if (!obj.id) throw new IdRequiredDbException();
     const { _id, ...rest } = ArticleMongooseModelDB.parseArticleToMongoose(obj);
     return ArticleModelMongoose
@@ -85,7 +85,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return ArticleModelMongoose
       .deleteOne({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {
@@ -93,7 +93,7 @@ class ArticleMongooseModelDB implements IModelDBArticle {
       });
   }
 
-  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea | NotFoundDbException> {
     let artAreaMongoose: IArticleAreaMongoose;
     return ArticleModelMongoose
       .findById(idArticle)

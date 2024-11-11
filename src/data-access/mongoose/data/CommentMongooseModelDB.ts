@@ -44,7 +44,7 @@ class CommentMongooseModelDB implements IModelDBComment {
     };
   }
 
-  read (id: string): Promise<Comment> | NotFoundDbException {
+  read (id: string): Promise<Comment | NotFoundDbException> {
     return CommentModelMongoose
       .findById(id)
       .then((res) => {
@@ -71,7 +71,7 @@ class CommentMongooseModelDB implements IModelDBComment {
       });
   }
 
-  update (obj: Comment): Promise<void> | NotFoundDbException {
+  update (obj: Comment): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = CommentMongooseModelDB.parseCommentToMongoose(obj);
     return CommentModelMongoose
       .updateOne({ _id }, rest)
@@ -80,7 +80,7 @@ class CommentMongooseModelDB implements IModelDBComment {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return CommentModelMongoose
       .deleteOne({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {

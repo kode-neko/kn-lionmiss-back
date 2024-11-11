@@ -19,7 +19,7 @@ class ArticleSeqModelDB implements IModelDBArticle {
 
   }
 
-  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
@@ -47,11 +47,11 @@ class ArticleSeqModelDB implements IModelDBArticle {
     throw new Error('Method not implemented.');
   }
 
-  update (obj: Article): Promise<void> | NotFoundDbException {
+  update (obj: Article): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 

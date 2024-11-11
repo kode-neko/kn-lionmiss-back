@@ -126,7 +126,7 @@ class UserMongoModelDB implements IModelDBUser {
     };
   }
 
-  read (id: string): Promise<User> | NotFoundDbException {
+  read (id: string): Promise<User | NotFoundDbException> {
     let userMongo: IUserMongo;
     let cartMongo: ICartMongo;
     let articleMongoList: IArticleMongo[];

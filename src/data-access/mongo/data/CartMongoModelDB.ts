@@ -74,7 +74,7 @@ class CartMongoModelDB implements IModelDBCart {
     };
   }
 
-  read (id: string): Promise<Cart> | NotFoundDbException {
+  read (id: string): Promise<Cart | NotFoundDbException> {
     let cartMongo: ICartMongo;
     return this.collCart
       .findOne({ _id: new ObjectId(id) })
@@ -88,7 +88,7 @@ class CartMongoModelDB implements IModelDBCart {
       .then((list) => CartMongoModelDB.parseMongoToCart(cartMongo, list));
   }
 
-  newCartUser (idUser: string): Promise<Cart> | NotFoundDbException {
+  newCartUser (idUser: string): Promise<Cart | NotFoundDbException> {
     let userMongo: IUserMongo;
     let idCart: ObjectId;
     const userFilter = { _id: new ObjectId(idUser) };
@@ -110,7 +110,7 @@ class CartMongoModelDB implements IModelDBCart {
       });
   }
 
-  createLine (idCart: string, cartLine: CartLine): Promise<Cart> | NotFoundDbException {
+  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
     const idCartFilter = { _id: new ObjectId(idCart) };
     let cartMongo: ICartMongo;
     return this.collCart
@@ -130,7 +130,7 @@ class CartMongoModelDB implements IModelDBCart {
       .then((list) => CartMongoModelDB.parseMongoToCart(cartMongo, list));
   }
 
-  updateLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
+  updateLine (idCart: string, cartLine: CartLine): Promise<void | NotFoundDbException> {
     const idCartFilter = { _id: new ObjectId(idCart) };
     return this.collCart
       .findOne(idCartFilter)
@@ -145,7 +145,7 @@ class CartMongoModelDB implements IModelDBCart {
       });
   }
 
-  deleteLine (idCart: string, idCartLine: string): Promise<void> | NotFoundDbException {
+  deleteLine (idCart: string, idCartLine: string): Promise<void | NotFoundDbException> {
     const idCartFilter = { _id: new ObjectId(idCart) };
     return this.collCart
       .findOne(idCartFilter)

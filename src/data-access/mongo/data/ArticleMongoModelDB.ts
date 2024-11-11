@@ -67,7 +67,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     };
   }
 
-  read (id: string): Promise<Article> | NotFoundDbException {
+  read (id: string): Promise<Article | NotFoundDbException> {
     return this.collArt
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
@@ -91,7 +91,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as Article));
   }
 
-  update (obj: Article): Promise<void> | NotFoundDbException {
+  update (obj: Article): Promise<void | NotFoundDbException> {
     if (!obj.id) throw new IdRequiredDbException();
     const { _id, ...rest } = ArticleMongoModelDB.parseArticleToMongo(obj);
     return this.collArt
@@ -101,7 +101,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collArt
       .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {
@@ -109,7 +109,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       });
   }
 
-  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea | NotFoundDbException> {
     return this.collArt
       .aggregate([
         {

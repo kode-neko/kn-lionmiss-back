@@ -51,7 +51,7 @@ class AreaMongoModelDB implements IModelDBArea {
     };
   }
 
-  read (id: string): Promise<Area> | NotFoundDbException {
+  read (id: string): Promise<Area | NotFoundDbException> {
     return this.collArea
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
@@ -60,7 +60,7 @@ class AreaMongoModelDB implements IModelDBArea {
       });
   }
 
-  readByProps (obj: Omit<Area, 'id'>): Promise<Area> | NotFoundDbException {
+  readByProps (obj: Omit<Area, 'id'>): Promise<Area | NotFoundDbException> {
     return this.collArea
       .findOne(obj)
       .then((res) => {
@@ -84,7 +84,7 @@ class AreaMongoModelDB implements IModelDBArea {
       .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as Area));
   }
 
-  update (obj: Area): Promise<void> | NotFoundDbException {
+  update (obj: Area): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = AreaMongoModelDB.parseAreaToMongo(obj);
     return this.collArea
       .updateOne({ _id }, rest)
@@ -93,7 +93,7 @@ class AreaMongoModelDB implements IModelDBArea {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collArea
       .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {

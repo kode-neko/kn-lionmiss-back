@@ -105,7 +105,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       .then((list) => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
   }
 
-  update (obj: Shipping): Promise<void> | NotFoundDbException {
+  update (obj: Shipping): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = ShippingMongooseModelDB.parseShippingToMongoose(obj);
     return ShippingModelMongoose
       .updateOne({ _id }, rest)
@@ -114,7 +114,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return ShippingModelMongoose
       .deleteOne({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {

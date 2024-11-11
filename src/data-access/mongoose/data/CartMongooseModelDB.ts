@@ -58,7 +58,7 @@ class CartMongooseModelDB implements IModelDBCart {
     };
   }
 
-  read (id: string): Promise<Cart> | NotFoundDbException {
+  read (id: string): Promise<Cart | NotFoundDbException> {
     let cartMongoose: ICartMongoose;
     return CartModelMongoose
       .findById(id)
@@ -71,7 +71,7 @@ class CartMongooseModelDB implements IModelDBCart {
       .then((list) => CartMongooseModelDB.parseMongooseToCart(cartMongoose, list));
   }
 
-  newCartUser (idUser: string): Promise<Cart> | NotFoundDbException {
+  newCartUser (idUser: string): Promise<Cart | NotFoundDbException> {
     let cart: ICartMongoose;
     let filterUser: RootFilterQuery<IUserMongoose>;
     try {
@@ -95,7 +95,7 @@ class CartMongooseModelDB implements IModelDBCart {
       });
   }
 
-  createLine (idCart: string, cartLine: CartLine): Promise<Cart> | NotFoundDbException {
+  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
     let cartMongoose: ICartMongoose;
     return CartModelMongoose
       .findById(idCart)
@@ -118,7 +118,7 @@ class CartMongooseModelDB implements IModelDBCart {
       });
   }
 
-  updateLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
+  updateLine (idCart: string, cartLine: CartLine): Promise<void | NotFoundDbException> {
     const cartLineMongoose = CartMongooseModelDB.parseCartLineToMongoose(cartLine);
     return CartModelMongoose
       .findById(idCart)
@@ -137,7 +137,7 @@ class CartMongooseModelDB implements IModelDBCart {
       });
   }
 
-  deleteLine (idCart: string, idCartLine: string): Promise<void> | NotFoundDbException {
+  deleteLine (idCart: string, idCartLine: string): Promise<void | NotFoundDbException> {
     return CartModelMongoose
       .findById(idCart)
       .then((res) => { // Find Cart to modify CartLine

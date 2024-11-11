@@ -19,19 +19,19 @@ class CartSeqModelDB implements IModelDBCart {
 
   }
 
-  newCartUser (idUser: string): Promise<Cart> | NotFoundDbException {
+  newCartUser (idUser: string): Promise<Cart | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  createLine (idCart: string, cartLine: CartLine): Promise<Cart> | NotFoundDbException {
+  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  updateLine (idCart: string, cartLine: CartLine): Promise<void> | NotFoundDbException {
+  updateLine (idCart: string, cartLine: CartLine): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  deleteLine (idCart: string, idCartLine: string): Promise<void> | NotFoundDbException {
+  deleteLine (idCart: string, idCartLine: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
