@@ -15,6 +15,7 @@ export {
 export {
   CartLineValSchema,
   CartValSchema,
+  ShippingtLineValSchema,
   ShippingValSchema
 } from './cartVals';
 
@@ -25,6 +26,5 @@ export {
   AddressValSchema,
   CommentValSchema,
   UserMeasuresValSchema,
-  UserValSchema,
-  LoginValSchema
+  UserValSchema
 } from './userVals';
