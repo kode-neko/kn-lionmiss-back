@@ -42,7 +42,7 @@ function deleteArticle (req: Request, res: Response) {
 
 // Translations per area
 
-function getArticleIdAreaId (req: Request, res: Response) {
+function getArticleIdAreaName (req: Request, res: Response) {
   const { idArticle, nameArea } = req.params;
   return getArticle()
     .readInfoArea(idArticle, nameArea)
@@ -56,5 +56,5 @@ export {
   postArticle,
   putArticle,
   deleteArticle,
-  getArticleIdAreaId
+  getArticleIdAreaName
 };

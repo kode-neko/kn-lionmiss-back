@@ -4,15 +4,24 @@ import {
   postUserLogin,
   postUserLogout
 } from '../controllers';
-import {
-  validationIdCreateFunc,
-  validationLoginMid
-} from '../middlewares';
+import { validAttrMidCreate } from '../middlewares';
 
 const router = Router();
 
-router.get('/:userame', validationIdCreateFunc('username'), getUserId);
-router.post('/login', validationLoginMid, postUserLogin);
-router.post('/logout', postUserLogout);
+router.get(
+  '/:userName',
+  validAttrMidCreate('userName'),
+  getUserId
+);
+router.post(
+  '/login',
+  validAttrMidCreate('userName', 'body'),
+  validAttrMidCreate('pass', 'body'),
+  postUserLogin
+);
+router.post(
+  '/logout',
+  postUserLogout
+);
 
 export default router;

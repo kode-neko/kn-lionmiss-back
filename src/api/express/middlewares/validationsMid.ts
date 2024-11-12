@@ -14,7 +14,7 @@ import {
   UserLoginValSchema
 } from './validations';
 
-function validIdMidCreate (idName = 'id', petition = 'params') {
+function validAttrMidCreate (idName = 'id', petition = 'params') {
   return (req: Request, res: Response, next: NextFunction) => {
     const ValidSchemaIdName = idValSchemaCreateFunc(idName);
     ValidSchemaIdName.parse(req[petition][idName]);
@@ -23,11 +23,11 @@ function validIdMidCreate (idName = 'id', petition = 'params') {
 }
 
 function idBodyValidMid () {
-  validIdMidCreate('id', 'body');
+  validAttrMidCreate('id', 'body');
 }
 
 function idParamValidMid () {
-  return validIdMidCreate();
+  return validAttrMidCreate();
 }
 
 function bodyValidMId (req: Request, res: Response, next: NextFunction) {
@@ -63,6 +63,7 @@ function loginValidMid (req: Request, res: Response, next: NextFunction) {
 }
 
 export {
+  validAttrMidCreate,
   idBodyValidMid,
   idParamValidMid,
   bodyValidMId,

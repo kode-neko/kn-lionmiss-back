@@ -7,18 +7,38 @@ import {
   deleteShipping
 } from '../controllers';
 import {
-  validationBodyMidCreateFunc,
-  validationIdBodyMid,
-  validationIdMid,
-  validationSearchParamsMid
+  idBodyValidMid,
+  idParamValidMid,
+  searchParamsValidMid,
+  bodyValidMidCreate
 } from '../middlewares';
-
 const router = Router();
 
-router.get('/:id', validationIdMid, getShippingId);
-router.post('/list', validationSearchParamsMid, postShippingList);
-router.post('/', validationIdBodyMid, validationBodyMidCreateFunc('shipping'), postShipping);
-router.put('/', validationBodyMidCreateFunc('shipping'), putShipping);
-router.delete('/:id', validationIdMid, deleteShipping);
+router.get(
+  '/:id',
+  idParamValidMid,
+  getShippingId
+);
+router.post(
+  '/list',
+  searchParamsValidMid,
+  postShippingList
+);
+router.post(
+  '/',
+  bodyValidMidCreate('shipping'),
+  postShipping
+);
+router.put(
+  '/',
+  idBodyValidMid,
+  bodyValidMidCreate('shipping'),
+  putShipping
+);
+router.delete(
+  '/:id',
+  idParamValidMid,
+  deleteShipping
+);
 
 export default router;

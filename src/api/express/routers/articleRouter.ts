@@ -5,45 +5,52 @@ import {
   postArticle,
   putArticle,
   deleteArticle,
-  getArticleIdAreaList
+  getArticleIdAreaName
 } from '../controllers';
 import {
-  validationBodyMidCreateFunc,
-  validationIdBodyMid,
-  validationIdMid,
-  validationIdCreateFunc,
-  validationSearchParamsMid
+  idBodyValidMid,
+  idParamValidMid,
+  searchParamsValidMid,
+  bodyValidMidCreate,
+  validAttrMidCreate
 } from '../middlewares';
 
 const router = Router();
 
 // Article ops
-router.get('/:id', validationIdMid, getArticleId);
-router.post('/list', validationSearchParamsMid, postArticleList);
+router.get(
+  '/:id',
+  idParamValidMid,
+  getArticleId
+);
+router.post(
+  '/list',
+  searchParamsValidMid,
+  postArticleList
+);
 router.post(
   '/',
-  validationIdBodyMid,
-  validationBodyMidCreateFunc('article'),
+  bodyValidMidCreate('article'),
   postArticle
 );
 router.put(
   '/',
-  validationIdBodyMid,
-  validationBodyMidCreateFunc('article'),
+  idBodyValidMid,
+  bodyValidMidCreate('article'),
   putArticle
 );
 router.delete(
   '/',
-  validationIdMid,
+  idParamValidMid,
   deleteArticle
 );
 
 // Translations per area
 router.get(
   '/:idArticle/area/:nameArea',
-  validationIdCreateFunc('idArticle'),
-  validationIdCreateFunc('nameArea'),
-  getArticleIdAreaList
+  validAttrMidCreate('idArticle'),
+  validAttrMidCreate('nameArea'),
+  getArticleIdAreaName
 );
 
 export default router;

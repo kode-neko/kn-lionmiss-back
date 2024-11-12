@@ -7,16 +7,40 @@ import {
   postCartNewUser
 } from '../controllers';
 import {
-  validationBodyMidCreateFunc,
-  validationIdMid
+  idParamValidMid,
+  idBodyValidMid,
+  bodyValidMidCreate,
+  validAttrMidCreate
 } from '../middlewares';
 
 const router = Router();
 
-router.get('/:id', validationIdMid, getCartId);
-router.post('/new/user/:username', validationIdMid, postCartNewUser);
-router.post('/line', validationBodyMidCreateFunc('cartLine'), postCartLine);
-router.put('/line', validationIdMid, validationBodyMidCreateFunc('cartLine'), putCartLine);
-router.delete('/:idCart/line/:numLine', validationIdMid, deleteCartLine);
+router.get(
+  '/:id',
+  idParamValidMid,
+  getCartId
+);
+router.post(
+  '/new/user/:username',
+  validAttrMidCreate('username'),
+  postCartNewUser
+);
+router.post(
+  '/line',
+  bodyValidMidCreate('cartLine'),
+  postCartLine
+);
+router.put(
+  '/line',
+  idBodyValidMid,
+  bodyValidMidCreate('cartLine'),
+  putCartLine
+);
+router.delete(
+  '/:idCart/line/:numLine',
+  validAttrMidCreate('idCart'),
+  validAttrMidCreate('numLine'),
+  deleteCartLine
+);
 
 export default router;
