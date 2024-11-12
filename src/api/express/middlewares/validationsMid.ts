@@ -7,32 +7,36 @@ import {
   CommentValSchema,
   IdValSchema,
   idValSchemaCreateFunc,
-  LoginValSchema,
-  SearParamsValSchema,
+  SearchParamsValSchema,
   ShippingValSchema,
   UserValSchema,
-  CartLineValSchema
+  CartLineValSchema,
+  UserLoginValSchema
 } from './validations';
 
-function validationIdCreateFunc (idName: string) {
+function validIdMidCreate (idName = 'id', petition = 'params') {
   return (req: Request, res: Response, next: NextFunction) => {
     const ValidSchemaIdName = idValSchemaCreateFunc(idName);
-    ValidSchemaIdName.parse(req.params[idName]);
+    ValidSchemaIdName.parse(req[petition][idName]);
     next();
   };
 }
 
-function validationIdMid () {
-  validationIdCreateFunc('id');
+function idBodyValidMid () {
+  validIdMidCreate('id', 'body');
 }
 
-function validationIdBodyMid (req: Request, res: Response, next: NextFunction) {
+function idParamValidMid () {
+  return validIdMidCreate();
+}
+
+function bodyValidMId (req: Request, res: Response, next: NextFunction) {
   IdValSchema.parse(req.body);
   next();
 }
 
-function validationSearchParamsMid (req: Request, res: Response, next: NextFunction) {
-  SearParamsValSchema.parse(req.body);
+function searchParamsValidMid (req: Request, res: Response, next: NextFunction) {
+  SearchParamsValSchema.parse(req.body);
   next();
 }
 
@@ -46,23 +50,23 @@ const mapVals: Record<string, any> = {
   shipping: ShippingValSchema
 };
 
-function validationBodyMidCreateFunc (name: string) {
+function bodyValidMidCreate (name: string) {
   return (req: Request, res: Response, next: NextFunction) => {
     mapVals[name].parse(req.body);
     next();
   };
 }
 
-function validationLoginMid (req: Request, res: Response, next: NextFunction) {
-  LoginValSchema.parse(req.body);
+function loginValidMid (req: Request, res: Response, next: NextFunction) {
+  UserLoginValSchema.parse(req.body);
   next();
 }
 
 export {
-  validationIdMid,
-  validationIdBodyMid,
-  validationSearchParamsMid,
-  validationIdCreateFunc,
-  validationBodyMidCreateFunc,
-  validationLoginMid
+  idBodyValidMid,
+  idParamValidMid,
+  bodyValidMId,
+  searchParamsValidMid,
+  bodyValidMidCreate,
+  loginValidMid
 };

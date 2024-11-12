@@ -1,8 +1,8 @@
 export {
-  validationIdMid,
-  validationIdBodyMid,
-  validationSearchParamsMid,
-  validationIdCreateFunc,
-  validationBodyMidCreateFunc,
-  validationLoginMid
+  idBodyValidMid,
+  idParamValidMid,
+  bodyValidMId,
+  searchParamsValidMid,
+  bodyValidMidCreate,
+  loginValidMid
 } from './validationsMid';

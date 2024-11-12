@@ -9,7 +9,7 @@ function idValSchemaCreateFunc (idName: string) {
   });
 }
 
-const SearParamsValSchema = z.object({
+const SearchParamsValSchema = z.object({
   limit: z
     .number()
     .positive()
@@ -35,6 +35,6 @@ const UserLoginValSchema = z.object({
 export {
   IdValSchema,
   idValSchemaCreateFunc,
-  SearParamsValSchema,
+  SearchParamsValSchema,
   UserLoginValSchema
 };

@@ -1,7 +1,7 @@
 export {
   IdValSchema,
   idValSchemaCreateFunc,
-  SearParamsValSchema,
+  SearchParamsValSchema,
   UserLoginValSchema
 } from './appVals';
 

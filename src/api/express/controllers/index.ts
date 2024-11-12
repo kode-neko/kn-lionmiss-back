@@ -4,7 +4,7 @@ export {
   postArticle,
   putArticle,
   deleteArticle,
-  getArticleIdAreaId
+  getArticleIdAreaName
 } from './articleCtrl';
 
 export {
