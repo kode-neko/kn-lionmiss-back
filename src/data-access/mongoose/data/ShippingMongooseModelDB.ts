@@ -1,16 +1,13 @@
 import {
-  Shipping, ShippingLine, SearchParams, Article
+  Shipping, ShippingLine, SearchParams
 } from '@model/index';
-import { Types } from 'mongoose';
 import { IModelDBShipping } from '../../interfaces';
 import {
-  ShippingModelMongoose,
-  IShippingMongoose,
-  IArticleMongoose,
-  IShippingLineMongoose,
-  ArticleModelMongoose
-} from '../db';
+  IArticleMongoose, IShippingLineMongoose, IShippingMongoose
+} from '../db/interfaces';
+import { Types } from 'mongoose';
 import { NotFoundDbException } from '../../error';
+import { ArticleModelMongoose, ShippingModelMongoose } from '../db/models';
 import ArticleMongooseModelDB from './ArticleMongooseModelDB';
 
 class ShippingMongooseModelDB implements IModelDBShipping {
@@ -30,7 +27,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
 
   public static parseShippingToMongoose (shipping: Shipping): IShippingMongoose {
     return {
-      _id: new Types.ObjectId(shipping.id),
+      _id: new Types.ObjectId(shipping.id as string),
       idTracking: shipping.idTracking,
       idShipping: shipping.idShipping,
       state: shipping.state,
@@ -43,7 +40,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
     return {
       id: shippingLine.id,
       qty: shippingLine.qty,
-      article: new Types.ObjectId(shippingLine.article.id)
+      article: new Types.ObjectId(shippingLine.article.id as string)
     };
   }
 
@@ -108,7 +105,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       .then((list) => ShippingMongooseModelDB.parseMongooseToShipping(shipping, list));
   }
 
-  update (obj: Shipping): Promise<void> | NotFoundDbException {
+  update (obj: Shipping): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = ShippingMongooseModelDB.parseShippingToMongoose(obj);
     return ShippingModelMongoose
       .updateOne({ _id }, rest)
@@ -117,7 +114,7 @@ class ShippingMongooseModelDB implements IModelDBShipping {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return ShippingModelMongoose
       .deleteOne({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {

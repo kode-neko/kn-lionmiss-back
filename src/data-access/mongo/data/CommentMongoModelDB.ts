@@ -5,7 +5,7 @@ import {
 } from 'mongodb';
 import { IModelDBComment } from '../../interfaces';
 import { ICommentMongo } from '../db/interfaces';
-import { getClientDb } from '../db';
+import { getConnMongo } from '../db';
 import { IdRequiredDbException, NotFoundDbException } from '../../error';
 
 class CommentMongoModelDB implements IModelDBComment {
@@ -27,7 +27,7 @@ class CommentMongoModelDB implements IModelDBComment {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collComment = this.db.collection<ICommentMongo>('cart');
   }
 
@@ -39,7 +39,7 @@ class CommentMongoModelDB implements IModelDBComment {
       rating: comment.rating,
       pics: comment.pics,
       article: new ObjectId(comment.article as string),
-      user: comment.user
+      user: new ObjectId(comment.user as string)
     };
   }
 
@@ -50,12 +50,12 @@ class CommentMongoModelDB implements IModelDBComment {
       text: mongoComment.text,
       rating: mongoComment.rating,
       pics: mongoComment.pics,
-      user: mongoComment.user,
+      user: mongoComment.user?.toString(),
       article: mongoComment.article?.toString()
     };
   }
 
-  read (id: string): Promise<Comment> | NotFoundDbException {
+  read (id: string): Promise<Comment | NotFoundDbException> {
     return this.collComment
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
@@ -77,10 +77,10 @@ class CommentMongoModelDB implements IModelDBComment {
     const commentMongo = CommentMongoModelDB.parseCommentToMongo(obj);
     return this.collComment
       .insertOne(commentMongo)
-      .then(({ insertedId: id }) => ({ id, ...obj }));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() }));
   }
 
-  update (obj: Comment): Promise<void> | NotFoundDbException {
+  update (obj: Comment): Promise<void | NotFoundDbException> {
     if (!obj.id) throw new IdRequiredDbException();
     return this.collComment
       .updateOne({ _id: new ObjectId(obj.id as string) }, obj)
@@ -89,7 +89,7 @@ class CommentMongoModelDB implements IModelDBComment {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collComment
       .deleteOne({ _id: new ObjectId(id as string) })
       .then(({ deletedCount }) => {

@@ -1,12 +1,14 @@
 export {
-  IAreaMongo,
-  IArticleAreaMongo,
-  IArticleMongo,
-  ICartLineMongo,
-  ICartMongo,
-  IShippingLineMongo,
-  IShippingMongo,
-  IUserMeasuresMongo,
-  IAddressMongo,
-  IUserMongo
+  AreaMongoModelDB,
+  ArticleAreaMongoModelDB,
+  ArticleMongoModelDB,
+  CartMongoModelDB,
+  CommentMongoModelDB,
+  ShippingMongoModelDB,
+  UserMongoModelDB
+} from './data';
+export {
+  createConnMongo,
+  getConnMongo,
+  getModelMongo
 } from './db';

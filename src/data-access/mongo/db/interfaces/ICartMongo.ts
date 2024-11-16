@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import IArticleMongo from './IArticleMongo';
 
 interface ICartLineMongo {
-  id: number;
+  id: string;
   qty: number;
   article: IArticleMongo['_id'];
 }

@@ -27,6 +27,10 @@ export default [
         'error',
         'consistent'
       ],
+      '@stylistic/array-element-newline': [
+        'error',
+        'consistent'
+      ],
       'object-curly-newline': ['error',
         {
           multiline: true,

@@ -5,17 +5,18 @@ import { ObjectId } from 'mongodb';
 import IArticleMongo from './IArticleMongo';
 import IAreaMongo from './IAreaMongo';
 import ICartMongo from './ICartMongo';
+import IShippingMongo from './IShippingMongo';
 
 interface IUserMeasuresMongo {
-  shoulder: string;
-  chest: string;
-  waist: string;
-  hips: string;
-  foot: string;
-  height: string;
-  weight: string;
-  unitsHeight: UnitsHeightEnum;
-  unitsWeight: UnitsWeightEnum;
+  shoulder: number;
+  chest: number;
+  waist: number;
+  hips: number;
+  foot: number;
+  height: number;
+  weight: number;
+  unitsHeight: string;
+  unitsWeight: string;
 }
 
 interface IAddressMongo {
@@ -35,7 +36,7 @@ interface IUserMongo {
   userName: string;
   email: string;
   cart: ICartMongo['_id'];
-  shippings: string;
+  shippings: IShippingMongo['_id'][];
   bday: Date;
   sex: SexEnum;
   area: IAreaMongo['name'];

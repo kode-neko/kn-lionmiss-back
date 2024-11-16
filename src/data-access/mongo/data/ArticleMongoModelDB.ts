@@ -8,7 +8,7 @@ import {
 } from 'mongodb';
 import { IModelDBArticle } from '../../interfaces';
 import {
-  getClientDb, IAreaMongo, IArticleAreaMongo, IArticleMongo
+  getConnMongo, IAreaMongo, IArticleAreaMongo, IArticleMongo
 } from '../db';
 import { IdRequiredDbException } from '../../error';
 import ArticleAreaMongoModelDB from './ArticleAreaMongoModelDB';
@@ -36,7 +36,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collArt = this.db.collection<IArticleMongo>('article');
     this.collArea = this.db.collection<IAreaMongo>('area');
   }
@@ -54,7 +54,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     };
   }
 
-  public static parseMongoToArticle (mongo: IArticleMongo, artAreaList: Article[]): Article {
+  public static parseMongoToArticle (mongo: IArticleMongo, artAreaList: IArticleAreaMongo[]): Article {
     return {
       id: mongo._id?.toString(),
       instructs: mongo.instructs,
@@ -63,11 +63,11 @@ class ArticleMongoModelDB implements IModelDBArticle {
       tags: mongo.tags,
       variants: mongo.variants,
       discolor: mongo.discolor,
-      articleAreaList: artAreaList
+      articleAreaList: []
     };
   }
 
-  read (id: string): Promise<Article> | NotFoundDbException {
+  read (id: string): Promise<Article | NotFoundDbException> {
     return this.collArt
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
@@ -88,10 +88,10 @@ class ArticleMongoModelDB implements IModelDBArticle {
     const articleMongo = ArticleMongoModelDB.parseArticleToMongo(obj);
     return this.collArt
       .insertOne(articleMongo)
-      .then(({ insertedId: id }) => ArticleMongoModelDB.parseMongoToArticle({ id, ...obj }, []));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as Article));
   }
 
-  update (obj: Article): Promise<void> | NotFoundDbException {
+  update (obj: Article): Promise<void | NotFoundDbException> {
     if (!obj.id) throw new IdRequiredDbException();
     const { _id, ...rest } = ArticleMongoModelDB.parseArticleToMongo(obj);
     return this.collArt
@@ -101,7 +101,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collArt
       .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {
@@ -109,7 +109,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       });
   }
 
-  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea | NotFoundDbException> {
     return this.collArt
       .aggregate([
         {
@@ -134,7 +134,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       ])
       .toArray()
       .then((list) => {
-        if (list.length === 0) throw NotFoundDbException('ArticleArea');
+        if (list.length === 0) throw new NotFoundDbException('ArticleArea');
         const { articleArea, area } = list[0];
         return ArticleAreaMongoModelDB.parseMongoToArticleArea(articleArea as IArticleAreaMongo, area as IAreaMongo);
       });
@@ -153,13 +153,13 @@ class ArticleMongoModelDB implements IModelDBArticle {
         return this.collArtArea.insertOne(articleAreaMongo);
       })
       .then(({ insertedId }) => {
-        return { id: insertedId, ...articleArea };
+        return { ...articleArea, id: insertedId.toString() };
       });
   }
 
   updateInfoArea (articleArea: ArticleArea): Promise<void> {
     if (!articleArea.id) throw new IdRequiredDbException();
-    const { _id, ...rest } = ArticleMongoModelDB.parseArticleToMongo(articleArea);
+    const { _id, ...rest } = ArticleAreaMongoModelDB.parseArticleAreaToMongo(articleArea);
     return this.collArtArea
       .updateOne({ _id }, rest)
       .then(({ modifiedCount }) => {

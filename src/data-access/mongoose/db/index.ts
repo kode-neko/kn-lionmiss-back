@@ -1,4 +1,8 @@
-export { initConnMongoose } from './utils';
+export {
+  createConnMongoose,
+  getConnMongoose,
+  getModelMongoose
+} from './utils';
 export {
   IAddressMongoose,
   IAreaMongoose,

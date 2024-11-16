@@ -1,31 +1,15 @@
-import { Article, ArticleArea, User } from '@model/index';
-import {
-  describe, expect, test, beforeAll, afterAll
-} from '@jest/globals';
-import { NotFoundDbException } from '@data-access/index';
-import {
-  initConnMongoose
-} from '@data-access/mongoose/index';
+import { User } from '@model/index';
 import {
   Collection, Db, MongoClient
 } from 'mongodb';
-import { faker } from '@faker-js/faker';
+import { createConnMongo, getConnMongo } from '../../../src/data-access/mongo/db';
+import { createConnMongoose } from '../../../src/data-access/mongoose/db/utils';
 import {
-  createFixArticle, createFixArticleArea, createFixArticleAreaNoId, createFixArticleNoId, createFixCart, createFixListArticle,
-  createFixListArticleArea,
-  createFixUser
-} from '../fixtures';
-import { AreaMongooseModelDB, UserMongooseModelDB, ArticleMongooseModelDB } from '../../../src/data-access/mongoose';
-import { ArticleAreaModelMongoose } from '../../../src/data-access/mongoose/db';
-import CartMongooseModelDB from '../../../src/data-access/mongoose/data/CartMongooseModelDB';
-
-const {
-  DB,
-  USER_ADMIN,
-  PASS_USER_ADMIN,
-  HOST_MONGO,
-  PORT_MONGO
-} = process.env;
+  AreaMongooseModelDB, ArticleMongooseModelDB, CartMongooseModelDB, UserMongooseModelDB
+} from '../../../src/data-access/mongoose/data';
+import { createFixUser } from '../fixtures';
+import { NotFoundDbException } from '../../../src/data-access/error';
+import { faker } from '@faker-js/faker';
 
 describe('UserMongooseModelDB', () => {
   let client: MongoClient;
@@ -38,32 +22,29 @@ describe('UserMongooseModelDB', () => {
   const userMongooseModel = UserMongooseModelDB.getIntance();
 
   beforeAll(async () => {
-    // Mongoose
-    const url = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
-    client = new MongoClient(url);
-    await client.connect();
+    // Mongo
+    await createConnMongo();
+    [client, db] = getConnMongo();
     db = client.db('lionmiss');
-    
     collArea = await db.createCollection('area');
     collArticle = await db.createCollection('article');
     collCart = await db.createCollection('cart');
     collUser = await db.createCollection('user');
 
-    // Mongooseose
-    await initConnMongoose();
+    // Mongoose
+    await createConnMongoose();
   });
 
   beforeEach(async () => {
-
     const user = createFixUser();
     const area = user.area;
     const cart = user.cart;
-    const articles = cart.lines.map(l => l.article);
-    
+    const articles = cart.lines.map((l) => l.article);
+
     const userMongoose = UserMongooseModelDB.parseUserToMongoose(user);
     const areaMongoose = AreaMongooseModelDB.parseAreaToMongoose(area);
     const cartMongoose = CartMongooseModelDB.parseCartToMongoose(cart);
-    const articleMongoose = articles.map(a => ArticleMongooseModelDB.parseArticleToMongoose(a));
+    const articleMongoose = articles.map((a) => ArticleMongooseModelDB.parseArticleToMongoose(a));
 
     await collUser.insertOne(userMongoose);
     await collArea.insertOne(areaMongoose);
@@ -102,5 +83,4 @@ describe('UserMongooseModelDB', () => {
     expect(async () => await userMongooseModel.read(faker.database.mongodbObjectId()))
       .toThrow(NotFoundDbException);
   });
-
 });

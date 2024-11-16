@@ -1,22 +1,46 @@
 import { Router } from 'express';
 import {
-  getCart,
-  postCart,
+  getCartId,
   postCartLine,
   putCartLine,
-  deleteCartLine
+  deleteCartLine,
+  postCartNewUser
 } from '../controllers';
 import {
-  validationBodyMidCreateFunc,
-  validationIdMid
+  idParamValidMid,
+  idBodyValidMid,
+  bodyValidMidCreate,
+  validAttrMidCreate
 } from '../middlewares';
 
 const router = Router();
 
-router.get('/:id', validationIdMid, getCart);
-router.post('/:idUser', validationIdMid, postCart);
-router.post('/:id/line', validationBodyMidCreateFunc('cartLine'), postCartLine);
-router.put('/:id/line', validationIdMid, validationBodyMidCreateFunc('cartLine'), putCartLine);
-router.delete('/:id/line/:id', validationIdMid, deleteCartLine);
+router.get(
+  '/:id',
+  idParamValidMid,
+  getCartId
+);
+router.post(
+  '/new/user/:username',
+  validAttrMidCreate('username'),
+  postCartNewUser
+);
+router.post(
+  '/line',
+  bodyValidMidCreate('cartLine'),
+  postCartLine
+);
+router.put(
+  '/line',
+  idBodyValidMid,
+  bodyValidMidCreate('cartLine'),
+  putCartLine
+);
+router.delete(
+  '/:idCart/line/:numLine',
+  validAttrMidCreate('idCart'),
+  validAttrMidCreate('numLine'),
+  deleteCartLine
+);
 
 export default router;

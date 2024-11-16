@@ -4,7 +4,7 @@ import { Shipping, ShippingLine } from '@model/index';
 import { NotFoundDbException } from '../../error';
 import { Connection, PoolConnection } from 'mariadb';
 import { IModelDBShipping } from '../../interfaces';
-import { getConn } from '../db/utils';
+import { getConnSql } from '../db/utils';
 import ArticleSqlModelDB from './ArticleSqlModelDB';
 
 class ShippingSqlModelDB implements IModelDBShipping {
@@ -21,7 +21,7 @@ class ShippingSqlModelDB implements IModelDBShipping {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToShipping (shippingSql: any, articleListSql: any[]): Shipping {
@@ -55,11 +55,11 @@ class ShippingSqlModelDB implements IModelDBShipping {
     throw new Error('Method not implemented.');
   }
 
-  update (obj: Shipping): Promise<void> | NotFoundDbException {
+  update (obj: Shipping): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 

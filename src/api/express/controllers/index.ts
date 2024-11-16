@@ -4,20 +4,12 @@ export {
   postArticle,
   putArticle,
   deleteArticle,
-
-  getArticleIdAreaId,
-  getArticleIdAreaList,
-
-  getArticleIdCommentId,
-  postArticleIdCommentIdList,
-  postArticleIdCommentId,
-  putArticleIdCommentId,
-  deleteArticleIdCommentId
+  getArticleIdAreaName
 } from './articleCtrl';
 
 export {
-  getCart,
-  postCart,
+  getCartId,
+  postCartNewUser,
   postCartLine,
   putCartLine,
   deleteCartLine
@@ -34,6 +26,5 @@ export {
 export {
   getUserId,
   postUserLogin,
-  postUserLogout,
-  getUserIdCart
+  postUserLogout
 } from './userCtrl';

@@ -10,4 +10,8 @@ export {
   IAddressMongo,
   IUserMongo
 } from './interfaces';
-export { createConn, getClientDb } from './utils';
+export {
+  createConnMongo,
+  getConnMongo,
+  getModelMongo
+} from './utils';

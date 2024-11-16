@@ -4,7 +4,7 @@ import { IShippingLineMongoose, IShippingMongoose } from '../interfaces';
 
 const shippingLineSchemaMongoose = new Schema<IShippingLineMongoose>({
   id: {
-    type: Number,
+    type: String,
     required: true
   },
   article: {

@@ -1,8 +1,9 @@
-import { NotFoundDbException } from '@data-access/index';
 import { Area, SearchParams } from '@model/index';
-import { AreaModelMongoose, IAreaMongoose } from '../db';
-import { Types } from 'mongoose';
 import { IModelDBArea } from '../../interfaces';
+import { IAreaMongoose } from '../db/interfaces';
+import { NotFoundDbException } from '../../error';
+import { AreaModelMongoose } from '../db/models';
+import { Types } from 'mongoose';
 
 class AreaMongooseModelDB implements IModelDBArea {
 
@@ -21,7 +22,7 @@ class AreaMongooseModelDB implements IModelDBArea {
 
   public static parseAreaToMongoose (area: Area): IAreaMongoose {
     return {
-      _id: new Types.ObjectId(area.id),
+      _id: new Types.ObjectId(area.id as string),
       name: area.name,
       locale: area.locale,
       country: area.country,
@@ -39,7 +40,7 @@ class AreaMongooseModelDB implements IModelDBArea {
     };
   }
 
-  read (id: string): Promise<Area> | NotFoundDbException {
+  read (id: string): Promise<Area | NotFoundDbException> {
     return AreaModelMongoose
       .findById(id)
       .then((res) => {
@@ -48,7 +49,7 @@ class AreaMongooseModelDB implements IModelDBArea {
       });
   }
 
-  readByProps (obj: Partial<Area>): Promise<Area> | NotFoundDbException {
+  readByProps (obj: Partial<Area>): Promise<Area | NotFoundDbException> {
     return AreaModelMongoose
       .findOne(obj)
       .then((res) => {
@@ -72,7 +73,7 @@ class AreaMongooseModelDB implements IModelDBArea {
       .then((res) => AreaMongooseModelDB.parseMongooseToArea(res));
   }
 
-  update (obj: Area): Promise<void> | NotFoundDbException {
+  update (obj: Area): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = AreaMongooseModelDB.parseAreaToMongoose(obj);
     return AreaModelMongoose
       .updateOne({ _id }, rest)
@@ -81,7 +82,7 @@ class AreaMongooseModelDB implements IModelDBArea {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return AreaModelMongoose
       .deleteMany({ _id: new Types.ObjectId(id) })
       .then(({ deletedCount }) => {

@@ -1,27 +1,15 @@
-import { Article, Area } from '@model/index';
-import {
-  describe, expect, test, beforeAll, afterAll
-} from '@jest/globals';
 import { NotFoundDbException } from '@data-access/index';
-import {
-  initConnMongoose
-} from '@data-access/mongoose/index';
+import { Area } from '@model/index';
 import {
   Collection, Db, MongoClient
 } from 'mongodb';
+import { AreaMongooseModelDB } from '../../../src/data-access/mongoose/data';
+import { createConnMongoose } from '../../../src/data-access/mongoose/db/utils';
+import { createConnMongo, getConnMongo } from '../../../src/data-access/mongo/db';
+import {
+  createFixArea, createFixAreaNoId, createFixListArea
+} from '../fixtures';
 import { faker } from '@faker-js/faker';
-
-import { AreaMongooseModelDB, ArticleMongooseModelDB } from '../../../src/data-access/mongoose';
-import { AreaModelMongoose } from '../../../src/data-access/mongoose/db';
-import { createFixArea, createFixAreaNoId, createFixListArea } from '../fixtures';
-
-const {
-  DB,
-  USER_ADMIN,
-  PASS_USER_ADMIN,
-  HOST_MONGO,
-  PORT_MONGO
-} = process.env;
 
 describe('AreaMongooseModelDB', () => {
   let client: MongoClient;
@@ -31,21 +19,20 @@ describe('AreaMongooseModelDB', () => {
   const areaMongooseModel = AreaMongooseModelDB.getIntance();
 
   beforeAll(async () => {
-    // Mongoose
-    const url = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
-    client = new MongoClient(url);
-    await client.connect();
+    // Mongo
+    await createConnMongo();
+    [client, db] = getConnMongo();
     db = client.db('lionmiss');
     collArea = await db.createCollection('area');
 
-    // Mongooseose
-    await initConnMongoose();
+    // Mongoose
+    await createConnMongoose();
   });
 
   beforeEach(async () => {
     const areaList = createFixListArea();
     areaExample = { ...areaList[0] };
-    const areaListMongoose = areaList.map(a => AreaMongooseModelDB.parseAreaToMongoose(a));
+    const areaListMongoose = areaList.map((a) => AreaMongooseModelDB.parseAreaToMongoose(a));
     await collArea.insertMany(areaListMongoose);
   });
 

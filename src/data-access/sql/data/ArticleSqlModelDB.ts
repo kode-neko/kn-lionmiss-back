@@ -5,7 +5,7 @@ import {
   Article, SearchParams, ArticleArea
 } from '@model/index';
 import { IModelDBArticle } from '../../interfaces';
-import { getConn } from '../db/utils';
+import { getConnSql } from '../db/utils';
 import { Connection, PoolConnection } from 'mariadb';
 
 class ArticleSqlModelDB implements IModelDBArticle {
@@ -22,7 +22,7 @@ class ArticleSqlModelDB implements IModelDBArticle {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToArticle (article: any, artAreaList: any[]): Article {
@@ -38,7 +38,7 @@ class ArticleSqlModelDB implements IModelDBArticle {
     };
   }
 
-  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea> | NotFoundDbException {
+  readInfoArea (idArticle: string, nameArea: string): Promise<ArticleArea | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
@@ -66,11 +66,11 @@ class ArticleSqlModelDB implements IModelDBArticle {
     throw new Error('Method not implemented.');
   }
 
-  update (obj: Article): Promise<void> | NotFoundDbException {
+  update (obj: Article): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 

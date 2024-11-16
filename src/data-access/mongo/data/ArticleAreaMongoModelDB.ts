@@ -5,7 +5,7 @@ import {
 } from 'mongodb';
 import { IModelDBArticleArea } from '../../interfaces';
 import {
-  getClientDb, IAreaMongo, IArticleAreaMongo
+  getConnMongo, IAreaMongo, IArticleAreaMongo
 } from '../db';
 import AreaMongoModelDB from './AreaMongoModelDB';
 
@@ -30,7 +30,7 @@ class ArticleAreaMongoModelDB implements IModelDBArticleArea {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collArtArea = this.db.collection<IArticleAreaMongo>('articleArea');
     this.collArea = this.db.collection<IAreaMongo>('area');
   }
@@ -57,7 +57,7 @@ class ArticleAreaMongoModelDB implements IModelDBArticleArea {
     };
   }
 
-  read (id: string): Promise<ArticleArea> | NotFoundDbException {
+  read (id: string): Promise<ArticleArea | NotFoundDbException> {
     let articleAreaMongo: IArticleAreaMongo;
     return this.collArtArea
       .findOne({ _id: new ObjectId(id) })
@@ -93,13 +93,12 @@ class ArticleAreaMongoModelDB implements IModelDBArticleArea {
 
   create (obj: ArticleArea): Promise<ArticleArea> {
     const articleAreaMongo = ArticleAreaMongoModelDB.parseArticleAreaToMongo(obj);
-    const areaMongo = AreaMongoModelDB.parseAreaToMongo(obj.area);
     return this.collArtArea
       .insertOne(articleAreaMongo)
-      .then(({ insertedId: id }) => ArticleAreaMongoModelDB.parseMongoToArticleArea({ id, ...obj }, areaMongo));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as ArticleArea));
   }
 
-  update (obj: ArticleArea): Promise<void> | NotFoundDbException {
+  update (obj: ArticleArea): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = ArticleAreaMongoModelDB.parseArticleAreaToMongo(obj);
     return this.collArtArea
       .updateOne({ _id }, rest)
@@ -108,7 +107,7 @@ class ArticleAreaMongoModelDB implements IModelDBArticleArea {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collArtArea
       .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {

@@ -1,6 +1,6 @@
 import { NotFoundDbException } from '@data-access/index';
 import {
-  Shipping, ShippingLine, SearchParams
+  Shipping, ShippingLine, SearchParams, PaymentEnum
 } from '@model/index';
 import {
   Collection, Db, MongoClient,
@@ -8,7 +8,7 @@ import {
 } from 'mongodb';
 import { IModelDBShipping } from '../../interfaces';
 import {
-  getClientDb, IArticleMongo, IShippingLineMongo, IShippingMongo
+  getConnMongo, IArticleMongo, IShippingLineMongo, IShippingMongo
 } from '../db';
 import ArticleMongoModelDB from './ArticleMongoModelDB';
 
@@ -33,7 +33,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collShipping = this.db.collection<IShippingMongo>('cart');
     this.collArt = this.db.collection<IArticleMongo>('cart');
   }
@@ -63,7 +63,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
       idTracking: shippingMongo.idTracking,
       idShipping: shippingMongo.idShipping,
       state: shippingMongo.state,
-      payment: shippingMongo.payment,
+      payment: PaymentEnum[shippingMongo.payment],
       lines: shippingMongo.lines.map((l) => ShippingMongoModelDB.parseMongoToShippingLine(l, articleListMongo.find((a) => a._id?.toString() === l.article?.toString()) as IArticleMongo))
     };
   }
@@ -100,6 +100,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
         const articleListMongo = list.flatMap((s) => s.lines.map((l) => new ObjectId(l.article)));
         return this.collArt.find({ _id: { $in: articleListMongo } });
       })
+      .then((list) => list.toArray())
       .then((list) => {
         return shippingList.map((s) => ShippingMongoModelDB.parseMongoToShipping(s, list));
       });
@@ -109,20 +110,20 @@ class ShippingMongoModelDB implements IModelDBShipping {
     const shippingMongo = ShippingMongoModelDB.parseShippingToMongo(obj);
     return this.collShipping
       .insertOne(shippingMongo)
-      .then(({ insertedId: id }) => ({ id, ...obj }));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() }));
   }
 
-  update (obj: Shipping): Promise<void> | NotFoundDbException {
+  update (obj: Shipping): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = ShippingMongoModelDB.parseShippingToMongo(obj);
-    this.collShipping
+    return this.collShipping
       .updateOne({ _id }, rest)
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Shipping');
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
-    this.collShipping
+  delete (id: string): Promise<void | NotFoundDbException> {
+    return this.collShipping
       .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {
         if (deletedCount === 0) throw new NotFoundDbException('Shipping');

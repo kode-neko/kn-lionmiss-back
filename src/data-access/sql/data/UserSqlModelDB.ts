@@ -6,7 +6,7 @@ import {
 import { Connection, PoolConnection } from 'mariadb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBUser } from '../../interfaces';
-import { getConn } from '../db/utils';
+import { getConnSql } from '../db/utils';
 import CartSqlModelDB from './CartSqlModelDB';
 
 class UserSqlModelDB implements IModelDBUser {
@@ -23,7 +23,7 @@ class UserSqlModelDB implements IModelDBUser {
   }
 
   private constructor () {
-    this.conn = getConn();
+    this.conn = getConnSql();
   }
 
   public static parseSqlToUser (

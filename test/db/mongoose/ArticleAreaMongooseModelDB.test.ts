@@ -1,29 +1,17 @@
-import { Article, ArticleArea } from '@model/index';
-import {
-  describe, expect, test, beforeAll, afterAll
-} from '@jest/globals';
 import { NotFoundDbException } from '@data-access/index';
-import {
-  initConnMongoose
-} from '@data-access/mongoose/index';
+import { ArticleArea } from '@model/index';
 import {
   Collection, Db, MongoClient
 } from 'mongodb';
-import { faker } from '@faker-js/faker';
 import {
-  createFixArticle, createFixArticleArea, createFixArticleAreaNoId, createFixArticleNoId, createFixListArticle,
-  createFixListArticleArea
+  AreaMongooseModelDB, ArticleAreaMongooseModelDB, ArticleMongooseModelDB
+} from '../../../src/data-access/mongoose/data';
+import { createConnMongo, getConnMongo } from '../../../src/data-access/mongo/db';
+import { createConnMongoose } from '../../../src/data-access/mongoose/db/utils';
+import {
+  createFixArticleArea, createFixArticleAreaNoId, createFixListArticle, createFixListArticleArea
 } from '../fixtures';
-import { AreaMongooseModelDB, ArticleAreaMongooseModelDB, ArticleMongooseModelDB } from '../../../src/data-access/mongoose';
-import { ArticleAreaModelMongoose } from '../../../src/data-access/mongoose/db';
-
-const {
-  DB,
-  USER_ADMIN,
-  PASS_USER_ADMIN,
-  HOST_MONGO,
-  PORT_MONGO
-} = process.env;
+import { faker } from '@faker-js/faker';
 
 describe('ArticleAreaMongooseModelDB', () => {
   let client: MongoClient;
@@ -32,34 +20,29 @@ describe('ArticleAreaMongooseModelDB', () => {
   let collArtArea: Collection;
   let collArea: Collection;
   let artAreaExample: ArticleArea;
-  let artExample: Article;
   const articleAreaMongooseModel = ArticleAreaMongooseModelDB.getIntance();
 
   beforeAll(async () => {
-    // Mongoose
-    const url = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
-    client = new MongoClient(url);
-    await client.connect();
+    // Mongo
+    await createConnMongo();
+    [client, db] = getConnMongo();
     db = client.db('lionmiss');
     collArticle = await db.createCollection('article');
     collArtArea = await db.createCollection('articleArea');
     collArea = await db.createCollection('area');
 
-    // Mongooseose
-    await initConnMongoose();
+    // Mongoose
+    await createConnMongoose();
   });
 
   beforeEach(async () => {
     const articleList = createFixListArticle();
     const artAreaList = createFixListArticleArea();
     artAreaExample = { ...artAreaList[0] };
-    artExample = { ...articleList[0] };
 
     const articleListMongoose = articleList.map((a) => ArticleMongooseModelDB.parseArticleToMongoose(a));
-    const articleAreaListMongoose = artAreaList.map((aa, i) =>
-      ArticleAreaMongooseModelDB.parseArticleAreaToMongoose(aa)
-    );
-    const areaListMongoose = artAreaList.map(aa => AreaMongooseModelDB.parseAreaToMongoose(aa.area));
+    const articleAreaListMongoose = artAreaList.map((aa, i) => ArticleAreaMongooseModelDB.parseArticleAreaToMongoose(aa));
+    const areaListMongoose = artAreaList.map((aa) => AreaMongooseModelDB.parseAreaToMongoose(aa.area));
 
     await collArticle.insertMany(articleListMongoose);
     await collArtArea.insertMany(articleAreaListMongoose);

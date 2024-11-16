@@ -1,6 +1,5 @@
 export {
-  createConn,
-  getConn,
-  parseObjToStrCrit,
-  prepareInsertStatement
+  createConnSql,
+  getConnSql,
+  getModelSql
 } from './utils';

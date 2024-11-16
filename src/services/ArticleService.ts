@@ -3,19 +3,35 @@ import {
   Article, SearchParams, Comment
 } from '@model/index';
 import { comment as commentFix } from '@fixtures/comment';
+import {
+  getArticle,
+  IModelDBArticle,
+  NotFoundDbException
+} from '../data-access';
 
 class ArticleService {
 
-  constructor () {
+  private instance: ArticleService;
 
+  private articleModel: IModelDBArticle;
+
+  private constructor () {
+    this.articleModel = getArticle();
   }
 
-  public getArticle (id: string): Article {
-    return articleList[0];
+  public getInstance (): ArticleService {
+    if (!this.instance) {
+      this.instance = new ArticleService();
+    }
+    return this.instance;
+  }
+
+  public getArticle (id: string): Promise<Article | NotFoundDbException> {
+    return this.articleModel.read(id);
   }
 
   public getListArticles (searchParams: SearchParams): Article[] {
-    return articleList;
+    return articleList();
   }
 
   public createArticle (article: Article): Article {

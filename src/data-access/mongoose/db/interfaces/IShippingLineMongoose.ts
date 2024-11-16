@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 interface IShippingLineMongoose {
-  id: number;
+  id: string;
   article: Types.ObjectId;
   qty: number;
 }

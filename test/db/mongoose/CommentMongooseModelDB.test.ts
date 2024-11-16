@@ -1,30 +1,15 @@
 import { Comment } from '@model/index';
 import {
-  describe, expect, test, beforeAll, afterAll
-} from '@jest/globals';
-import { NotFoundDbException } from '@data-access/index';
-import {
-  initConnMongoose,
-  CommentMongooseModelDB,
-  ArticleMongooseModelDB
-} from '@data-access/mongoose/index';
-import {
   Collection, Db, MongoClient
 } from 'mongodb';
-import { faker } from '@faker-js/faker';
+import { createConnMongo, getConnMongo } from '../../../src/data-access/mongo/db';
+import { ArticleMongooseModelDB, CommentMongooseModelDB } from '../../../src/data-access/mongoose/data';
 import {
-  createFixComment, createFixCommentNoId,
-  createFixListArticle,
-  createFixListComment
+  createFixComment, createFixCommentNoId, createFixListArticle, createFixListComment
 } from '../fixtures';
-
-const {
-  DB,
-  USER_ADMIN,
-  PASS_USER_ADMIN,
-  HOST_MONGO,
-  PORT_MONGO
-} = process.env;
+import { createConnMongoose } from '../../../src/data-access/mongoose/db/utils';
+import { faker } from '@faker-js/faker';
+import { NotFoundDbException } from '../../../src/data-access/error';
 
 describe('CommentMongooseModelDB', () => {
   let client: MongoClient;
@@ -36,16 +21,15 @@ describe('CommentMongooseModelDB', () => {
   const commentMongooseModel = CommentMongooseModelDB.getIntance();
 
   beforeAll(async () => {
-    // Mongoose
-    const url = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
-    client = new MongoClient(url);
-    await client.connect();
+    // Mongo
+    await createConnMongo();
+    [client, db] = getConnMongo();
     db = client.db('lionmiss');
     collComment = await db.createCollection('comment');
     collArticle = await db.createCollection('article');
 
-    // Mongooseose
-    await initConnMongoose();
+    // Mongoose
+    await createConnMongoose();
   });
 
   beforeEach(async () => {

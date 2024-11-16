@@ -6,7 +6,7 @@ import { NotFoundDbException } from '@data-access/index';
 import { Area, SearchParams } from '@model/index';
 import { IAreaMongo } from '../db/interfaces';
 import { IModelDBArea } from '../../interfaces';
-import { getClientDb } from '../db/utils';
+import { getConnMongo } from '../db';
 
 class AreaMongoModelDB implements IModelDBArea {
 
@@ -27,7 +27,7 @@ class AreaMongoModelDB implements IModelDBArea {
 
   private constructor () {
     [this.client,
-      this.db] = getClientDb();
+      this.db] = getConnMongo();
     this.collArea = this.db.collection<IAreaMongo>('area');
   }
 
@@ -51,20 +51,20 @@ class AreaMongoModelDB implements IModelDBArea {
     };
   }
 
-  read (id: string): Promise<Area> | NotFoundDbException {
+  read (id: string): Promise<Area | NotFoundDbException> {
     return this.collArea
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
-        if (!res) throw NotFoundDbException('area');
+        if (!res) throw new NotFoundDbException('area');
         return AreaMongoModelDB.parseMongoToArea(res);
       });
   }
 
-  readByProps (obj: Omit<Area, 'id'>): Promise<Area> | NotFoundDbException {
+  readByProps (obj: Omit<Area, 'id'>): Promise<Area | NotFoundDbException> {
     return this.collArea
       .findOne(obj)
       .then((res) => {
-        if (!res) throw NotFoundDbException('area');
+        if (!res) throw new NotFoundDbException('area');
         return AreaMongoModelDB.parseMongoToArea(res);
       });
   }
@@ -81,10 +81,10 @@ class AreaMongoModelDB implements IModelDBArea {
     const objMongo: IAreaMongo = AreaMongoModelDB.parseAreaToMongo(obj);
     return this.collArea
       .insertOne(objMongo)
-      .then(({ insertedId: id }) => ({ id, ...obj }));
+      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() } as Area));
   }
 
-  update (obj: Area): Promise<void> | NotFoundDbException {
+  update (obj: Area): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = AreaMongoModelDB.parseAreaToMongo(obj);
     return this.collArea
       .updateOne({ _id }, rest)
@@ -93,7 +93,7 @@ class AreaMongoModelDB implements IModelDBArea {
       });
   }
 
-  delete (id: string): Promise<void> | NotFoundDbException {
+  delete (id: string): Promise<void | NotFoundDbException> {
     return this.collArea
       .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {
