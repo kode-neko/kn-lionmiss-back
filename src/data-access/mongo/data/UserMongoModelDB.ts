@@ -51,6 +51,10 @@ class UserMongoModelDB implements IModelDBUser {
     return {
       _id: new ObjectId(user.id as string),
       userName: user.userName,
+      pass: user.pass,
+      salt: user.salt,
+      google: user.google,
+      twitter: user.twitter,
       email: user.email,
       cart: new ObjectId(user.cart?.id as string),
       shippings: user.shippings.map((s) => new ObjectId(s.id as string)),
@@ -72,6 +76,10 @@ class UserMongoModelDB implements IModelDBUser {
     return {
       id: mongo._id?.toString(),
       userName: mongo.userName,
+      pass: mongo.pass,
+      salt: mongo.salt,
+      google: mongo.google,
+      twitter: mongo.twitter,
       email: mongo.email,
       cart: cartMongo &&
         CartMongoModelDB.parseMongoToCart(

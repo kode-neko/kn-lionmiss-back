@@ -9,6 +9,10 @@ interface User {
   id?: string;
   userName: string;
   email: string;
+  pass: string;
+  salt: string;
+  google?: string;
+  twitter?: string;
   cart?: Cart;
   shippings: Shipping[];
   bday: Date;

@@ -7,7 +7,8 @@
     "docker": "docker-compose --env-file ./config/env/.env.dev up --detach",
     "docker:down": "docker-compose down",
     "build": "npx tsc --project ./config/tsconfig.json",
-    "express": "dotenvx run -f ./config/env/.env.dev -- node ./public/api/express/index.js "
+    "express": "dotenvx run -f ./config/env/.env.dev -- node ./public/api/express/index.js",
+    "pass:app": "node ./scripts/pass-app.mjs"
   },
   "author": "Kodeneko",
   "license": "ISC",
@@ -38,12 +39,15 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.14.1",
     "casual": "^1.6.2",
-    "express": "^4.21.0",
+    "deep-equal": "^2.2.3",
+    "express": "^4.21.1",
+    "jose": "^5.9.6",
     "mariadb": "^3.4.0",
     "mongodb": "^6.9.0",
     "mongoose": "^8.6.1",
     "passport-jwt": "^4.0.1",
     "sequelize": "^6.37.3",
+    "uuid": "^11.0.3",
     "zod": "^3.23.8"
   }
 }

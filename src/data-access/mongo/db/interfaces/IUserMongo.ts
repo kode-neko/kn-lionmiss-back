@@ -34,6 +34,10 @@ interface IAddressMongo {
 interface IUserMongo {
   _id?: ObjectId;
   userName: string;
+  pass: string;
+  salt: string;
+  google?: string;
+  twitter?: string;
   email: string;
   cart: ICartMongo['_id'];
   shippings: IShippingMongo['_id'][];
