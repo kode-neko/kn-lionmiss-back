@@ -8,7 +8,8 @@
     "docker:down": "docker-compose down",
     "build": "npx tsc --project ./config/tsconfig.json",
     "express": "dotenvx run -f ./config/env/.env.dev -- node ./public/api/express/index.js",
-    "pass:app": "node ./scripts/pass-app.mjs"
+    "pass:app": "node ./scripts/pass-app.mjs",
+    "scratch": "tsc --module esnext ./scripts/scratches.ts && node ./scripts/scratches.js"
   },
   "author": "Kodeneko",
   "license": "ISC",
@@ -45,6 +46,7 @@
     "mariadb": "^3.4.0",
     "mongodb": "^6.9.0",
     "mongoose": "^8.6.1",
+    "openid-client": "^6.1.7",
     "passport-jwt": "^4.0.1",
     "sequelize": "^6.37.3",
     "uuid": "^11.0.3",
