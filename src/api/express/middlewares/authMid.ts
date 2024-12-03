@@ -1,7 +1,7 @@
 import {
   NextFunction, Request, Response
 } from 'express';
-import { extractHeader } from './auth/utils';
+import { extractHeader } from './utils';
 import {
   checkHeaderAuthJwt, checkSubAuthJwt, getPaylaodAuthJwt
 } from '../../../utils';
