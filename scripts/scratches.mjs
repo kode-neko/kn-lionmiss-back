@@ -1,6 +1,7 @@
 import * as client from 'openid-client';
 
 // OAuth variables
+
 /*
 const OAUTH_ISSUER = '';
 const CLIENT_ID = '';
