@@ -5,6 +5,10 @@ import {
   userRouter
 } from './routers';
 import session from 'express-session';
+import cors from 'cors';
+import helmet from 'helmet';
+import xss from 'express-xss-sanitizer';
+import hpp from 'hpp';
 
 // Env bars
 const {
@@ -13,6 +17,18 @@ const {
 
 // Create server app...
 const app = express();
+
+// Security
+app.use(cors({
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
+app.use(helmet());
+app.use(xss());
+app.use(hpp());
+app.disable('x-powered-by');
 
 // Middlewares
 if (AUTH_SYS === 'session') {
