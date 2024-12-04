@@ -7,3 +7,8 @@ export {
   bodyValidMidCreate,
   loginValidMid
 } from './validationsMid';
+export {
+  chkAuthJwtMid,
+  chkSessionMid,
+  chkAuthMid
+} from './authMid';

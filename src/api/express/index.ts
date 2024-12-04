@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   articleRouter,
+  cartRouter,
   shippingRouter,
   userRouter
 } from './routers';
@@ -9,6 +10,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import xss from 'express-xss-sanitizer';
 import hpp from 'hpp';
+import { chkAuthMid } from './middlewares';
 
 // Env bars
 const {
@@ -41,9 +43,11 @@ if (AUTH_SYS === 'session') {
 app.use(express.json());
 
 // Routers
-app.use(articleRouter);
-app.use(shippingRouter);
 app.use(userRouter);
+app.use(chkAuthMid); // reesto de rutas necesitan autenticación
+app.use(articleRouter);
+app.use(cartRouter);
+app.use(shippingRouter);
 
 // Error management
 app.use(function (req, res) {
