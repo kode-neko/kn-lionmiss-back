@@ -1,4 +1,6 @@
-import express from 'express';
+import express, {
+  NextFunction, Request, Response
+} from 'express';
 import {
   articleRouter,
   cartRouter,
@@ -11,6 +13,7 @@ import helmet from 'helmet';
 import xss from 'express-xss-sanitizer';
 import hpp from 'hpp';
 import { chkAuthMid } from './middlewares';
+import { createConn } from '../../data-access';
 
 // Env bars
 const {
@@ -50,19 +53,21 @@ app.use(cartRouter);
 app.use(shippingRouter);
 
 // Error management
-app.use(function (req, res) {
-  throw new Error('BROKEN');
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500).send({ error: err.message });
 });
 
 // Launch server
-console.log(`Launch server in ${HOST_API}:${PORT_API}`);
-try {
-  app.listen(
-    Number(PORT_API),
-    HOST_API as string,
-    () => console.log(`Express server up in ${HOST_API}:${PORT_API}`)
-  );
-} catch (err) {
-  console.log(`Express error connect server: ${err}`);
-}
+createConn()
+  .then(() => {
+    app.listen(
+      Number(PORT_API),
+      HOST_API as string,
+      () => console.log(`Express server up in ${HOST_API}:${PORT_API}`)
+    );
+  })
+  .catch((err: Error) => `There was an error: ${err.message}`);
 
