@@ -4,11 +4,11 @@ import {
   jwtVerify, KeyLike, SignJWT, jwtDecrypt,
   JWTPayload
 } from 'jose';
-import { AuthException } from '../error';
-import { getUser } from '../../../../data-access';
+import { AuthException } from '../../api/express/middlewares/error';
+import { getUser } from '../../data-access';
 // import { v6 as uuidv6 } from 'uuid';
 
-const JWT_SECRET: KeyLike = process.env.JWT_SECRET as unknown as KeyLike;
+const KEY_SECRET: KeyLike = process.env.KEY_SECRET as unknown as KeyLike;
 const JWT_HEADER = {
   alg: 'HS256',
   typ: 'JWT'
@@ -22,9 +22,9 @@ const JWT_PAYLOAD = {
   // jti: uuidv6()
 };
 
-async function createTokenJwt (user: User) {
+function createTokenJwt (user: User): Promise<string> {
   const jwt = new SignJWT();
-  return await jwt
+  return jwt
     .setProtectedHeader(JWT_HEADER)
     .setIssuer(JWT_PAYLOAD.iss)
     .setSubject(user.userName)
@@ -33,16 +33,16 @@ async function createTokenJwt (user: User) {
     .setNotBefore('1s')
     .setIssuedAt(Date.now())
     // .setJti(uuidv6())
-    .sign(JWT_SECRET);
+    .sign(KEY_SECRET);
 }
 
 async function checkHeaderAuthJwt (authHeader: string): Promise<string> {
   const [bearer, token] = authHeader.split(' ');
   if (bearer !== 'Bearer') throw new AuthException('The header is formed wrong');
   try {
-    await jwtVerify(token, JWT_SECRET);
+    await jwtVerify(token, KEY_SECRET);
   } catch {
-    throw new AuthException('The header is formed wrong');
+    throw new AuthException('The token is wrong');
   }
   return token;
 }
@@ -50,7 +50,7 @@ async function checkHeaderAuthJwt (authHeader: string): Promise<string> {
 async function getPaylaodAuthJwt (token: string): Promise<JWTPayload> {
   let payload: JWTPayload;
   try {
-    const infoToken = await jwtDecrypt(token, JWT_SECRET);
+    const infoToken = await jwtDecrypt(token, KEY_SECRET);
     payload = { ...infoToken.payload };
   } catch {
     throw new AuthException('The token is not valid');

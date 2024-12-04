@@ -25,6 +25,8 @@ export {
 
 export {
   getUserId,
-  postUserLogin,
-  postUserLogout
+  postUserLoginJwt,
+  postUserLoginSession,
+  portUserLogoutSession,
+  postUserLogoutJwt
 } from './userCtrl';
