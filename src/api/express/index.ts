@@ -47,7 +47,7 @@ app.use(express.json());
 
 // Routers
 app.use(userRouter);
-app.use(chkAuthMid); // reesto de rutas necesitan autenticación
+app.use(chkAuthMid); // el resto de rutas necesitan autenticación
 app.use(articleRouter);
 app.use(cartRouter);
 app.use(shippingRouter);
