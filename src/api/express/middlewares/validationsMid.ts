@@ -30,7 +30,7 @@ function idParamValidMid () {
   return validAttrMidCreate();
 }
 
-function bodyValidMId (req: Request, res: Response, next: NextFunction) {
+function bodyValidMid (req: Request, res: Response, next: NextFunction) {
   IdValSchema.parse(req.body);
   next();
 }
@@ -66,7 +66,7 @@ export {
   validAttrMidCreate,
   idBodyValidMid,
   idParamValidMid,
-  bodyValidMId,
+  bodyValidMid,
   searchParamsValidMid,
   bodyValidMidCreate,
   loginValidMid

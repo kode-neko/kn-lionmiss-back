@@ -1,12 +1,29 @@
 import { Router } from 'express';
 import {
   getUserId,
-  postUserLogin,
-  postUserLogout
+  postUserLoginJwt,
+  postUserLoginSession,
+  portUserLogoutSession,
+  postUserLogoutJwt
 } from '../controllers';
 import { validAttrMidCreate } from '../middlewares';
 
+const { AUTH_SYS } = process.env;
+
 const router = Router();
+
+let postUserLogin;
+let postUserLogout;
+
+switch (AUTH_SYS) {
+  case 'session':
+    postUserLogin = postUserLoginJwt;
+    postUserLogout = postUserLogoutJwt;
+    break;
+  default:
+    postUserLogin = postUserLoginSession;
+    postUserLogout = portUserLogoutSession;
+}
 
 router.get(
   '/:userName',

@@ -1,7 +1,11 @@
 {
     "_id": ObjectId("66db42707f97b60ae12b4a25"),
     "userName": "kodeneko",
-    "email": "kdoeneko@mail.es",
+    "email": "kodeneko@mail.es",
+    "pass": "r7TQZOnlZmy6NlzWR5C0C3NDmluLdwO",
+    "salt": "$2b$10$gTVWozHJoDA71V9csRrPL.",
+    "google": "",
+    "twitter": "",
     "cart": ObjectId("66db45237f97b60ae12b4a30"),
     "shippings": [
         ObjectId("6710f1f5ebc5588f1c016fff"),

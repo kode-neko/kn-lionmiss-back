@@ -2,8 +2,13 @@ export {
   validAttrMidCreate,
   idBodyValidMid,
   idParamValidMid,
-  bodyValidMId,
+  bodyValidMid,
   searchParamsValidMid,
   bodyValidMidCreate,
   loginValidMid
 } from './validationsMid';
+export {
+  chkAuthJwtMid,
+  chkSessionMid,
+  chkAuthMid
+} from './authMid';
