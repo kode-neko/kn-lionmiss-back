@@ -1,26 +1,24 @@
-import { Article } from '@model/article';
+import { Article } from '../article';
 import Address from './Address';
 import SexEnum from './SexEnum';
-import UserMeasures from './UserMeasures';
+import Measures from './Measures';
 import { Cart, Shipping } from '../cart';
 import Area from '../article/Area';
 
 interface User {
-  id?: string;
+  id: string;
   userName: string;
-  email: string;
   pass: string;
   salt: string;
-  google?: string;
-  twitter?: string;
-  cart?: Cart;
-  shippings: Shipping[];
+  email: string;
   bday: Date;
   sex: SexEnum;
   area: Area;
-  measures: UserMeasures;
-  favs: Article[];
-  addresses: Address[];
+  measures: Measures;
+  addresseList: Address[];
+  favList: Article[];
+  cart: Cart;
+  shippingList: Shipping[];
 }
 
 export default User;

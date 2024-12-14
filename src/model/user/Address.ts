@@ -1,5 +1,5 @@
 interface Address {
-  id?: string;
+  id: string;
   alias: string;
   name: string;
   surname: string;
@@ -8,7 +8,7 @@ interface Address {
   state: string;
   country: string;
   phone: string;
-  obs: string;
+  obs?: string;
 }
 
 export default Address;
