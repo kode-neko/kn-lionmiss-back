@@ -9,6 +9,5 @@ export {
 } from './data';
 export {
   createConnMongo,
-  getConnMongo,
-  getModelMongo
+  getConnMongo
 } from './db';
