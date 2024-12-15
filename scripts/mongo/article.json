@@ -1,36 +1,109 @@
 [
   {
-    "_id" : ObjectId("66db3e857f97b60ae12b4a1e"),
-    "instructs" : {
-        "whasing" : "30º",
-        "ironing" : "180º",
-        "spining" : "low",
-        "dryCleaning" : "no"
-    },
-    "sizes" : {
-        "s" : NumberInt(20),
-        "m" : NumberInt(4),
-        "l" : NumberInt(20)
-    },
-    "materials" : {
-        "cotton" : NumberInt(30),
-        "rayon" : NumberInt(70)
-    },
-    "tags" : [
-        "female",
-        "dress",
-        "short",
-        "summer"
+    "_id": ObjectId("66db3e857f97b60ae12b4a1e"),
+    "tags": [
+      "female",
+      "dress",
+      "short",
+      "summer"
     ],
-    "variants" : [
-        "red",
-        "green",
-        "stripes"
+    "materials": {
+      "cotton": NumberInt(30),
+      "rayon": NumberInt(70)
+    },
+    "instructs": {
+      "whasing": "30º",
+      "ironing": "180º",
+      "spining": "low",
+      "dryCleaning": "no"
+    },
+    "discolor": false,
+    "articleVariantList": [
+      {
+        "name": "red",
+        "sizes": {
+          "S": NumberInt(3),
+          "M": NumberInt(56),
+          "L": NumberInt(2),
+          "XL": NumberInt(23)
+        }
+      },
+      {
+        "name": "black",
+        "sizes": {
+          "S": NumberInt(12),
+          "M": NumberInt(13),
+          "L": NumberInt(3),
+          "XL": NumberInt(20)
+        }
+      }
     ],
-    "discolor" : false,
+    "pictureList": [
+      {
+        "id": NumberInt(1),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Nisi adipisicing fugiat tempor tempor irure nisi non proident."
+      },
+      {
+        "id": NumberInt(2),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Nisi adipisicing fugiat tempor tempor irure nisi non proident."
+      }
+    ],
     "articleArea": [
-            ObjectId("66db3fc57f97b60ae12b4a21"),
-            ObjectId("66f1e45ebbc729d277277a6c")
-        ]
-    }
+            ObjectId("675f574b8e2e192cb4308380"),
+            ObjectId("675f574a8e2e192cb430837f")
+    ]
+  },
+  {
+    "_id": ObjectId("675f50408e2e192cb4308376"),
+    "tags": [
+      "female",
+      "shirt",
+      "pants",
+      "winter"
+    ],
+    "materials": {
+      "cotton": NumberInt(80),
+      "nylon": NumberInt(20)
+    },
+    "instructs": {
+      "whasing": "20º",
+      "ironing": "no",
+      "spining": "low",
+      "dryCleaning": "no"
+    },
+    "discolor": false,
+    "articleVariantList": [
+      {
+        "name": "yellow",
+        "sizes": {
+          "S": NumberInt(3),
+          "M": NumberInt(56),
+          "L": NumberInt(2),
+          "XL": NumberInt(23)
+        }
+      }
+    ],
+    "pictureList": [
+      {
+        "id": NumberInt(1),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Nisi adipisicing fugiat tempor tempor irure nisi non proident."
+      },
+      {
+        "id": NumberInt(2),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Occaecat commodo consequat consectetur officia irure consequat."
+      }
+    ],
+    "articleArea": [
+            ObjectId("675f574a8e2e192cb430837e"),
+            ObjectId("675f57498e2e192cb430837d")
+    ]
+  }
 ]
