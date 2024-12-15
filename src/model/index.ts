@@ -21,7 +21,7 @@ export {
   UnitsHeightEnum,
   UnitsWeightEnum,
   User,
-  UserMeasures
+  Measures
 } from './user';
 
 export {

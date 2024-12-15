@@ -5,7 +5,6 @@ import {
   ArticleValSchema,
   CartValSchema,
   CommentValSchema,
-  IdValSchema,
   idValSchemaCreateFunc,
   SearchParamsValSchema,
   ShippingValSchema,
@@ -14,7 +13,7 @@ import {
   UserLoginValSchema
 } from './validations';
 
-function validAttrMidCreate (idName = 'id', petition = 'params') {
+function attrValidMidCreate (idName = 'id', petition = 'params') {
   return (req: Request, res: Response, next: NextFunction) => {
     const ValidSchemaIdName = idValSchemaCreateFunc(idName);
     ValidSchemaIdName.parse(req[petition][idName]);
@@ -23,16 +22,11 @@ function validAttrMidCreate (idName = 'id', petition = 'params') {
 }
 
 function idBodyValidMid () {
-  validAttrMidCreate('id', 'body');
+  attrValidMidCreate('id', 'body');
 }
 
 function idParamValidMid () {
-  return validAttrMidCreate();
-}
-
-function bodyValidMid (req: Request, res: Response, next: NextFunction) {
-  IdValSchema.parse(req.body);
-  next();
+  return attrValidMidCreate();
 }
 
 function searchParamsValidMid (req: Request, res: Response, next: NextFunction) {
@@ -63,10 +57,9 @@ function loginValidMid (req: Request, res: Response, next: NextFunction) {
 }
 
 export {
-  validAttrMidCreate,
+  attrValidMidCreate,
   idBodyValidMid,
   idParamValidMid,
-  bodyValidMid,
   searchParamsValidMid,
   bodyValidMidCreate,
   loginValidMid
