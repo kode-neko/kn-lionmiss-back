@@ -3,12 +3,11 @@ import ShippingLine from './ShippingLine';
 import ShipStateEnum from './ShipStateEnum';
 
 interface Shipping {
-  id?: string;
-  idTracking: string;
-  idShipping: string;
+  id: string;
+  idTracking?: string;
   state: Partial<Record<ShipStateEnum, Date>>;
   payment: PaymentEnum;
-  lines: ShippingLine[];
+  shippingLineList: ShippingLine[];
 }
 
 export default Shipping;

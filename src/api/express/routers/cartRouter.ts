@@ -10,7 +10,7 @@ import {
   idParamValidMid,
   idBodyValidMid,
   bodyValidMidCreate,
-  validAttrMidCreate
+  attrValidMidCreate
 } from '../middlewares';
 
 const router = Router();
@@ -22,7 +22,7 @@ router.get(
 );
 router.post(
   '/new/user/:username',
-  validAttrMidCreate('username'),
+  attrValidMidCreate('username'),
   postCartNewUser
 );
 router.post(
@@ -38,8 +38,8 @@ router.put(
 );
 router.delete(
   '/:idCart/line/:numLine',
-  validAttrMidCreate('idCart'),
-  validAttrMidCreate('numLine'),
+  attrValidMidCreate('idCart'),
+  attrValidMidCreate('numLine'),
   deleteCartLine
 );
 

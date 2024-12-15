@@ -1,7 +1,7 @@
 import UnitsHeightEnum from './UnitsHeightEnum';
 import UnitsWeightEnum from './UnitsWeightEnum';
 
-interface UserMeasures {
+interface Measures {
   shoulder?: number;
   chest?: number;
   waist?: number;
@@ -13,4 +13,4 @@ interface UserMeasures {
   unitsWeight: UnitsWeightEnum;
 }
 
-export default UserMeasures;
+export default Measures;

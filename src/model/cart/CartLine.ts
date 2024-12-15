@@ -1,7 +1,7 @@
-import { Article } from '@model/index';
+import { Article } from '../article';
 
 interface CartLine {
-  id: string;
+  order: number;
   qty: number;
   article: Article;
 }

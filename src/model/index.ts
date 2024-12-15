@@ -1,7 +1,8 @@
 export {
-  Article,
   Area,
+  Article,
   ArticleArea,
+  ArticleVariant,
   InstructEnum
 } from './article';
 
@@ -16,12 +17,16 @@ export {
 
 export {
   Address,
-  Comment,
   SexEnum,
   UnitsHeightEnum,
   UnitsWeightEnum,
   User,
-  UserMeasures
+  Measures
 } from './user';
+
+export {
+  Comment,
+  Picture
+} from './common';
 
 export { SearchParams, UserLogin } from './app';
