@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import IArticleMongo from './IArticleMongo';
 import IUserMongo from './IUserMongo';
 
-interface ICommentMongo {
+interface CommentMongo {
   _id?: ObjectId;
   title: string;
   article: IArticleMongo['_id'];
@@ -12,4 +12,4 @@ interface ICommentMongo {
   pics: string[];
 }
 
-export default ICommentMongo;
+export default CommentMongo;

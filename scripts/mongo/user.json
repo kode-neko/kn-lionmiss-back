@@ -18,7 +18,7 @@
         "unitsHeight": "cm",
         "unitsWeight": "kg"
     },
-    "addresseList": [
+    "addressList": [
         {
             "id": NumberInt(1),
             "alias": "Casa",

@@ -53,8 +53,8 @@
       }
     ],
     "articleArea": [
-            ObjectId("675f574b8e2e192cb4308380"),
-            ObjectId("675f574a8e2e192cb430837f")
+        ObjectId("675f574b8e2e192cb4308380"),
+        ObjectId("675f574a8e2e192cb430837f")
     ]
   },
   {
@@ -102,8 +102,8 @@
       }
     ],
     "articleArea": [
-            ObjectId("675f574a8e2e192cb430837e"),
-            ObjectId("675f57498e2e192cb430837d")
+        ObjectId("675f574a8e2e192cb430837e"),
+        ObjectId("675f57498e2e192cb430837d")
     ]
   }
 ]
