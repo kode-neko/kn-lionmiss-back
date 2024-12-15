@@ -6,6 +6,8 @@ interface Comment {
   body: string;
   rating: number;
   pictureList: Picture[];
+  idArticle: string;
+  idUser: string;
 }
 
 export default Comment;
