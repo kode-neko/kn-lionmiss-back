@@ -1,7 +1,7 @@
 interface ArticleVariant {
   id: string;
   name: string;
-  qty: number;
+  sizes: Record<string, number>;
 }
 
 export default ArticleVariant;
