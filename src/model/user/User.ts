@@ -15,7 +15,7 @@ interface User {
   sex: SexEnum;
   area: Area;
   measures: Measures;
-  addresseList: Address[];
+  addressList: Address[];
   favList: Article[];
   cart: Cart;
   shippingList: Shipping[];

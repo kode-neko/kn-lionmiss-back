@@ -1,9 +1,10 @@
 import { InstructEnum } from '@model/index';
 import { ObjectId } from 'mongodb';
 import IArticleAreaMongo from './IArticleAreaMongo';
+import PictureMongo from './PictureMongo';
 
 interface ArticleMongo {
-  _id?: ObjectId;
+  _id: ObjectId;
   tags: string[];
   materials: Record<string, number>;
   instructs: Partial<Record<InstructEnum, string>>;
@@ -12,12 +13,7 @@ interface ArticleMongo {
     name: string;
     sizes: Record<string, number>;
   }[];
-  pictureList: {
-    id: string;
-    ext: string;
-    src: string;
-    alt: string;
-  } [];
+  pictureList: PictureMongo[];
   articleAreaList: IArticleAreaMongo['_id'][];
 }
 

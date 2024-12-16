@@ -4,9 +4,10 @@ import AreaMongo from './AreaMongo';
 import ArticleMongo from './ArticleMongo';
 import CartMongo from './CartMongo';
 import ShippingMongo from './ShippingMongo';
+import { UnitsHeightEnum, UnitsWeightEnum } from '../../../../model';
 
 interface UserMongo {
-  _id?: ObjectId;
+  _id: ObjectId;
   userName: string;
   pass: string;
   salt: string;
@@ -15,15 +16,15 @@ interface UserMongo {
   sex: SexEnum;
   area: AreaMongo['name'];
   measures: {
-    shoulder?: string;
-    chest?: string;
-    waist?: string;
-    hips?: string;
-    foot?: string;
-    height?: string;
-    weight?: string;
-    unitsHeight: string;
-    unitsWeight: string;
+    shoulder?: number;
+    chest?: number;
+    waist?: number;
+    hips?: number;
+    foot?: number;
+    height?: number;
+    weight?: number;
+    unitsHeight: UnitsHeightEnum;
+    unitsWeight: UnitsWeightEnum;
   };
   addressList: {
     id: string;
