@@ -1,5 +1,5 @@
 interface Picture {
-  id: string;
+  id?: string;
   ext: string;
   src: string;
   alt: string;

@@ -1,5 +1,5 @@
 interface ArticleVariant {
-  id: string;
+  id?: string;
   name: string;
   sizes: Record<string, number>;
 }

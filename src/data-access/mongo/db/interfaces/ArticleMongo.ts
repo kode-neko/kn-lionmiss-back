@@ -4,7 +4,7 @@ import IArticleAreaMongo from './IArticleAreaMongo';
 import PictureMongo from './PictureMongo';
 
 interface ArticleMongo {
-  _id: ObjectId;
+  _id?: ObjectId;
   tags: string[];
   materials: Record<string, number>;
   instructs: Partial<Record<InstructEnum, string>>;

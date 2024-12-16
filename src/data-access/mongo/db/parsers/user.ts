@@ -26,7 +26,7 @@ function parseUserToMongo (obj: User): UserMongo {
       unitsWeight: obj.measures.unitsWeight
     },
     addressList: obj.addressList.map((a) => ({
-      id: a.id,
+      id: a.id as string,
       alias: a.alias,
       name: a.name,
       surname: a.surname,

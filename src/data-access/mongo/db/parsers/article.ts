@@ -6,7 +6,7 @@ import ArticleMongo from '../interfaces/ArticleMongo';
 
 function parseArticleToMongo (article: Article): ArticleMongo {
   return {
-    _id: new ObjectId(article.id),
+    _id: new ObjectId(article.id as string),
     tags: article.tags,
     materials: article.materials,
     instructs: article.instructs,

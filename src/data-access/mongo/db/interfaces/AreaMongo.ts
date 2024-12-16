@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 interface AreaMongo {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   country: string;
   locale: string;

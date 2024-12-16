@@ -5,7 +5,7 @@ import { parseMongoToPicture, parsePictureToMongo } from './picture';
 
 function parseCommentToMongo (obj: Comment) {
   return {
-    _id: new ObjectId(obj.id),
+    _id: new ObjectId(obj.id as string),
     title: obj.title,
     body: obj.body,
     rating: obj.rating,

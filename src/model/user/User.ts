@@ -6,7 +6,7 @@ import { Cart, Shipping } from '../cart';
 import Area from '../article/Area';
 
 interface User {
-  id: string;
+  id?: string;
   userName: string;
   pass: string;
   salt: string;

@@ -4,7 +4,7 @@ import ArticleMongo from './ArticleMongo';
 import { PaymentEnum } from '../../../../model';
 
 interface ShippingMongo {
-  _id: ObjectId;
+  _id?: ObjectId;
   idTracking?: string;
   state: Partial<Record<ShipStateEnum, Date>>;
   idPayment?: string;

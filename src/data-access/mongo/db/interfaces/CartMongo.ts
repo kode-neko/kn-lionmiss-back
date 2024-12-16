@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import ArticleMongo from './ArticleMongo';
 
 interface CartMongo {
-  _id: ObjectId;
+  _id?: ObjectId;
   cartLineList: {
     order: string;
     qty: number;

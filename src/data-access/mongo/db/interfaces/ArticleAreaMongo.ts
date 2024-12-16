@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import IAreaMongo from './IAreaMongo';
 
 interface ArticleAreaMongo {
-  _id: ObjectId;
+  _id?: ObjectId;
   title: string;
   desc: string;
   variantList: Record<string, string>;

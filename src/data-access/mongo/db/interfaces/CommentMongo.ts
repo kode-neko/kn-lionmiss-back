@@ -4,7 +4,7 @@ import ArticleMongo from './ArticleMongo';
 import UserMongo from './UserMongo';
 
 interface CommentMongo {
-  _id: ObjectId;
+  _id?: ObjectId;
   title: string;
   body: string;
   rating: number;

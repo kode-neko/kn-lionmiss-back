@@ -1,7 +1,7 @@
 interface SearchParams<T> {
   limit: number;
   skip: number;
-  obj?: T;
+  obj?: Partial<T>;
   tags?: string[];
   terms?: string[];
 }
