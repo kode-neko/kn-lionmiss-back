@@ -1,16 +1,11 @@
-import { NotFoundDbException } from '@data-access/index';
 import {
-  Shipping, ShippingLine, SearchParams, PaymentEnum
-} from '@model/index';
-import {
-  Collection, Db, MongoClient,
-  ObjectId
+  Collection, Db, MongoClient
 } from 'mongodb';
+import { NotFoundDbException } from '../../error';
 import { IModelDBShipping } from '../../interfaces';
-import {
-  getConnMongo, IArticleMongo, IShippingLineMongo, IShippingMongo
-} from '../db';
-import ArticleMongoModelDB from './ArticleMongoModelDB';
+import { ArticleMongo, ShippingMongo } from '../db/interfaces';
+import { getConnMongo } from '../db/utils';
+import { SearchParams, Shipping } from '../../../model';
 
 class ShippingMongoModelDB implements IModelDBShipping {
 
@@ -18,9 +13,9 @@ class ShippingMongoModelDB implements IModelDBShipping {
 
   private db: Db;
 
-  private collShipping: Collection<IShippingMongo>;
+  private collShipping: Collection<ShippingMongo>;
 
-  private collArt: Collection<IArticleMongo>;
+  private collArt: Collection<ArticleMongo>;
 
   private static instance: IModelDBShipping;
 
@@ -34,100 +29,28 @@ class ShippingMongoModelDB implements IModelDBShipping {
   private constructor () {
     [this.client,
       this.db] = getConnMongo();
-    this.collShipping = this.db.collection<IShippingMongo>('cart');
-    this.collArt = this.db.collection<IArticleMongo>('cart');
+    this.collShipping = this.db.collection<ShippingMongo>('cart');
+    this.collArt = this.db.collection<ArticleMongo>('cart');
   }
 
-  public static parseShippingToMongo (shipping: Shipping): IShippingMongo {
-    return {
-      _id: new ObjectId(shipping.id as string),
-      idTracking: shipping.idTracking,
-      idShipping: shipping.idShipping,
-      state: shipping.state,
-      payment: shipping.payment,
-      lines: shipping.lines.map((l) => ShippingMongoModelDB.parseShippingLineToMongo(l))
-    };
+  createFromCart (cartId: string): Promise<Shipping> {
+    throw new Error('Method not implemented.');
   }
 
-  public static parseShippingLineToMongo (shippingLine: ShippingLine): IShippingLineMongo {
-    return {
-      id: shippingLine.id,
-      qty: shippingLine.qty,
-      article: new ObjectId(shippingLine.article.id as string)
-    };
+  read (id: string): Promise<any> {
+    throw new Error('Method not implemented.');
   }
 
-  public static parseMongoToShipping (shippingMongo: IShippingMongo, articleListMongo: IArticleMongo[]): Shipping {
-    return {
-      id: shippingMongo._id?._id.toString(),
-      idTracking: shippingMongo.idTracking,
-      idShipping: shippingMongo.idShipping,
-      state: shippingMongo.state,
-      payment: PaymentEnum[shippingMongo.payment],
-      lines: shippingMongo.lines.map((l) => ShippingMongoModelDB.parseMongoToShippingLine(l, articleListMongo.find((a) => a._id?.toString() === l.article?.toString()) as IArticleMongo))
-    };
-  }
-
-  public static parseMongoToShippingLine (shippingLineMongo: IShippingLineMongo, articleMongo: IArticleMongo): ShippingLine {
-    return {
-      id: shippingLineMongo.id,
-      qty: shippingLineMongo.qty,
-      article: ArticleMongoModelDB.parseMongoToArticle(articleMongo, [])
-    };
-  }
-
-  read (id: string): NotFoundDbException | Promise<Shipping> {
-    let shippinMongo: IShippingMongo;
-    return this.collShipping
-      .findOne({ _id: new ObjectId(id) })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Shipping');
-        shippinMongo = res;
-        const articleListMongo = res.lines.map((l) => new ObjectId(l.article));
-        return this.collArt.find({ _id: { $in: articleListMongo } });
-      })
-      .then((list) => list.toArray())
-      .then((list) => ShippingMongoModelDB.parseMongoToShipping(shippinMongo, list));
-  }
-
-  readList ({ limit, skip }: SearchParams<Shipping>): Promise<Shipping[]> {
-    let shippingList: IShippingMongo[];
-    return this.collShipping
-      .find({}, { skip, limit })
-      .toArray()
-      .then((list) => {
-        shippingList = list;
-        const articleListMongo = list.flatMap((s) => s.lines.map((l) => new ObjectId(l.article)));
-        return this.collArt.find({ _id: { $in: articleListMongo } });
-      })
-      .then((list) => list.toArray())
-      .then((list) => {
-        return shippingList.map((s) => ShippingMongoModelDB.parseMongoToShipping(s, list));
-      });
-  }
-
-  create (obj: Shipping): Promise<Shipping> {
-    const shippingMongo = ShippingMongoModelDB.parseShippingToMongo(obj);
-    return this.collShipping
-      .insertOne(shippingMongo)
-      .then(({ insertedId: id }) => ({ ...obj, id: id.toString() }));
+  readList (searchParams?: SearchParams<T>): Promise<Shipping[]> {
+    throw new Error('Method not implemented.');
   }
 
   update (obj: Shipping): Promise<void | NotFoundDbException> {
-    const { _id, ...rest } = ShippingMongoModelDB.parseShippingToMongo(obj);
-    return this.collShipping
-      .updateOne({ _id }, rest)
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('Shipping');
-      });
+    throw new Error('Method not implemented.');
   }
 
   delete (id: string): Promise<void | NotFoundDbException> {
-    return this.collShipping
-      .deleteOne({ _id: new ObjectId(id) })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('Shipping');
-      });
+    throw new Error('Method not implemented.');
   }
 
 }
