@@ -7,7 +7,7 @@ interface Shipping {
   idTracking?: string;
   state: Partial<Record<ShipStateEnum, Date>>;
   idPayment?: string;
-  payment: PaymentEnum;
+  payment?: PaymentEnum;
   shippingLineList: ShippingLine[];
 }
 

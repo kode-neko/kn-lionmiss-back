@@ -8,7 +8,7 @@ interface ShippingMongo {
   idTracking?: string;
   state: Partial<Record<ShipStateEnum, Date>>;
   idPayment?: string;
-  payment: PaymentEnum;
+  payment?: PaymentEnum;
   shippingLineList: {
     order: string;
     qty: number;
