@@ -24,8 +24,6 @@ class ArticleMongoModelDB implements IModelDBArticle {
 
   private collArt: Collection<ArticleMongo>;
 
-  private collArea: Collection<AreaMongo>;
-
   private collArtArea: Collection<ArticleAreaMongo>;
 
   private static instance: IModelDBArticle;
@@ -42,7 +40,6 @@ class ArticleMongoModelDB implements IModelDBArticle {
       this.db] = getConnMongo();
     this.collArt = this.db.collection<ArticleMongo>('article');
     this.collArtArea = this.db.collection<ArticleAreaMongo>('articleArticle');
-    this.collArea = this.db.collection<AreaMongo>('area');
   }
 
   read (id: string): Promise<Article> {
