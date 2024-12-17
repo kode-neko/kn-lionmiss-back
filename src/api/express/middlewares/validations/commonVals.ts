@@ -23,7 +23,11 @@ const CommentValSchema = z.object({
     .positive()
     .gte(5),
   pictureList: z
-    .array(PictureValSchema)
+    .array(PictureValSchema),
+  idArticle: z
+    .string(),
+  idUser: z
+    .string()
 });
 
 export {

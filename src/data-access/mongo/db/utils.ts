@@ -1,15 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Db, MongoClient } from 'mongodb';
-import { IModelDBType } from '../../interfaces';
-import {
-  AreaMongoModelDB,
-  ArticleAreaMongoModelDB,
-  ArticleMongoModelDB,
-  CartMongoModelDB,
-  CommentMongoModelDB,
-  ShippingMongoModelDB,
-  UserMongoModelDB
-} from '../data';
 
 const {
   ENV,
@@ -57,20 +47,7 @@ function getConnMongo (): [MongoClient, Db] {
   ];
 }
 
-function getModelMongo (modelName: string): IModelDBType {
-  const AreaMongoModel = AreaMongoModelDB;
-  const ArticleAreaMongoModel = ArticleAreaMongoModelDB;
-  const ArticleMongoModel = ArticleMongoModelDB;
-  const CartMongoModel = CartMongoModelDB;
-  const CommentMongoModel = CommentMongoModelDB;
-  const ShippingMongoModel = ShippingMongoModelDB;
-  const UserMongoModel = UserMongoModelDB;
-
-  return eval(`${modelName}MongoModel`).getIntance();
-}
-
 export {
   createConnMongo,
-  getConnMongo,
-  getModelMongo
+  getConnMongo
 };

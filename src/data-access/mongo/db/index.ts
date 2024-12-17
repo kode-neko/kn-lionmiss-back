@@ -12,6 +12,5 @@ export {
 } from './interfaces';
 export {
   createConnMongo,
-  getConnMongo,
-  getModelMongo
+  getConnMongo
 } from './utils';

@@ -1,16 +1,9 @@
 {
     "_id": ObjectId("66db42707f97b60ae12b4a25"),
     "userName": "kodeneko",
-    "email": "kodeneko@mail.es",
     "pass": "r7TQZOnlZmy6NlzWR5C0C3NDmluLdwO",
     "salt": "$2b$10$gTVWozHJoDA71V9csRrPL.",
-    "google": "",
-    "twitter": "",
-    "cart": ObjectId("66db45237f97b60ae12b4a30"),
-    "shippings": [
-        ObjectId("6710f1f5ebc5588f1c016fff"),
-        ObjectId("6710f1f5ebc5588f1c017000")
-    ],
+    "email": "kodeneko@mail.es",
     "bday": ISODate("2021-02-25T10:03:46.000+0000"),
     "sex": "female",
     "area": "Spanish",
@@ -25,11 +18,9 @@
         "unitsHeight": "cm",
         "unitsWeight": "kg"
     },
-    "favs": [
-        ObjectId("66db3e857f97b60ae12b4a1e")
-    ],
-    "addresses": [
+    "addressList": [
         {
+            "id": NumberInt(1),
             "alias": "Casa",
             "name": "Elena",
             "surname": "Nito del Bosque",
@@ -38,9 +29,10 @@
             "state": "Sevilla",
             "country": "Spain",
             "phone": NumberInt(766543321),
-            "obs": ""
+            "obs": "main"
         },
         {
+            "id": NumberInt(2),
             "alias": "Empresa",
             "name": "Elena",
             "surname": "Nito del Bosque",
@@ -48,8 +40,15 @@
             "city": "Río Claro",
             "state": "Sevilla",
             "country": "Spain",
-            "phone": NumberInt(766543321),
-            "obs": ""
+            "phone": NumberInt(766543321)
         }
+    ],
+    "favList": [
+        ObjectId("66db3e857f97b60ae12b4a1e")
+    ],
+    "cart": ObjectId("675f587f8e2e192cb4308381"),
+    "shippingList": [
+        ObjectId("675f58868e2e192cb4308383"),
+        ObjectId("675f58868e2e192cb4308382")
     ]
 }

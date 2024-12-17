@@ -6,7 +6,7 @@ import { Cart, Shipping } from '../cart';
 import Area from '../article/Area';
 
 interface User {
-  id: string;
+  id?: string;
   userName: string;
   pass: string;
   salt: string;
@@ -15,7 +15,7 @@ interface User {
   sex: SexEnum;
   area: Area;
   measures: Measures;
-  addresseList: Address[];
+  addressList: Address[];
   favList: Article[];
   cart: Cart;
   shippingList: Shipping[];

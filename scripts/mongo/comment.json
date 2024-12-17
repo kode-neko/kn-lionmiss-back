@@ -1,10 +1,46 @@
-{
-  "_id" : ObjectId("66db43c97f97b60ae12b4a2d"),
-  "article" : ObjectId("66db3e857f97b60ae12b4a1e"),
-  "user" : "kodeneko",
-  "text" : "Lorem ipsum dolor sit amet consectetur adipiscing elit, porta per porttitor mollis odio enim pretiu.",
-  "rating" : NumberInt(4),
-  "pics" : [
-      "20120419130822.png"
-  ]
-}
+[
+  {
+    "_id": ObjectId("675f5b508e2e192cb4308385"),
+    "title": "Adipisicing dolore",
+    "body": "Lorem ipsum dolor sit amet consectetur adipiscing elit, porta per porttitor mollis odio enim pretiu",
+    "rating": NumberInt(4),
+    "pictureList": [
+      {
+        "id": NumberInt(1),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Qui nulla exercitation nulla cupidatat."
+      },
+      {
+        "id": NumberInt(2),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Tempor ipsum incididunt cillum adipisicing."
+      }
+    ],
+    "idArticle": ObjectId("675f574a8e2e192cb430837e"),
+    "idUser": "kodeneko"
+  },
+  {
+    "_id": ObjectId("675f5b4f8e2e192cb4308384"),
+    "title": "Proident aliquip",
+    "body": "Velit sint pariatur voluptate aliquip nostrud proident sint cillum duis amet eu sunt.",
+    "rating": NumberInt(4),
+    "pictureList": [
+      {
+        "id": NumberInt(1),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Ea cillum eiusmod id nulla cillum aute eu."
+      },
+      {
+        "id": NumberInt(2),
+        "ext": "png",
+        "src": "path/path",
+        "alt": "Voluptate irure et qui nisi aliquip excepteur occaecat sit duis excepteur enim adipisicing."
+      }
+    ],
+    "idArticle": ObjectId("675f57498e2e192cb430837d"),
+    "idUser": "kodeneko"
+  }
+]

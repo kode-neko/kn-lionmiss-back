@@ -1,9 +1,6 @@
 import { Area } from '@model/index';
 import IModelDB from './IModelDB';
-import { NotFoundDbException } from '../error';
 
-interface IModelDBArea extends IModelDB<Area> {
-  readByProps(obj: Omit<Area, 'id'>): Promise<Area | NotFoundDbException>;
-}
+type IModelDBArea = IModelDB<Area>;
 
 export default IModelDBArea;

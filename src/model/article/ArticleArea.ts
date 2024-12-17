@@ -1,7 +1,7 @@
 import Area from './Area';
 
 interface ArticleArea {
-  id: string;
+  id?: string;
   title: string;
   desc: string;
   variantList: Record<string, string>;

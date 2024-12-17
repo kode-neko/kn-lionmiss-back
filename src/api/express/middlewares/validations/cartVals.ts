@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { ArticleValSchema } from './articleVals';
 
 const CartLineValSchema = z.object({
-  id: z
+  order: z
     .string(),
   qty: z
     .number(),
@@ -15,12 +15,12 @@ const CartValSchema = z.object({
   id: z
     .string()
     .nullable(),
-  lines: z
+  cartLineList: z
     .array(CartLineValSchema)
 });
 
 const ShippingtLineValSchema = z.object({
-  id: z
+  order: z
     .string(),
   qty: z
     .number(),
@@ -37,14 +37,16 @@ const ShippingValSchema = z.object({
     .string()
     .nullable(),
   idTracking: z
-    .string(),
-  idShipping: z
-    .string(),
+    .string()
+    .nullable(),
   state: z
     .record(ShipStateEnumValSchema, z.date()),
+  idPayment: z
+    .string()
+    .nullable(),
   payment:
     PaymentEnumValSchema,
-  lines: z
+  shippingLineList: z
     .array(ShippingtLineValSchema)
 });
 

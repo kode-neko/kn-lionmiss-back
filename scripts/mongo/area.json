@@ -1,23 +1,29 @@
 [
   {
-    "_id": ObjectId("6710f63bebc5588f1c01701c"),
-    "name" : "Spanish",
-    "locale": "es",
-    "country" : "Spain",
-    "symbol" : "€"
+    "_id": ObjectId("675f509c8e2e192cb4308378"),
+    "name": "spanish",
+    "country": "Spain",
+    "locale": "es-ES",
+    "currency": "€",
+    "dateFormat": "dd/mm/yyyy",
+    "gen": true
   },
   {
-    "_id": ObjectId("6710f63bebc5588f1c01701d"),
-    "name" : "English-UK",
+    "_id": ObjectId("675f509b8e2e192cb4308377"),
+    "name": "englishUK",
+    "country": "United Kingdom",
     "locale": "en-GB",
-    "country" : "United Kingdom",
-    "symbol" : "£"
+    "currency": "£",
+    "dateFormat": "mm/dd/yyyy",
+    "gen": true
   },
   {
-    "_id": ObjectId("6710f63bebc5588f1c01701f"),
-    "name" : "English-USA",
+    "_id": ObjectId("675f543e8e2e192cb430837b"),
+    "name": "englishUSA",
+    "country": "USA",
     "locale": "en-US",
-    "country" : "United States",
-    "symbol" : "$"
+    "currency": "$",
+    "dateFormat": "mm/dd/yyyy",
+    "gen": false
   }
 ]

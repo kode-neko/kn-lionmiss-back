@@ -4,9 +4,8 @@ import ArticleVariant from './ArticleVariant';
 import InstructEnum from './InstructEnum';
 
 interface Article {
-  id: string;
+  id?: string;
   tags: string[];
-  sizes: Record<string, number>;
   materials: Record<string, number>;
   instructs: Partial<Record<InstructEnum, string>>;
   discolor: boolean;
