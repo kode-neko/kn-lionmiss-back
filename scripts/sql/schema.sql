@@ -41,14 +41,20 @@ CREATE TABLE article_sizes (
 );
 
 CREATE TABLE article_variant(
-	article CHAR(36) NOT NULL,
-	variant VARCHAR(50) NOT NULL,
-	
-	FOREIGN KEY (article) REFERENCES article(id)
+	id CHAR(36) PRIMARY KEY,
+	name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE article_variant_sizes(
+	variant CHAR(36),
+	size VARCHAR(100) NOT NULL,
+	qty INT NOT NULL,
+
+	FOREIGN KEY (variant) REFERENCES article(id) 
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
-	PRIMARY KEY(article, variant)
+	PRIMARY KEY(variant, size)
 );
 
 CREATE TABLE article_materials(
@@ -87,12 +93,13 @@ CREATE TABLE area(
 );
 
 CREATE TABLE article_area(
+	id CHAR(36) NOT NULL,
 	article CHAR(36) NOT NULL,
-	area CHAR(36) NOT NULL,
 	title TINYTEXT NOT NULL,
-	descrip TEXT,
-	price DECIMAL(6,2) UNSIGNED NOT NULL,
-	tax DECIMAL(4, 2) UNSIGNED NOT NULL,
+	description TEXT,
+	price DECIMAL(6,2) NOT NULL,
+	tax DECIMAL(4, 2) NOT NULL,
+	area CHAR(36) NOT NULL,
 	
 	FOREIGN KEY (article) REFERENCES article(id)
 	ON DELETE CASCADE
@@ -102,14 +109,56 @@ CREATE TABLE article_area(
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
-	PRIMARY KEY(article, area)
+	PRIMARY KEY(id, article, area)
 );
+
+CREATE TABLE article_area_variant(
+	article CHAR(36) NOT NULL,
+	variant VARCHAR(100) NOT NULL,
+	translation VARCHAR(100) NOT NULL,
+	
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (variant) REFERENCES article_variant(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, variant)
+);
+
+CREATE TABLE picture(
+	id CHAR(36) PRIMARY KEY,
+	ext CHAR(3) NOT NULL,
+	src VARCHAR(255) NOT NULL,
+	alt VARCHAR(300) NOT NULL
+);
+
+CREATE TABLE article_picture(
+	article CHAR(36) NOT NULL,
+	picture CHAR(36) NOT NULL,
+
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (picture) REFERENCES picture(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, picture)
+);
+
+
 
 CREATE TABLE user(
 	id CHAR(36) PRIMARY KEY,
-	email VARCHAR(255) UNIQUE NOT NULL,
 	userName VARCHAR(100) UNIQUE NOT NULL,
-	bday DATE NOT NULL,
+	pass VARCHAR(250) NOT NULL,
+	SALT VARCHAR(250) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	bday VARCHAR(255) NOT NULL,
 	sex ENUM('female', 'male'),
 	area CHAR(36) NOT NULL,
 	
@@ -139,13 +188,17 @@ CREATE TABLE comment(
 
 CREATE TABLE comment_pics(
 	comment CHAR(36) NOT NULL,
-	pic VARCHAR(50) NOT NULL,
+	picture VARCHAR(50) NOT NULL,
 
 	FOREIGN KEY (comment) REFERENCES comment(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
+
+	FOREIGN KEY (picture) REFERENCES picture(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
 	
-	PRIMARY KEY(comment, pic)
+	PRIMARY KEY(comment, picture)
 );
 
 CREATE TABLE address(
@@ -206,6 +259,7 @@ CREATE TABLE cart(
 
 CREATE TABLE cart_line(
 	id TINYINT(3) NOT NULL,
+	orderr INT(4) NOT NULL,
 	cart CHAR(36) NOT NULL,
 	article CHAR(36) NOT NULL,
 	qty TINYINT(2) NOT NULL,
@@ -223,7 +277,7 @@ CREATE TABLE cart_line(
 
 CREATE TABLE shipping(
 	id CHAR(36) PRIMARY KEY,
-	user CHAR(36) NOT NULL
+	user CHAR(36) NOT NULL,
 	idTracking VARCHAR(36) NOT NULL,
 	idPayment VARCHAR(36) NOT NULL,
 	payment ENUM('transfer', 'card', 'crypto', 'paypal') NOT NULL,
@@ -259,6 +313,7 @@ CREATE TABLE shipping_state(
 
 CREATE TABLE shipping_line(
 	id CHAR(36) NOT NULL,
+	orderr INT(4) NOT NULL,
 	shipping CHAR(36) NOT NULL,
 	article CHAR(36) NOT NULL,
 	qty TINYINT(2) NOT NULL,
@@ -273,8 +328,3 @@ CREATE TABLE shipping_line(
 	
 	PRIMARY KEY(id, shipping)
 );
-
-
-
-
-
