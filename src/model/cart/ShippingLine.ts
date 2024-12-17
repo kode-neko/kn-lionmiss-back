@@ -1,9 +1,9 @@
-import { Article } from '@model/index';
+import { Article } from '../article';
 
 interface ShippingLine {
-  id: string;
+  order: number;
   qty: number;
-  article?: Article;
+  article: Article;
 }
 
 export default ShippingLine;

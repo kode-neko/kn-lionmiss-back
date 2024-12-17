@@ -1,7 +1,7 @@
 enum InstructEnum {
   WHASING = 'whasing',
   IRONING = 'ironing',
-  SPIN = 'spining',
+  SPINNING = 'spining',
   DRY_CLEANING = 'dryCleaning'
 }
 

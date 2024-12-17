@@ -1,9 +1,11 @@
 interface Area {
   id?: string;
   name: string;
-  locale: string;
   country: string;
-  symbol: string;
+  locale: string;
+  currency: string;
+  dateFormat: string;
+  gen: boolean;
 }
 
 export default Area;

@@ -11,9 +11,8 @@ const UnitsWeightEnumValSchema = z.nativeEnum(UnitsWeightEnum);
 
 const AddressValSchema = z.object({
   id: z
-    .string()
-    .nullable(),
-  alais: z
+    .string(),
+  alias: z
     .string(),
   name: z
     .string(),
@@ -31,41 +30,31 @@ const AddressValSchema = z.object({
     .string(),
   obs: z
     .string()
+    .nullable()
 });
 
-const CommentValSchema = z.object({
-  id: z
-    .string()
-    .nullable(),
-  title: z
-    .string(),
-  cont: z
-    .string(),
-  rating: z
-    .number()
-    .min(0)
-    .max(5),
-  pics: z
-    .array(z.string()),
-  article: z
-    .string()
-});
-
-const UserMeasuresValSchema = z.object({
+const MeasuresValSchema = z.object({
   shoulder: z
-    .number(),
+    .number()
+    .nullable(),
   chest: z
-    .number(),
+    .number()
+    .nullable(),
   waist: z
-    .number(),
+    .number()
+    .nullable(),
   hips: z
-    .number(),
+    .number()
+    .nullable(),
   foot: z
-    .number(),
+    .number()
+    .nullable(),
   height: z
-    .number(),
+    .number()
+    .nullable(),
   weight: z
-    .number(),
+    .number()
+    .nullable(),
   unitsHeight:
     UnitsHeightEnumValSchema,
   unitsWeight:
@@ -74,17 +63,16 @@ const UserMeasuresValSchema = z.object({
 
 const UserValSchema = z.object({
   id: z
-    .string()
-    .nullable(),
+    .string(),
   userName: z
+    .string(),
+  pass: z
+    .string(),
+  salt: z
     .string(),
   email: z
     .string()
     .email(),
-  cart:
-    CartValSchema,
-  shippings: z
-    .array(ShippingValSchema),
   bday: z
     .date(),
   sex:
@@ -92,11 +80,15 @@ const UserValSchema = z.object({
   area:
     AreaValSchema,
   measures:
-    UserMeasuresValSchema,
-  favs: z
+    MeasuresValSchema,
+  addressList: z
+    .array(AddressValSchema),
+  favList: z
     .array(z.string()),
-  addresses: z
-    .array(AddressValSchema)
+  cart:
+    CartValSchema,
+  shippings: z
+    .array(ShippingValSchema)
 });
 
 export {
@@ -104,7 +96,6 @@ export {
   UnitsHeightEnumValSchema,
   UnitsWeightEnumValSchema,
   AddressValSchema,
-  CommentValSchema,
-  UserMeasuresValSchema,
+  MeasuresValSchema,
   UserValSchema
 };

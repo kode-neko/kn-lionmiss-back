@@ -1,5 +1,4 @@
 export {
-  IdValSchema,
   idValSchemaCreateFunc,
   SearchParamsValSchema,
   UserLoginValSchema
@@ -20,11 +19,15 @@ export {
 } from './cartVals';
 
 export {
+  PictureValSchema,
+  CommentValSchema
+} from './commonVals';
+
+export {
   SexEnumValSchema,
   UnitsHeightEnumValSchema,
   UnitsWeightEnumValSchema,
   AddressValSchema,
-  CommentValSchema,
-  UserMeasuresValSchema,
+  MeasuresValSchema,
   UserValSchema
 } from './userVals';

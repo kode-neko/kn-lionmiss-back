@@ -8,7 +8,7 @@ interface Address {
   state: string;
   country: string;
   phone: string;
-  obs: string;
+  obs?: string;
 }
 
 export default Address;

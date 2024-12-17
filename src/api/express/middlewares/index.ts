@@ -1,8 +1,7 @@
 export {
-  validAttrMidCreate,
+  attrValidMidCreate,
   idBodyValidMid,
   idParamValidMid,
-  bodyValidMid,
   searchParamsValidMid,
   bodyValidMidCreate,
   loginValidMid

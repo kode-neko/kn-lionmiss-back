@@ -12,7 +12,7 @@ import {
   idParamValidMid,
   searchParamsValidMid,
   bodyValidMidCreate,
-  validAttrMidCreate
+  attrValidMidCreate
 } from '../middlewares';
 
 const router = Router();
@@ -48,8 +48,8 @@ router.delete(
 // Translations per area
 router.get(
   '/:idArticle/area/:nameArea',
-  validAttrMidCreate('idArticle'),
-  validAttrMidCreate('nameArea'),
+  attrValidMidCreate('idArticle'),
+  attrValidMidCreate('nameArea'),
   getArticleIdAreaName
 );
 
