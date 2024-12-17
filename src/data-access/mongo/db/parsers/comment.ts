@@ -11,7 +11,7 @@ function parseCommentToMongo (obj: Comment) {
     rating: obj.rating,
     pictureList: obj.pictureList.map((p) => parsePictureToMongo(p)),
     idArticle: new ObjectId(obj.idArticle),
-    idUser: new ObjectId(obj.idUser)
+    idUser: obj.idUser
   };
 }
 
@@ -23,7 +23,7 @@ function parseMongoToComment (mongo: CommentMongo) {
     rating: mongo.rating,
     pictureList: mongo.pictureList.map((p) => parseMongoToPicture(p)),
     idArticle: mongo.idArticle.toString(),
-    idUser: mongo.idUser.toString()
+    idUser: mongo.idUser
   };
 }
 

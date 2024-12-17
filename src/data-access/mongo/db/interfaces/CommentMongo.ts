@@ -10,7 +10,7 @@ interface CommentMongo {
   rating: number;
   pictureList: PictureMongo[];
   idArticle: ArticleMongo['_id'];
-  idUser: UserMongo['_id'];
+  idUser: UserMongo['userName'];
 }
 
 export default CommentMongo;

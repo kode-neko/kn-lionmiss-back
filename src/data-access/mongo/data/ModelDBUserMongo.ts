@@ -1,19 +1,18 @@
-import { NotFoundDbException } from '@data-access/index';
-import {
-  User, SexEnum, Address, UnitsHeightEnum, UnitsWeightEnum
-} from '@model/index';
 import {
   Collection, Db, MongoClient,
   ObjectId
 } from 'mongodb';
 import { IModelDBUser } from '../../interfaces';
 import {
-  getConnMongo,
-  IAddressMongo,
-  IAreaMongo,
-  IArticleMongo, ICartMongo, IUserMeasuresMongo, IUserMongo
-} from '../db';
-import CartMongoModelDB from './CartMongoModelDB';
+  AreaMongo, ArticleMongo, CartMongo, ShippingMongo, UserMongo
+} from '../db/interfaces';
+import { NotFoundDbException } from '../../error';
+import { getConnMongo } from '../db/utils';
+import { User } from '../../../model';
+import {
+  parseMongoToArea,
+  parseMongoToCart, parseMongoToShiping, parseMongoToUser
+} from '../db/parsers';
 
 class UserMongoModelDB implements IModelDBUser {
 
@@ -21,13 +20,15 @@ class UserMongoModelDB implements IModelDBUser {
 
   private db: Db;
 
-  private collUser: Collection<IUserMongo>;
+  private collUser: Collection<UserMongo>;
 
-  private collCart: Collection<ICartMongo>;
+  private collCart: Collection<CartMongo>;
 
-  private collArt: Collection<IArticleMongo>;
+  private collArt: Collection<ArticleMongo>;
 
-  private collArea: Collection<IAreaMongo>;
+  private collArea: Collection<AreaMongo>;
+
+  private collShipping: Collection<ShippingMongo>;
 
   private static instance: IModelDBUser;
 
@@ -41,126 +42,65 @@ class UserMongoModelDB implements IModelDBUser {
   private constructor () {
     [this.client,
       this.db] = getConnMongo();
-    this.collUser = this.db.collection<IUserMongo>('user');
-    this.collCart = this.db.collection<ICartMongo>('cart');
-    this.collArt = this.db.collection<IArticleMongo>('article');
-    this.collArea = this.db.collection<IAreaMongo>('area');
+    this.collUser = this.db.collection<UserMongo>('user');
+    this.collCart = this.db.collection<CartMongo>('cart');
+    this.collArt = this.db.collection<ArticleMongo>('article');
+    this.collArea = this.db.collection<AreaMongo>('area');
+    this.collShipping = this.db.collection<ShippingMongo>('shipping');
   }
 
-  public static parseUserToMongo (user: User): IUserMongo {
-    return {
-      _id: new ObjectId(user.id as string),
-      userName: user.userName,
-      pass: user.pass,
-      salt: user.salt,
-      google: user.google,
-      twitter: user.twitter,
-      email: user.email,
-      cart: new ObjectId(user.cart?.id as string),
-      shippings: user.shippings.map((s) => new ObjectId(s.id as string)),
-      bday: user.bday,
-      sex: user.sex,
-      area: user.area.name,
-      measures: { ...user.measures } as IUserMeasuresMongo,
-      favs: user.favs.map((s) => new ObjectId(s.id as string)),
-      addresses: user.addresses.map((a) => UserMongoModelDB.parseAddressToMongo(a))
-    };
-  }
-
-  public static parseMongoToUser (
-    mongo: IUserMongo,
-    areaMongo: IAreaMongo,
-    cartMongo?: ICartMongo,
-    cartArticleListMongo?: IArticleMongo[]
-  ): User {
-    return {
-      id: mongo._id?.toString(),
-      userName: mongo.userName,
-      pass: mongo.pass,
-      salt: mongo.salt,
-      google: mongo.google,
-      twitter: mongo.twitter,
-      email: mongo.email,
-      cart: cartMongo &&
-        CartMongoModelDB.parseMongoToCart(
-          cartMongo,
-          cartArticleListMongo || []
-        ),
-      shippings: [],
-      bday: mongo.bday,
-      sex: SexEnum[mongo.sex],
-      area: areaMongo,
-      measures: {
-        shoulder: mongo.measures.shoulder,
-        chest: mongo.measures.chest,
-        waist: mongo.measures.waist,
-        hips: mongo.measures.hips,
-        foot: mongo.measures.foot,
-        height: mongo.measures.height,
-        weight: mongo.measures.weight,
-        unitsHeight: UnitsHeightEnum[mongo.measures.unitsHeight],
-        unitsWeight: UnitsWeightEnum[mongo.measures.unitsWeight]
-      },
-      favs: [],
-      addresses: mongo.addresses.map((a) => UserMongoModelDB.parseMongoToAddress(a))
-    };
-  }
-
-  public static parseAddressToMongo (address: Address): IAddressMongo {
-    return {
-      alias: address.alias,
-      name: address.name,
-      surname: address.surname,
-      address: address.address,
-      city: address.city,
-      state: address.state,
-      country: address.country,
-      phone: address.phone,
-      obs: address.obs
-    };
-  }
-
-  public static parseMongoToAddress (mongo: IAddressMongo): Address {
-    return {
-      alias: mongo.alias,
-      name: mongo.name,
-      surname: mongo.surname,
-      address: mongo.address,
-      city: mongo.city,
-      state: mongo.state,
-      country: mongo.country,
-      phone: mongo.phone,
-      obs: mongo.obs
-    };
-  }
-
-  read (id: string): Promise<User | NotFoundDbException> {
-    let userMongo: IUserMongo;
-    let cartMongo: ICartMongo;
-    let articleMongoList: IArticleMongo[];
+  read (id: string): Promise<User> {
+    let userMongo: UserMongo;
+    let artFavList: ArticleMongo[];
+    let cartMongo: CartMongo;
+    let cartMongoArtList: ArticleMongo[];
+    let shippingMongoList: ShippingMongo[];
+    let shippingMongoArtList: ArticleMongo[];
 
     return this.collUser
-      .findOne({
-        $or: [{ _id: new ObjectId(id) },
-          { userName: id }]
-      })
+      .findOne({ _id: new ObjectId(id) })
       .then((res) => {
         if (!res) throw new NotFoundDbException('User');
         userMongo = res;
-        return this.collCart.findOne({ _id: new ObjectId(userMongo._id) });
+        return this.collCart
+          .findOne({ _id: new ObjectId(userMongo._id) });
       })
       .then((res) => {
-        if (res) cartMongo = res;
-        const idsArticles = cartMongo.lines.map((l) => new ObjectId(l.article));
-        return this.collArt.find({ _id: { $in: idsArticles } });
+        if (!res) throw new NotFoundDbException('Cart');
+        cartMongo = res;
+        const idArticleList = cartMongo.cartLineList.map((clm) => clm.article);
+        return this.collArt
+          .find({ _id: { $in: idArticleList } });
       })
-      .then((list) => list.toArray())
+      .then((res) => res.toArray())
       .then((list) => {
-        articleMongoList = list;
-        return this.collArea.findOne({ name: userMongo.area });
+        cartMongoArtList = list;
+        return this.collArt
+          .find({ _id: { $in: userMongo.favList } });
+      })
+      .then((res) => res.toArray())
+      .then((list) => {
+        artFavList = list;
+        const idShippingList = userMongo.shippingList.map((sl) => new ObjectId(sl));
+        return this.collShipping.find({ _id: { $in: idShippingList } });
+      })
+      .then((res) => res.toArray())
+      .then((list) => {
+        shippingMongoList = list;
+        const idArticleList = shippingMongoList.flatMap((s) => s.shippingLineList.map((sl) => sl.article));
+        return this.collArt.find({ _id: { $in: idArticleList } });
+      })
+      .then((res) => res.toArray())
+      .then((list) => {
+        shippingMongoArtList = list;
+        return this.collArea.find({ name: userMongo.area });
       })
       .then((res) => {
-        return UserMongoModelDB.parseMongoToUser(userMongo, res as IAreaMongo, cartMongo, articleMongoList);
+        if (!res) throw new NotFoundDbException('Area');
+        const area = parseMongoToArea(res);
+        const shippingList = shippingMongoList.map((sm) => parseMongoToShiping(sm, shippingMongoArtList));
+        const cart = parseMongoToCart(cartMongo, cartMongoArtList);
+        return parseMongoToUser(userMongo, area, artFavList, cart, shippingList);
       });
   }
 

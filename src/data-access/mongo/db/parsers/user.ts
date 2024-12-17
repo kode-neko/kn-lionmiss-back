@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import UserMongo from '../interfaces/UserMongo';
 import {
-  Area, Article, Cart, User
+  Area, Article, Cart, Shipping, User
 } from '../../../../model';
 
 function parseUserToMongo (obj: User): UserMongo {
@@ -43,7 +43,7 @@ function parseUserToMongo (obj: User): UserMongo {
   };
 }
 
-function parseMongoToUser (userMongo: UserMongo, area: Area, favList: Article[], cart: Cart): User {
+function parseMongoToUser (userMongo: UserMongo, area: Area, favList: Article[], cart: Cart, shippingList: Shipping[]): User {
   return {
     id: userMongo._id.toString(),
     userName: userMongo.userName,
@@ -57,7 +57,7 @@ function parseMongoToUser (userMongo: UserMongo, area: Area, favList: Article[],
     addressList: userMongo.addressList,
     favList: favList,
     cart: cart,
-    shippingList: []
+    shippingList: shippingList
   };
 }
 

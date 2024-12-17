@@ -42,10 +42,11 @@ class AreaMongoModelDB implements IModelDBArea {
   }
 
   readList (searchParams: SearchParams<Area>): Promise<Area[]> {
-    const { limit, skip } = searchParams;
-    const filter = searchParams.tags.map((t) => ({ name: t }));
+    const {
+      limit, skip, tags
+    } = searchParams;
     return this.collArea
-      .find({ $or: filter }, { limit, skip })
+      .find({ tags: { $in: tags } }, { limit, skip })
       .toArray()
       .then((list) => {
         return list.map((e) => parseMongoToArea(e));

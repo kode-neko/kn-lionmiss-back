@@ -1,9 +1,13 @@
 import {
-  Collection, Db, MongoClient
+  Collection, Db, MongoClient,
+  ObjectId
 } from 'mongodb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBComment } from '../../interfaces';
 import { CommentMongo } from '../db/interfaces';
+import { getConnMongo } from '../db/utils';
+import { parseCommentToMongo, parseMongoToComment } from '../db/parsers';
+import { Comment, SearchParams } from '../../../model';
 
 class CommentMongoModelDB implements IModelDBComment {
 
@@ -28,24 +32,54 @@ class CommentMongoModelDB implements IModelDBComment {
     this.collComment = this.db.collection<CommentMongo>('cart');
   }
 
-  read (id: string): Promise<any> {
-    throw new Error('Method not implemented.');
+  read (id: string): Promise<Comment> {
+    return this.collComment
+      .findOne({ $or: [{ _id: new ObjectId(id) }, { name: id }] })
+      .then((res) => {
+        if (!res) throw new NotFoundDbException('Comment');
+        return parseMongoToComment(res);
+      });
   }
 
-  readList (searchParams?: SearchParams<T>): Promise<Comment[]> {
-    throw new Error('Method not implemented.');
+  readList (searchParams?: SearchParams<Comment>): Promise<Comment[]> {
+    const {
+      limit, skip, obj
+    } = searchParams;
+    let filter;
+    if (obj) filter = [
+      { article: obj.article },
+      { user: obj.user }
+    ];
+    return this.collComment
+      .find({ $or: filter }, { limit, skip })
+      .toArray()
+      .then((list) => {
+        return list.map((e) => parseMongoToComment(e));
+      });
   }
 
   create (obj: Comment): Promise<Comment> {
-    throw new Error('Method not implemented.');
+    const commentMongo = parseCommentToMongo(obj);
+    return this.collComment
+      .insertOne(commentMongo)
+      .then(({ insertedId }) => ({ ...obj, _id: insertedId.toString() }));
   }
 
   update (obj: Comment): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
+    const { _id, ...rest } = parseCommentToMongo(obj);
+    return this.collComment
+      .updateOne({ _id }, { ...rest })
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('Comment');
+      });
   }
 
   delete (id: string): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
+    return this.collComment
+      .deleteOne(new ObjectId(id))
+      .then(({ deletedCount }) => {
+        if (deletedCount === 0) throw new NotFoundDbException('Comment');
+      });
   }
 
 }
