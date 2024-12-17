@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { Area } from '../../../../../model';
 import { AreaMongo } from '../../interfaces';
 
-function parseAreaToMongo (obj: Area | Omit<Area, 'id'>): AreaMongo {
+function parseAreaToMongo (obj: Area): AreaMongo {
   return {
     _id: new ObjectId(obj.id as string),
     name: obj.name,

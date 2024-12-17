@@ -25,7 +25,7 @@ function parseArticleToMongo (article: Article): ArticleMongo {
 
 function parseMongoToArticle (mongo: ArticleMongo): Article {
   return {
-    id: mongo._id.toString(),
+    id: mongo._id?.toString(),
     tags: mongo.tags,
     materials: mongo.materials,
     instructs: mongo.instructs,
@@ -34,9 +34,8 @@ function parseMongoToArticle (mongo: ArticleMongo): Article {
       mongo.articleVariantList
         .map((maa, i) => ({ ...maa, id: i.toString() })),
     pictureList:
-      mongo.pictureList.map((mp) => parseMongoToPicture(mp)),
-    articleAreaList:
-      mongo.articleAreaList.map(parseMongoToArticleArea)
+      mongo.pictureList.map(parseMongoToPicture),
+    articleAreaList: []
   };
 }
 

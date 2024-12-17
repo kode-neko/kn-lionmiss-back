@@ -1,11 +1,13 @@
 import {
-  Collection, Db, MongoClient
+  Collection, Db, MongoClient,
+  ObjectId
 } from 'mongodb';
 import { IModelDBArea } from '../../interfaces';
 import { AreaMongo } from '../db/interfaces';
 import { getConnMongo } from '../db/utils';
 import { Area, SearchParams } from '../../../model';
 import { NotFoundDbException } from '../../error';
+import { parseAreaToMongo, parseMongoToArea } from '../db/parsers';
 
 class AreaMongoModelDB implements IModelDBArea {
 
@@ -31,23 +33,47 @@ class AreaMongoModelDB implements IModelDBArea {
   }
 
   read (id: string): Promise<Area> {
-    throw new Error('Method not implemented.');
+    return this.collArea
+      .findOne({ $or: [{ _id: new ObjectId(id) }, { name: id }] })
+      .then((res) => {
+        if (!res) throw new NotFoundDbException('Area');
+        return parseMongoToArea(res);
+      });
   }
 
   readList (searchParams: SearchParams<Area>): Promise<Area[]> {
-    throw new Error('Method not implemented.');
+    const { limit, skip } = searchParams;
+    const filter = searchParams.tags.map((t) => ({ name: t }));
+    return this.collArea
+      .find({ $or: filter }, { limit, skip })
+      .toArray()
+      .then((list) => {
+        return list.map((e) => parseMongoToArea(e));
+      });
   }
 
   create (obj: Area): Promise<Area> {
-    throw new Error('Method not implemented.');
+    const areaMongo = parseAreaToMongo(obj);
+    return this.collArea
+      .insertOne(areaMongo)
+      .then(({ insertedId }) => ({ ...obj, _id: insertedId.toString() }));
   }
 
   update (obj: Area): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
+    const { _id, ...rest } = parseAreaToMongo(obj);
+    return this.collArea
+      .updateOne({ _id }, { ...rest })
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('Area');
+      });
   }
 
   delete (id: string): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
+    return this.collArea
+      .deleteOne(new ObjectId(id))
+      .then(({ deletedCount }) => {
+        if (deletedCount === 0) throw new NotFoundDbException('Area');
+      });
   }
 
 }
