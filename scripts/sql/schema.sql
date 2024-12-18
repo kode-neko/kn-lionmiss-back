@@ -4,16 +4,9 @@ CREATE TABLE article(
 	id CHAR(36) PRIMARY KEY,
 	discolor BOOL NOT NULL
 );
-
-CREATE TABLE instruct(
-	name VARCHAR(25) PRIMARY KEY
-);
-
-
 CREATE TABLE tag(
 	name VARCHAR(50) PRIMARY KEY
 );
-
 CREATE TABLE article_tag(
 	article CHAR(36) NOT NULL,
 	tag VARCHAR(25) NOT NULL,
@@ -28,35 +21,6 @@ CREATE TABLE article_tag(
 	
 	PRIMARY KEY(article, tag)
 );
-
-CREATE TABLE article_sizes (
-	article CHAR(36) NOT NULL,
-	size VARCHAR(20) NOT NULL,
-	
-	FOREIGN KEY (article) REFERENCES article(id) 
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	PRIMARY KEY(article, size)
-);
-
-CREATE TABLE article_variant(
-	id CHAR(36) PRIMARY KEY,
-	name VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE article_variant_sizes(
-	variant CHAR(36),
-	size VARCHAR(100) NOT NULL,
-	qty INT NOT NULL,
-
-	FOREIGN KEY (variant) REFERENCES article(id) 
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	PRIMARY KEY(variant, size)
-);
-
 CREATE TABLE article_materials(
 	article CHAR(36) NOT NULL,
 	material VARCHAR(50) NOT NULL,
@@ -68,11 +32,13 @@ CREATE TABLE article_materials(
 	
 	PRIMARY KEY(article, material)
 );
-
+CREATE TABLE instruct(
+	name VARCHAR(25) PRIMARY KEY
+);
 CREATE TABLE article_instruct(
 	article CHAR(36) NOT NULL,
 	instruct VARCHAR(25) NOT NULL,
-  descrip VARCHAR(25) NOT NULL, 
+    descrip VARCHAR(25) NOT NULL, 
 	
 	FOREIGN KEY (article) REFERENCES article(id)
 	ON DELETE CASCADE
@@ -84,19 +50,42 @@ CREATE TABLE article_instruct(
 	
 	PRIMARY KEY(article, instruct)
 );
+CREATE TABLE article_variant(
+	id CHAR(36) NOT NULL,
+	article CHAR(36) NOT NULL,
+	name VARCHAR(100) NOT NULL,
 
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+
+	PRIMARY KEY(id)
+);
+CREATE TABLE article_variant_sizes(
+	variant CHAR(36),
+	size CHAR(10) NOT NULL,
+	qty INT NOT NULL,
+
+	FOREIGN KEY (variant) REFERENCES article_variant(id) 
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(variant, size)
+);
 CREATE TABLE area(
 	id CHAR(36) PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	country VARCHAR(100) NOT NULL,
-	symbol VARCHAR(1) NOT NULL
+	locale CHAR(6) NOT NULL,
+	currency CHAR(1) NOT NULL,
+	dateFormat VARCHAR(50) NOT NULL,
+	gen BOOLEAN NOT NULL
 );
-
 CREATE TABLE article_area(
-	id CHAR(36) NOT NULL,
+	id CHAR(36) UNIQUE NOT NULL,
 	article CHAR(36) NOT NULL,
 	title TINYTEXT NOT NULL,
-	description TEXT,
+	descrip TEXT,
 	price DECIMAL(6,2) NOT NULL,
 	tax DECIMAL(4, 2) NOT NULL,
 	area CHAR(36) NOT NULL,
@@ -109,15 +98,14 @@ CREATE TABLE article_area(
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
-	PRIMARY KEY(id, article, area)
+	PRIMARY KEY(article, area)
 );
-
 CREATE TABLE article_area_variant(
-	article CHAR(36) NOT NULL,
-	variant VARCHAR(100) NOT NULL,
+	article_area CHAR(36) NOT NULL,
+	variant CHAR(36) NOT NULL,
 	translation VARCHAR(100) NOT NULL,
 	
-	FOREIGN KEY (article) REFERENCES article(id)
+	FOREIGN KEY (article_area) REFERENCES article_area(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
@@ -125,48 +113,63 @@ CREATE TABLE article_area_variant(
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
-	PRIMARY KEY(article, variant)
+	PRIMARY KEY(article_area, variant)
 );
 
-CREATE TABLE picture(
-	id CHAR(36) PRIMARY KEY,
-	ext CHAR(3) NOT NULL,
-	src VARCHAR(255) NOT NULL,
-	alt VARCHAR(300) NOT NULL
+CREATE TABLE cart(
+	id CHAR(36) PRIMARY KEY
 );
-
-CREATE TABLE article_picture(
+CREATE TABLE cart_line(
+	cart CHAR(36) NOT NULL,
+	orderr INT(4) NOT NULL,
 	article CHAR(36) NOT NULL,
-	picture CHAR(36) NOT NULL,
+	qty TINYINT(2) NOT NULL,
 
+	FOREIGN KEY (cart) REFERENCES cart(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
 	FOREIGN KEY (article) REFERENCES article(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
-	FOREIGN KEY (picture) REFERENCES picture(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	PRIMARY KEY(article, picture)
+	PRIMARY KEY(orderr, cart, article)
 );
-
-
-
+CREATE TABLE measures(
+	id CHAR(36) PRIMARY KEY,
+	shoulder TINYINT(23) UNSIGNED,
+	chest TINYINT(23) UNSIGNED,
+	waist TINYINT(23) UNSIGNED,
+	hips TINYINT(23) UNSIGNED,
+	foot TINYINT(23) UNSIGNED,
+	height TINYINT(23) UNSIGNED,
+	weight TINYINT(23) UNSIGNED,
+	unitsHeight ENUM('cm', 'inch'),
+	unitsWeight ENUM('kg', 'lb')
+);
 CREATE TABLE user(
 	id CHAR(36) PRIMARY KEY,
 	userName VARCHAR(100) UNIQUE NOT NULL,
 	pass VARCHAR(250) NOT NULL,
-	SALT VARCHAR(250) NOT NULL,
+	salt VARCHAR(250) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	bday VARCHAR(255) NOT NULL,
 	sex ENUM('female', 'male'),
+
 	area CHAR(36) NOT NULL,
+	measures CHAR(36) NOT NULL,
+	cart CHAR(36) NOT NULL,
 	
 	FOREIGN KEY (area) REFERENCES area(id)
 	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	FOREIGN KEY (measures) REFERENCES measures(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	FOREIGN KEY (cart) REFERENCES cart(id)
+	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
-
 CREATE TABLE comment(
 	id CHAR(36) PRIMARY KEY,
 	user CHAR(36) NOT NULL,
@@ -185,22 +188,41 @@ CREATE TABLE comment(
 	
 	UNIQUE(user, article)
 );
+CREATE TABLE picture(
+	id CHAR(36) PRIMARY KEY,
+	ext CHAR(3) NOT NULL,
+	src VARCHAR(255) NOT NULL,
+	alt TEXT NOT NULL
+);
+CREATE TABLE picture_article(
+	article CHAR(36) NOT NULL,
+	picture CHAR(36) NOT NULL,
 
-CREATE TABLE comment_pics(
+	FOREIGN KEY (article) REFERENCES article(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	FOREIGN KEY (picture) REFERENCES picture(id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	
+	PRIMARY KEY(article, picture)
+);
+
+CREATE TABLE picture_comment(
 	comment CHAR(36) NOT NULL,
-	picture VARCHAR(50) NOT NULL,
+	picture CHAR(36) NOT NULL,
 
 	FOREIGN KEY (comment) REFERENCES comment(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
-
+	
 	FOREIGN KEY (picture) REFERENCES picture(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
 	PRIMARY KEY(comment, picture)
 );
-
 CREATE TABLE address(
 	id CHAR(36) PRIMARY KEY,
 	user CHAR(36) NOT NULL,
@@ -211,15 +233,13 @@ CREATE TABLE address(
 	city VARCHAR(100) NOT NULL,
 	state VARCHAR(100) NOT NULL,
 	country VARCHAR(100) NOT NULL,
-	phone TINYINT(23) UNSIGNED NOT NULL,
+	phone CHAR(23) UNSIGNED NOT NULL,
 	obs TEXT,
 
 	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
-
-
 CREATE TABLE user_favs(
 	user CHAR(36) NOT NULL,
 	article CHAR(36) NOT NULL,
@@ -234,47 +254,6 @@ CREATE TABLE user_favs(
 	
 	PRIMARY KEY(user, article)
 );
-
-CREATE TABLE measures(
-	id CHAR(36) PRIMARY KEY,
-	user CHAR(36) NOT NULL,
-	shoulder TINYINT(23) UNSIGNED,
-	chest TINYINT(23) UNSIGNED,
-	waist TINYINT(23) UNSIGNED,
-	hips TINYINT(23) UNSIGNED,
-	foot TINYINT(23) UNSIGNED,
-	height TINYINT(23) UNSIGNED,
-	weight TINYINT(23) UNSIGNED,
-	unitsHeight ENUM('cm', 'inch'),
-	unitsWeight ENUM('kg', 'lb'),
-
-	FOREIGN KEY (user) REFERENCES user(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
-);
-
-CREATE TABLE cart(
-	id CHAR(36) PRIMARY KEY
-);
-
-CREATE TABLE cart_line(
-	id TINYINT(3) NOT NULL,
-	orderr INT(4) NOT NULL,
-	cart CHAR(36) NOT NULL,
-	article CHAR(36) NOT NULL,
-	qty TINYINT(2) NOT NULL,
-
-	FOREIGN KEY (cart) REFERENCES cart(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	FOREIGN KEY (article) REFERENCES article(id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	
-	PRIMARY KEY(id, cart)
-);
-
 CREATE TABLE shipping(
 	id CHAR(36) PRIMARY KEY,
 	user CHAR(36) NOT NULL,
@@ -282,7 +261,7 @@ CREATE TABLE shipping(
 	idPayment VARCHAR(36) NOT NULL,
 	payment ENUM('transfer', 'card', 'crypto', 'paypal') NOT NULL,
 
-	FOREIGN KEY (id) REFERENCES user(id)
+	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
@@ -301,7 +280,6 @@ CREATE TABLE shipping_state(
 			'exception'
 		) 
 		NOT NULL,
-	xtra TINYTEXT,
 	
 	FOREIGN KEY (shipping) REFERENCES shipping(id)
 	ON DELETE CASCADE
@@ -309,10 +287,7 @@ CREATE TABLE shipping_state(
 	
 	PRIMARY KEY(id, shipping)
 );
-
-
 CREATE TABLE shipping_line(
-	id CHAR(36) NOT NULL,
 	orderr INT(4) NOT NULL,
 	shipping CHAR(36) NOT NULL,
 	article CHAR(36) NOT NULL,
@@ -326,5 +301,5 @@ CREATE TABLE shipping_line(
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
 	
-	PRIMARY KEY(id, shipping)
+	PRIMARY KEY(shipping, article)
 );
