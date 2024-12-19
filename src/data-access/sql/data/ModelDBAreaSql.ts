@@ -1,21 +1,14 @@
-import {
-  Collection, Db, MongoClient,
-  ObjectId
-} from 'mongodb';
+import SearchParams from '../../../model/app/SearchParams';
 import { IModelDBArea } from '../../interfaces';
-import { AreaMongo } from '../db/interfaces';
-import { getConnMongo } from '../db/utils';
-import { Area, SearchParams } from '../../../model';
+import Area from '../../../model/article/Area';
 import { NotFoundDbException } from '../../error';
-import { parseAreaToMongo, parseMongoToArea } from '../db/parsers';
+import { PrismaClient } from '@prisma/client';
+import { getPrismaClient } from '../db/utils';
+import { idToNum, idToStr } from './utils';
 
 class AreaMongoModelDB implements IModelDBArea {
 
-  private client: MongoClient;
-
-  private db: Db;
-
-  private collArea: Collection<AreaMongo>;
+  private prisma: PrismaClient;
 
   private static instance: AreaMongoModelDB;
 
@@ -27,53 +20,59 @@ class AreaMongoModelDB implements IModelDBArea {
   }
 
   private constructor () {
-    [this.client,
-      this.db] = getConnMongo();
-    this.collArea = this.db.collection<AreaMongo>('area');
+    this.prisma = getPrismaClient();
   }
 
   read (id: string): Promise<Area> {
-    return this.collArea
-      .findOne({ $or: [{ _id: new ObjectId(id) }, { name: id }] })
+    return this.prisma.area
+      .findFirst({ where: { OR: [{ id: idToNum(id) }, { name: id }] } })
       .then((res) => {
         if (!res) throw new NotFoundDbException('Area');
-        return parseMongoToArea(res);
+        return { ...res, id: idToStr(res.id) };
       });
   }
 
   readList (searchParams: SearchParams<Area>): Promise<Area[]> {
     const {
-      limit, skip, tags
+      skip, limit: take, tags
     } = searchParams;
-    return this.collArea
-      .find({ tags: { $in: tags } }, { limit, skip })
-      .toArray()
+    return this.prisma.area
+      .findMany({
+        where: { name: { in: tags } },
+        skip,
+        take
+      })
       .then((list) => {
-        return list.map((e) => parseMongoToArea(e));
+        return list.map(({ id, ...rest }) => ({ id: idToStr(id), ...rest }));
       });
   }
 
   create (obj: Area): Promise<Area> {
-    const areaMongo = parseAreaToMongo(obj);
-    return this.collArea
-      .insertOne(areaMongo)
-      .then(({ insertedId }) => ({ ...obj, _id: insertedId.toString() }));
+    const { id, ...rest } = obj;
+    return this.prisma.area
+      .create({ data: { ...rest } })
+      .then(({ id, ...rest }) => ({ id: idToStr(id), ...rest }));
   }
 
   update (obj: Area): Promise<void | NotFoundDbException> {
-    const { _id, ...rest } = parseAreaToMongo(obj);
-    return this.collArea
-      .updateOne({ _id }, { ...rest })
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('Area');
+    const { id, ...rest } = obj;
+    return this.prisma.area
+      .update({
+        where: { id: idToNum(id as string) },
+        data: { ...rest }
+      })
+      .then(() => Promise.resolve())
+      .catch(() => {
+        throw new NotFoundDbException('Area');
       });
   }
 
   delete (id: string): Promise<void | NotFoundDbException> {
-    return this.collArea
-      .deleteOne(new ObjectId(id))
-      .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('Area');
+    return this.prisma.area
+      .delete({ where: { id: idToNum(id as string) } })
+      .then(() => Promise.resolve())
+      .catch(() => {
+        throw new NotFoundDbException('Area');
       });
   }
 
