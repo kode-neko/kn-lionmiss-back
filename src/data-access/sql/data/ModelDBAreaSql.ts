@@ -1,6 +1,5 @@
-import SearchParams from '../../../model/app/SearchParams';
+import { SearchParams, Area } from '@model/index';
 import { IModelDBArea } from '../../interfaces';
-import Area from '../../../model/article/Area';
 import { NotFoundDbException } from '../../error';
 import { PrismaClient } from '@prisma/client';
 import { getPrismaClient } from '../db/utils';

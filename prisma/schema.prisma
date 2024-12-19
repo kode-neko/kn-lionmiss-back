@@ -152,11 +152,11 @@ model comment {
   user                                             Int               @db.UnsignedMediumInt
   article                                          Int               @db.UnsignedMediumInt
   title                                            String            @db.TinyText
-  text                                             String            @db.Text
-  rating                                           Boolean
+  body                                             String            @db.Text
+  rating                                           Int               @db.UnsignedMediumInt
   user_comment_userTouser                          user              @relation("comment_userTouser", fields: [user], references: [id], onDelete: Cascade, map: "comment_ibfk_1")
   article_comment_articleToarticle                 article           @relation("comment_articleToarticle", fields: [article], references: [id], onDelete: Cascade, map: "comment_ibfk_2")
-  picture_comment_picture_comment_commentTocomment picture_comment[] @relation("picture_comment_commentTocomment")
+  commentToPicture picture_comment[] @relation("picture_comment_commentTocomment")
 
   @@unique([user, article], map: "user")
   @@index([article], map: "article")
@@ -187,7 +187,7 @@ model picture {
   src                                              String            @db.VarChar(255)
   alt                                              String            @db.Text
   picture_article_picture_article_pictureTopicture picture_article[] @relation("picture_article_pictureTopicture")
-  picture_comment_picture_comment_pictureTopicture picture_comment[] @relation("picture_comment_pictureTopicture")
+  comment picture_comment[] @relation("picture_comment_pictureTopicture")
 }
 
 model picture_article {
@@ -203,8 +203,8 @@ model picture_article {
 model picture_comment {
   comment                                  Int     @db.UnsignedMediumInt
   picture                                  Int     @db.UnsignedMediumInt
-  comment_picture_comment_commentTocomment comment @relation("picture_comment_commentTocomment", fields: [comment], references: [id], onDelete: Cascade, map: "picture_comment_ibfk_1")
-  picture_picture_comment_pictureTopicture picture @relation("picture_comment_pictureTopicture", fields: [picture], references: [id], onDelete: Cascade, map: "picture_comment_ibfk_2")
+  conn_comment comment @relation("picture_comment_commentTocomment", fields: [comment], references: [id], onDelete: Cascade, map: "picture_comment_ibfk_1")
+  commentToPicture picture @relation("picture_comment_pictureTopicture", fields: [picture], references: [id], onDelete: Cascade, map: "picture_comment_ibfk_2")
 
   @@id([comment, picture])
   @@index([picture], map: "picture")
