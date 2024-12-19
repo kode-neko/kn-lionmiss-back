@@ -1,14 +1,37 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Area {
+  id              Int @id @default(autoincrement()) 
+  name            String
+  country         String
+  locale          String
+  currency        String
+  dateFormat      String
+  gen             Boolean
+}
+
+model Picture {
+  id              Int @id @default(autoincrement()) 
+  ext             String
+  src             String
+  alt             String
+  comment         Comment @relation(fields: [commentId], references: [id])
+  commentId         Int
+}
+
+model Comment {
+  id              Int @id @default(autoincrement()) 
+  title           String
+  body            String
+  rating          Int
+  pictureList     Picture[]
+  idArticle       Int?
+  idUser          Int?
 }

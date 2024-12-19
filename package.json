@@ -9,7 +9,8 @@
     "build": "npx tsc --project ./config/tsconfig.json",
     "express": "dotenvx run -f ./config/env/.env.dev -- node ./public/api/express/index.js",
     "pass:app": "node ./scripts/pass-app.mjs",
-    "scratch": "tsc --module esnext ./scripts/scratches.ts && node ./scripts/scratches.js"
+    "scratch": "tsc --module esnext ./scripts/scratches.ts && node ./scripts/scratches.js",
+    "prisma:generate": "dotenvx run -f ./config/env/.env.dev -- npx prisma generate --schema=./src/data-access/sql/db/prisma/schema.prisma"
   },
   "author": "Kodeneko",
   "license": "ISC",
@@ -38,7 +39,7 @@
     "typescript-eslint": "^8.4.0"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.14.1",
+    "@dotenvx/dotenvx": "^1.31.0",
     "@prisma/client": "^6.1.0",
     "casual": "^1.6.2",
     "cors": "^2.8.5",
