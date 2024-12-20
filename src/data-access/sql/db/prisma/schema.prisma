@@ -7,6 +7,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Instruct {
+  whashing
+  ironning
+  spinning
+  dryCleanning
+}
+
+enum Sex {
+  female
+  male
+}
+
+enum UnitsHeight {
+  cm
+  inch
+}
+
+enum UnitsWeight {
+  kg
+  lb
+}
+
+enum Payment {
+  transfer
+  card
+  crypto
+  paypal
+}
+
+enum ShipState {
+  orderRecieved
+  prodessing
+  shipped
+  delivering
+  returned
+  exception
+}
+
 model Area {
   id              Int @id @default(autoincrement()) 
   name            String
@@ -55,6 +93,7 @@ model Comment {
   body            String
   rating          Int
   pictureList     PictureComment[]
+
   idArticle       Int?
   idUser          Int?
 }
@@ -69,9 +108,12 @@ model Article {
   articleVariantList ArticleVariant[]
   pictureList        PictureArticle[]
   articleAreaList    ArticleArea[]
+
+  // manSyn
+  UserFavs UserFavs[]
+  CartLine CartLine[]
+  ShippingLine ShippingLine[]
 }
-
-
 
 model TagArticle {
   name  String @id
@@ -99,7 +141,7 @@ model MaterialArticle {
 }
 
 model InstructsArticle {
-  instruct    String
+  instruct    Instruct
   desc        String
 
   articleId   Int
@@ -151,4 +193,110 @@ model ArticleAreaVariant {
   articleArea     ArticleArea @relation(fields: [articleAreaId], references: [id])
 
   @@id([variant, articleAreaId])
+}
+
+model Measures {
+  id            Int @id @default(autoincrement())
+  shoudler      Decimal?
+  chest         Decimal?
+  waist         Decimal?
+  hips          Decimal?
+  foot          Decimal?
+  height        Decimal?
+  weight        Decimal?
+  unitHeight    UnitsHeight
+  unitWeight    UnitsWeight
+
+  user          User?
+}
+
+model Address {
+  id        Int @id @default(autoincrement())
+  alias     String
+  name      String
+  surname   String
+  address   String
+  city      String
+  state     String
+  country   String
+  phone     String
+  obs       String?
+
+  userId    Int
+  user      User @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id          Int @id @default(autoincrement())
+  userName    String
+  pass        String
+  salt        String
+  email       String
+  bday        String
+  sex         Sex
+
+  measureId     Int @unique
+  mesures       Measures @relation(fields: [measureId], references: [id])
+  adressList    Address[]
+  favList       UserFavs[]
+}
+
+model UserFavs {
+  userId       Int
+  user         User @relation(fields: [userId], references: [id])
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([userId, articleId])  
+}
+
+model CartLine {
+  cartId      Int
+  order       Int
+  qty         Int
+  articleId   Int
+  
+  cart        Cart @relation(fields: [cartId], references: [id])
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([cartId, order])
+  @@unique([cartId,articleId])
+}
+
+model Cart {
+  id              Int @id @default(autoincrement())
+  cartLineList    CartLine[]
+}
+
+model Shipping {
+  id            Int @id @default(autoincrement())
+  idTracking    String?
+  state         ShippingState[]
+  idPayment     String?
+  payment       Payment?
+
+  shippingLineList      ShippingLine[]
+}
+
+model ShippingState {
+  id            Int @id @default(autoincrement())
+  state         ShipState
+  date          DateTime
+
+  shippingId    Int
+  shipping      Shipping @relation(fields: [shippingId], references: [id])
+}
+
+model ShippingLine {
+  shippingId    Int
+  order         Int
+  qty           Int
+
+  articleId     Int
+  article       Article @relation(fields: [articleId], references: [id])
+  shipping      Shipping @relation(fields: [shippingId], references: [id])
+
+  @@id([shippingId, order])
+  @@unique([shippingId, articleId])
 }
