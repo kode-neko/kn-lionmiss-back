@@ -163,10 +163,10 @@ model ArticleArea {
   tax           Float
 
   areaId        Int
-  area          Area @relation(fields: [areaId], references: [id])
+  area          Area? @relation(fields: [areaId], references: [id])
   
   articleId     Int
-  article       Article @relation(fields: [articleId], references: [id])
+  article       Article? @relation(fields: [articleId], references: [id])
 }
 
 model ArticleAreaVariant {

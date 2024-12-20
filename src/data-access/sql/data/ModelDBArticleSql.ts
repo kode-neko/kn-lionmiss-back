@@ -88,23 +88,44 @@ class ArticleMongoModelDB implements IModelDBArticle {
           id: idToNum(id),
           articleAreaList: { some: { area: { OR: [{ id: idToNum(area.id as string) }, { name: area.name }] } } }
         },
-        include: {
-          tags: { include: { tag: true } },
-          materials: true,
-          instructs: true,
-          articleVariantList: { include: { sizes: true } },
-          pictureList: true,
-          articleAreaList: { include: { area: true, variantList: true } }
-        }
+        include: this.includeArticle
       }).then(this.parseArticle);
   }
 
   readListByArea (searchParams: SearchParams<Article>, area: Area): Promise<Article[]> {
-    throw new Error('Method not implemented.');
+    const {
+      limit: take, skip, tags
+    } = searchParams;
+    return this.prisma.article
+      .findMany({
+        where: {
+          tags: { every: { tagId: { in: tags } } },
+          articleAreaList: { some: { area: { OR: [{ id: idToNum(area.id as string) }, { name: area.name }] } } }
+        },
+        include: this.includeArticle,
+        take,
+        skip
+      })
+      .then((list) => list.map(this.parseArticle));
   }
 
   createArticleArea (id: string, articleArea: ArticleArea): Promise<Article> {
-    return this.prisma.articleArea.create({ data: {} });
+    throw new Error('Method not implemented.');
+
+    /*
+    const {
+      id, area, article, ...rest
+    } = articleArea;
+    return this.prisma.articleArea
+      .create({
+        data: {
+          ...rest,
+          areaId: idToNum(area.id as string),
+          articleId: idToNum(article.id)
+        }
+      })
+      .then((res) => ({ ...articleArea, id: idToStr(res.id) }));
+      */
   }
 
   updateArticleArea (articleArea: ArticleArea): Promise<void | NotFoundDbException> {
