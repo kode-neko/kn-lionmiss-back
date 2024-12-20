@@ -64,24 +64,8 @@ model Picture {
   src             String
   alt             String
 
-  pictureCommentId       Int
-  pictureComment         PictureComment @relation(fields: [pictureCommentId], references: [id])
-
-  pictureArticleId       Int
-  pictureArticle         PictureArticle @relation(fields: [pictureArticleId], references: [id])
-}
-
-model PictureComment {
-  id              Int @id
-  pictureList     Picture[]
-
   commentId       Int
   comment         Comment @relation(fields: [commentId], references: [id])
-}
-
-model PictureArticle {
-  id              Int @id
-  pictureList     Picture[]
 
   articleId       Int
   article         Article @relation(fields: [articleId], references: [id])
@@ -92,7 +76,7 @@ model Comment {
   title           String
   body            String
   rating          Int
-  pictureList     PictureComment[]
+  pictureList     Picture[]
 
   idArticle       Int?
   idUser          Int?
@@ -106,7 +90,7 @@ model Article {
   discolor      Boolean
 
   articleVariantList ArticleVariant[]
-  pictureList        PictureArticle[]
+  pictureList        Picture[]
   articleAreaList    ArticleArea[]
 
   // manSyn
@@ -175,8 +159,8 @@ model ArticleArea {
   title         String
   desc          String
   variantList   ArticleAreaVariant[]
-  price         Decimal
-  tax           Decimal
+  price         Float
+  tax           Float
 
   areaId        Int
   area          Area @relation(fields: [areaId], references: [id])
@@ -197,13 +181,13 @@ model ArticleAreaVariant {
 
 model Measures {
   id            Int @id @default(autoincrement())
-  shoudler      Decimal?
-  chest         Decimal?
-  waist         Decimal?
-  hips          Decimal?
-  foot          Decimal?
-  height        Decimal?
-  weight        Decimal?
+  shoudler      Float?
+  chest         Float?
+  waist         Float?
+  hips          Float?
+  foot          Float?
+  height        Float?
+  weight        Float?
   unitHeight    UnitsHeight
   unitWeight    UnitsWeight
 
