@@ -43,13 +43,13 @@
         "id": NumberInt(1),
         "ext": "png",
         "src": "path/path",
-        "alt": "Nisi adipisicing fugiat tempor tempor irure nisi non proident."
+        "alt": "Aute laborum id dolor duis ipsum anim veniam consequat nulla voluptate voluptate consectetur ipsum magna."
       },
       {
         "id": NumberInt(2),
         "ext": "png",
         "src": "path/path",
-        "alt": "Nisi adipisicing fugiat tempor tempor irure nisi non proident."
+        "alt": "Qui dolore commodo elit eu pariatur proident."
       }
     ],
     "articleArea": [

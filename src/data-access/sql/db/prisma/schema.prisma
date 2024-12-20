@@ -1,0 +1,286 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Instruct {
+  whashing
+  ironning
+  spinning
+  dryCleanning
+}
+
+enum Sex {
+  female
+  male
+}
+
+enum UnitsHeight {
+  cm
+  inch
+}
+
+enum UnitsWeight {
+  kg
+  lb
+}
+
+enum Payment {
+  transfer
+  card
+  crypto
+  paypal
+}
+
+enum ShipState {
+  orderRecieved
+  prodessing
+  shipped
+  delivering
+  returned
+  exception
+}
+
+model Area {
+  id              Int @id @default(autoincrement()) 
+  name            String
+  country         String
+  locale          String
+  currency        String
+  dateFormat      String
+  gen             Boolean
+
+  // mandFor
+  articleArea ArticleArea[]
+}
+
+model Picture {
+  id              Int @id @default(autoincrement()) 
+  ext             String
+  src             String
+  alt             String
+
+  commentId       Int
+  comment         Comment @relation(fields: [commentId], references: [id])
+
+  articleId       Int
+  article         Article @relation(fields: [articleId], references: [id])
+}
+
+model Comment {
+  id              Int @id @default(autoincrement()) 
+  title           String
+  body            String
+  rating          Int
+  pictureList     Picture[]
+
+  idArticle       Int?
+  idUser          Int?
+}
+
+model Article {
+  id            Int @id @default(autoincrement())
+  tags          ArticleTag[]
+  materials     MaterialArticle[]
+  instructs     InstructsArticle[]
+  discolor      Boolean
+
+  articleVariantList ArticleVariant[]
+  pictureList        Picture[]
+  articleAreaList    ArticleArea[]
+
+  // manSyn
+  UserFavs UserFavs[]
+  CartLine CartLine[]
+  ShippingLine ShippingLine[]
+}
+
+model TagArticle {
+  name  String @id
+
+  articles  ArticleTag[]
+}
+
+model ArticleTag {
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+  tagId       String
+  tag         TagArticle @relation(fields: [tagId], references: [name])
+
+  @@id([articleId, tagId])   
+}
+
+model MaterialArticle {
+  material    String
+  desc        String
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([material, articleId])
+}
+
+model InstructsArticle {
+  instruct    Instruct
+  desc        String
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([instruct, articleId])
+}
+
+
+model ArticleVariant {
+  id              Int @id @default(autoincrement())
+  name            String
+  sizes           ArticleVariantSizes[]
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+}
+
+model ArticleVariantSizes {
+  size                String
+  qty                 Int
+
+  articleVariantId    Int
+  articleVariant      ArticleVariant @relation(fields: [articleVariantId], references: [id])
+
+  @@id([size, articleVariantId])
+}
+
+model ArticleArea {
+  id            Int @id @default(autoincrement())
+  title         String
+  desc          String
+  variantList   ArticleAreaVariant[]
+  price         Float
+  tax           Float
+
+  areaId        Int
+  area          Area? @relation(fields: [areaId], references: [id])
+  
+  articleId     Int
+  article       Article? @relation(fields: [articleId], references: [id])
+}
+
+model ArticleAreaVariant {
+  variant   Int
+  trans     String
+
+  articleAreaId   Int
+  articleArea     ArticleArea @relation(fields: [articleAreaId], references: [id])
+
+  @@id([variant, articleAreaId])
+}
+
+model Measures {
+  id            Int @id @default(autoincrement())
+  shoudler      Float?
+  chest         Float?
+  waist         Float?
+  hips          Float?
+  foot          Float?
+  height        Float?
+  weight        Float?
+  unitHeight    UnitsHeight
+  unitWeight    UnitsWeight
+
+  user          User?
+}
+
+model Address {
+  id        Int @id @default(autoincrement())
+  alias     String
+  name      String
+  surname   String
+  address   String
+  city      String
+  state     String
+  country   String
+  phone     String
+  obs       String?
+
+  userId    Int
+  user      User @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id          Int @id @default(autoincrement())
+  userName    String
+  pass        String
+  salt        String
+  email       String
+  bday        String
+  sex         Sex
+
+  measureId     Int @unique
+  mesures       Measures @relation(fields: [measureId], references: [id])
+  adressList    Address[]
+  favList       UserFavs[]
+}
+
+model UserFavs {
+  userId       Int
+  user         User @relation(fields: [userId], references: [id])
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([userId, articleId])  
+}
+
+model CartLine {
+  cartId      Int
+  order       Int
+  qty         Int
+  articleId   Int
+  
+  cart        Cart @relation(fields: [cartId], references: [id])
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([cartId, order])
+  @@unique([cartId,articleId])
+}
+
+model Cart {
+  id              Int @id @default(autoincrement())
+  cartLineList    CartLine[]
+}
+
+model Shipping {
+  id            Int @id @default(autoincrement())
+  idTracking    String?
+  state         ShippingState[]
+  idPayment     String?
+  payment       Payment?
+
+  shippingLineList      ShippingLine[]
+}
+
+model ShippingState {
+  id            Int @id @default(autoincrement())
+  state         ShipState
+  date          DateTime
+
+  shippingId    Int
+  shipping      Shipping @relation(fields: [shippingId], references: [id])
+}
+
+model ShippingLine {
+  shippingId    Int
+  order         Int
+  qty           Int
+
+  articleId     Int
+  article       Article @relation(fields: [articleId], references: [id])
+  shipping      Shipping @relation(fields: [shippingId], references: [id])
+
+  @@id([shippingId, order])
+  @@unique([shippingId, articleId])
+}

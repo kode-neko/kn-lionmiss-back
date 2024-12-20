@@ -46,7 +46,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     return this.collArt
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
-        if (!res) throw new NotFoundDbException('Area');
+        if (!res) throw new NotFoundDbException('Article');
         return parseMongoToArticle(res);
       });
   }

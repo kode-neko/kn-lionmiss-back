@@ -46,7 +46,7 @@ class AreaMongoModelDB implements IModelDBArea {
       limit, skip, tags
     } = searchParams;
     return this.collArea
-      .find({ tags: { $in: tags } }, { limit, skip })
+      .find({ name: { $in: tags } }, { limit, skip })
       .toArray()
       .then((list) => {
         return list.map((e) => parseMongoToArea(e));
