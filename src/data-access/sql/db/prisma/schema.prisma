@@ -15,6 +15,9 @@ model Area {
   currency        String
   dateFormat      String
   gen             Boolean
+
+  // mandFor
+  articleArea ArticleArea[]
 }
 
 model Picture {
@@ -22,8 +25,28 @@ model Picture {
   ext             String
   src             String
   alt             String
+
+  pictureCommentId       Int
+  pictureComment         PictureComment @relation(fields: [pictureCommentId], references: [id])
+
+  pictureArticleId       Int
+  pictureArticle         PictureArticle @relation(fields: [pictureArticleId], references: [id])
+}
+
+model PictureComment {
+  id              Int @id
+  pictureList     Picture[]
+
+  commentId       Int
   comment         Comment @relation(fields: [commentId], references: [id])
-  commentId         Int
+}
+
+model PictureArticle {
+  id              Int @id
+  pictureList     Picture[]
+
+  articleId       Int
+  article         Article @relation(fields: [articleId], references: [id])
 }
 
 model Comment {
@@ -31,7 +54,101 @@ model Comment {
   title           String
   body            String
   rating          Int
-  pictureList     Picture[]
+  pictureList     PictureComment[]
   idArticle       Int?
   idUser          Int?
+}
+
+model Article {
+  id            Int @id @default(autoincrement())
+  tags          ArticleTag[]
+  materials     MaterialArticle[]
+  instructs     InstructsArticle[]
+  discolor      Boolean
+
+  articleVariantList ArticleVariant[]
+  pictureList        PictureArticle[]
+  articleAreaList    ArticleArea[]
+}
+
+
+
+model TagArticle {
+  name  String @id
+
+  articles  ArticleTag[]
+}
+
+model ArticleTag {
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+  tagId       String
+  tag         TagArticle @relation(fields: [tagId], references: [name])
+
+  @@id([articleId, tagId])   
+}
+
+model MaterialArticle {
+  material    String
+  desc        String
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([material, articleId])
+}
+
+model InstructsArticle {
+  instruct    String
+  desc        String
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+
+  @@id([instruct, articleId])
+}
+
+
+model ArticleVariant {
+  id              Int @id @default(autoincrement())
+  name            String
+  sizes           ArticleVariantSizes[]
+
+  articleId   Int
+  article     Article @relation(fields: [articleId], references: [id])
+}
+
+model ArticleVariantSizes {
+  size                String
+  qty                 Int
+
+  articleVariantId    Int
+  articleVariant      ArticleVariant @relation(fields: [articleVariantId], references: [id])
+
+  @@id([size, articleVariantId])
+}
+
+model ArticleArea {
+  id            Int @id @default(autoincrement())
+  title         String
+  desc          String
+  variantList   ArticleAreaVariant[]
+  price         Decimal
+  tax           Decimal
+
+  areaId        Int
+  area          Area @relation(fields: [areaId], references: [id])
+  
+  articleId     Int
+  article       Article @relation(fields: [articleId], references: [id])
+}
+
+model ArticleAreaVariant {
+  variant   Int
+  trans     String
+
+  articleAreaId   Int
+  articleArea     ArticleArea @relation(fields: [articleAreaId], references: [id])
+
+  @@id([variant, articleAreaId])
 }
