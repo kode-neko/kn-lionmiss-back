@@ -57,7 +57,7 @@ class AreaMongoModelDB implements IModelDBArea {
     const { id, ...rest } = obj;
     return this.prisma.area
       .update({
-        where: { id: idToNum(id as string) },
+        where: { id: idToNum(id) },
         data: { ...rest }
       })
       .then(() => Promise.resolve())
@@ -68,7 +68,7 @@ class AreaMongoModelDB implements IModelDBArea {
 
   delete (id: string): Promise<void | NotFoundDbException> {
     return this.prisma.area
-      .delete({ where: { id: idToNum(id as string) } })
+      .delete({ where: { id: idToNum(id) } })
       .then(() => Promise.resolve())
       .catch(() => {
         throw new NotFoundDbException('Area');

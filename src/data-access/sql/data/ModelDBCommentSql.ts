@@ -3,28 +3,7 @@ import { NotFoundDbException } from '../../error';
 import { IModelDBComment } from '../../interfaces';
 import { PrismaClient } from '@prisma/client';
 import { getPrismaClient } from '../db/utils';
-import { idToNum, idToStr } from './utils';
-
-type CommentPrisma = {
-  commentToPicture: ({
-    commentToPicture: {
-      id: number;
-      ext: string;
-      src: string;
-      alt: string;
-    };
-  } & {
-    comment: number;
-    picture: number;
-  })[];
-} & {
-  id: number;
-  user: number;
-  article: number;
-  title: string;
-  body: string;
-  rating: number;
-};
+import { idToNum } from './utils';
 
 class CommentMongoModelDB implements IModelDBComment {
 
@@ -43,26 +22,15 @@ class CommentMongoModelDB implements IModelDBComment {
     this.prisma = getPrismaClient();
   }
 
-  private parseToComment (prisma: CommentPrisma): Comment {
-    const {
-      id, commentToPicture, user, article, ...rest
-    } = prisma;
-    const pictureList = commentToPicture
-      .map(({ commentToPicture: { id, ...rest } }) => ({ id: idToStr(id), ...rest }));
-    return {
-      id: idToStr(id), ...rest, pictureList, idArticle: article.toString(), idUser: user.toString()
-    };
-  }
-
   read (id: string): Promise<Comment> {
     return this.prisma.comment
       .findFirst({
         where: { id: idToNum(id) },
-        include: { commentToPicture: { include: { commentToPicture: true } } }
+        include: { pictureList: true }
       })
       .then((res) => {
         if (!res) throw new NotFoundDbException('Comment');
-        return this.parseToComment(res);
+        return res;
       });
   }
 
@@ -78,23 +46,42 @@ class CommentMongoModelDB implements IModelDBComment {
     return this.prisma.comment
       .findMany({
         where: { AND: filter },
-        include: { commentToPicture: { include: { commentToPicture: true } } },
+        include: { pictureList: true },
         skip,
         take
       })
-      .then((list) => list.map(this.parseToComment));
+      .then((list) => list);
   }
 
   create (obj: Comment): Promise<Comment> {
-    throw new Error('Method not implemented.');
+    const { id, ...rest } = obj;
+    return this.prisma.comment
+      .create({
+        data: { ...rest },
+        include: { pictureList: true }
+      });
   }
 
   update (obj: Comment): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
+    const { id, ...rest } = obj;
+    return this.prisma.comment
+      .update({
+        where: { id: idToNum(id) },
+        data: { ...rest }
+      })
+      .then(() => Promise.resolve())
+      .catch(() => {
+        throw new NotFoundDbException('Area');
+      });
   }
 
   delete (id: string): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
+    return this.prisma.area
+      .delete({ where: { id: idToNum(id) } })
+      .then(() => Promise.resolve())
+      .catch(() => {
+        throw new NotFoundDbException('Area');
+      });
   }
 
 }
