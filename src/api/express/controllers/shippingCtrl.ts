@@ -4,7 +4,7 @@ import { errorResponse } from './utils';
 
 // RUD Shipping
 
-function getShippingId (req: Request, res: Response) {
+function getShippingById (req: Request, res: Response) {
   const { id } = req.params;
   return getShipping()
     .read(id)
@@ -44,7 +44,7 @@ function postShipping (req: Request, res: Response) {
 }
 
 export {
-  getShippingId,
+  getShippingById,
   postShippingList,
   postShipping,
   putShipping,
