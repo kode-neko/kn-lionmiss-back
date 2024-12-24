@@ -1,7 +1,6 @@
-export { default as AreaMongoModelDB } from './AreaMongoModelDB';
-export { default as ArticleAreaMongoModelDB } from './ArticleAreaMongoModelDB';
-export { default as ArticleMongoModelDB } from './ArticleMongoModelDB';
-export { default as CartMongoModelDB } from './CartMongoModelDB';
-export { default as CommentMongoModelDB } from './CommentMongoModelDB';
-export { default as ShippingMongoModelDB } from './ShippingMongoModelDB';
-export { default as UserMongoModelDB } from './UserMongoModelDB';
+export { default as ModelDBAreaMongo } from './ModelDBAreaMongo';
+export { default as ModelDBArticleMongo } from './ModelDBArticleMongo';
+export { default as ModelDBCartMongo } from './ModelDBCartMongo';
+export { default as ModelDBCommentMongo } from './ModelDBCommentMongo';
+export { default as ModelDBShippingMongo } from './ModelDBShippingMongo';
+export { default as ModelDBUserMongo } from './ModelDBUserMongo';
