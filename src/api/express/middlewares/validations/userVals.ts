@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
   SexEnum, UnitsHeightEnum, UnitsWeightEnum
 } from '@model/index';
-import { AreaValSchema } from './articleVals';
+import { AreaValSchema, ArticleValSchema } from './articleVals';
 import { CartValSchema, ShippingValSchema } from './cartVals';
 
 const SexEnumValSchema = z.nativeEnum(SexEnum);
@@ -11,7 +11,8 @@ const UnitsWeightEnumValSchema = z.nativeEnum(UnitsWeightEnum);
 
 const AddressValSchema = z.object({
   id: z
-    .string(),
+    .string()
+    .nullable(),
   alias: z
     .string(),
   name: z
@@ -36,24 +37,38 @@ const AddressValSchema = z.object({
 const MeasuresValSchema = z.object({
   shoulder: z
     .number()
+    .positive()
+    .int()
     .nullable(),
   chest: z
     .number()
+    .positive()
+    .int()
     .nullable(),
   waist: z
     .number()
+    .positive()
+    .int()
     .nullable(),
   hips: z
     .number()
+    .positive()
+    .int()
     .nullable(),
   foot: z
     .number()
+    .positive()
+    .int()
     .nullable(),
   height: z
     .number()
+    .positive()
+    .int()
     .nullable(),
   weight: z
     .number()
+    .positive()
+    .int()
     .nullable(),
   unitsHeight:
     UnitsHeightEnumValSchema,
@@ -63,7 +78,8 @@ const MeasuresValSchema = z.object({
 
 const UserValSchema = z.object({
   id: z
-    .string(),
+    .string()
+    .nullable(),
   userName: z
     .string(),
   pass: z
@@ -84,10 +100,10 @@ const UserValSchema = z.object({
   addressList: z
     .array(AddressValSchema),
   favList: z
-    .array(z.string()),
+    .array(ArticleValSchema),
   cart:
     CartValSchema,
-  shippings: z
+  shippingsList: z
     .array(ShippingValSchema)
 });
 

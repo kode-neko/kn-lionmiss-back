@@ -1,8 +1,8 @@
 enum ShipStateEnum {
-  ORDER_RECIEVED = 'order_recieved',
+  ORDER_RECIEVED = 'orderRecieved',
   PROCESSING = 'processing',
   SHIPPED = 'shipped',
-  DELIVERING = 'delievring',
+  DELIVERING = 'delivering',
   RETURNED = 'returned',
   EXCEPTION = 'exception'
 }

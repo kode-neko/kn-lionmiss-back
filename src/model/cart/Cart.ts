@@ -1,7 +1,8 @@
 import CartLine from './CartLine';
 
 interface Cart {
-  id: string;
+  id?: string;
+
   cartLineList: CartLine[];
 }
 

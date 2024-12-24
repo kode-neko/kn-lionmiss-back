@@ -7,6 +7,7 @@ interface ArticleArea {
   variantList: Record<string, string>;
   price: number;
   tax: number;
+
   area: Area;
 }
 

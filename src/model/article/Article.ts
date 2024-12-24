@@ -9,6 +9,7 @@ interface Article {
   materials: Record<string, number>;
   instructs: Partial<Record<InstructEnum, string>>;
   discolor: boolean;
+
   articleVariantList: ArticleVariant[];
   pictureList: Picture[];
   articleAreaList: ArticleArea[];
