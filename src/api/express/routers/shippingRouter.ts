@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-  getShippingId,
+  getShippingById,
   postShippingList,
   postShipping,
   putShipping,
@@ -9,17 +9,15 @@ import {
 
 const router = Router();
 
+// RUD Shipping
+
 router.get(
   '/:id',
-  getShippingId
-);
-router.post(
-  '/list',
-  postShippingList
+  getShippingById
 );
 router.post(
   '/',
-  postShipping
+  postShippingList
 );
 router.put(
   '/',
@@ -28,6 +26,13 @@ router.put(
 router.delete(
   '/:id',
   deleteShipping
+);
+
+// Create from Cart
+
+router.get(
+  '/cart/:cartId',
+  postShipping
 );
 
 export default router;

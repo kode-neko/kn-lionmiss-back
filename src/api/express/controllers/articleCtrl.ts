@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { getArticle } from '../../../data-access';
 import { errorResponse } from './utils';
 
-// Article ops
+// CRUD
 
 function getArticleById (req: Request, res: Response) {
   const { id } = req.params;
@@ -72,7 +72,7 @@ function putArticleArea (req: Request, res: Response) {
 }
 
 function deleteArticleArea (req: Request, res: Response) {
-  const { id, articleArea } = req.body;
+  const { id, articleArea } = req.params;
   return getArticle()
     .deleteArticleArea(id, articleArea)
     .then((list) => res.status(200).send(list));

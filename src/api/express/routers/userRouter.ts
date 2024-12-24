@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-  getUserId,
+  getUserById,
   postUserLoginJwt,
   postUserLoginSession,
   portUserLogoutSession,
@@ -26,7 +26,7 @@ switch (AUTH_SYS) {
 
 router.get(
   '/:userName',
-  getUserId
+  getUserById
 );
 router.post(
   '/login',

@@ -1,33 +1,35 @@
 import { Router } from 'express';
 import {
-  getCartById,
-  postCartLine,
-  putCartLine,
-  deleteCartLine
+  getAreaById,
+  postAreaList,
+  postArea,
+  putArea,
+  deleteArea
 } from '../controllers';
 
 const router = Router();
 
-// R Cart
+// CRUD
 
 router.get(
   '/:id',
-  getCartById
+  getAreaById
 );
-
-// CartLine
-
 router.post(
-  '/line',
-  postCartLine
+  '/list',
+  postAreaList
+);
+router.post(
+  '/',
+  postArea
 );
 router.put(
-  '/line',
-  putCartLine
+  '/',
+  putArea
 );
 router.delete(
-  '/line',
-  deleteCartLine
+  '/:id',
+  deleteArea
 );
 
 export default router;
