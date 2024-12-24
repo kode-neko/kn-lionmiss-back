@@ -6,7 +6,6 @@ import {
   portUserLogoutSession,
   postUserLogoutJwt
 } from '../controllers';
-import { attrValidMidCreate, loginValidMid } from '../middlewares';
 
 const { AUTH_SYS } = process.env;
 
@@ -27,12 +26,10 @@ switch (AUTH_SYS) {
 
 router.get(
   '/:userName',
-  attrValidMidCreate('userName'),
   getUserId
 );
 router.post(
   '/login',
-  loginValidMid,
   postUserLogin
 );
 router.post(

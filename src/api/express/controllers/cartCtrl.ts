@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import { getCart } from '../../../data-access';
 import { errorResponse } from './utils';
 
-function getCartId (req: Request, res: Response) {
+// R Cart
+
+function getCartById (req: Request, res: Response) {
   const { id } = req.params;
   return getCart()
     .read(id)
@@ -10,13 +12,7 @@ function getCartId (req: Request, res: Response) {
     .catch((err) => errorResponse(err, res));
 }
 
-function postCartNewUser (req: Request, res: Response) {
-  const { username } = req.params;
-  return getCart()
-    .newCartUser(username)
-    .then((obj) => res.status(200).send(obj))
-    .catch((err) => errorResponse(err, res));
-}
+// CartLine
 
 function postCartLine (req: Request, res: Response) {
   const { idCart, cartLine } = req.body;
@@ -35,16 +31,15 @@ function putCartLine (req: Request, res: Response) {
 }
 
 function deleteCartLine (req: Request, res: Response) {
-  const { idCart, numLine } = req.body;
+  const { idCart, orderLine } = req.body;
   return getCart()
-    .deleteLine(idCart, numLine)
+    .deleteLine(idCart, orderLine)
     .then((obj) => res.status(200).send(obj))
     .catch((err) => errorResponse(err, res));
 }
 
 export {
-  getCartId,
-  postCartNewUser,
+  getCartById,
   postCartLine,
   putCartLine,
   deleteCartLine

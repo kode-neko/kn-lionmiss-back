@@ -97,18 +97,23 @@ class ArticleMongoModelDB implements IModelDBArticle {
       });
   }
 
-  private static mongoProjectionArea = (area: Area) => ({
+  private static mongoProjectionArea = (area: string) => ({
     $project: {
       articleAreaList: {
         $filter: {
           input: '$articleAreaList',
-          cond: { $eq: ['$articleAreaList.area.name', area.name] }
+          cond: {
+            $or: [
+              { $eq: ['$articleAreaList.area.name', area] },
+              { $eq: ['$articleAreaList.area._id', new ObjectId(area)] }
+            ]
+          }
         }
       }
     }
   });
 
-  readByArea (id: string, area: Area): Promise<Article | NotFoundDbException> {
+  readByArea (id: string, area: string): Promise<Article | NotFoundDbException> {
     return this.collArt
       .aggregate([
         { $match: { _id: new ObjectId(id) } },
@@ -121,7 +126,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       });
   }
 
-  readListByArea (searchParams: SearchParams<Article>, area: Area): Promise<Article[]> {
+  readListByArea (searchParams: SearchParams<Article>, area: string): Promise<Article[]> {
     const {
       limit, skip, tags
     } = searchParams;

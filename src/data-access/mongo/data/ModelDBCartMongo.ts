@@ -117,11 +117,11 @@ class CartMongoModelDB implements IModelDBCart {
       });
   }
 
-  deleteLine (idCart: string, idCartLine: string): Promise<void | NotFoundDbException> {
+  deleteLine (idCart: string, orderLine: string): Promise<void | NotFoundDbException> {
     return this.collCart
       .deleteOne({
         _id: new ObjectId(idCart),
-        $pull: { lineCartList: { $eq: new ObjectId(idCartLine) } }
+        $pull: { lineCartList: { $eq: orderLine } }
       })
       .then(({ deletedCount }) => {
         if (deletedCount === 0) throw new NotFoundDbException('Cart');

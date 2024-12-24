@@ -4,7 +4,7 @@ import { errorResponse } from './utils';
 
 // Article ops
 
-function getArticleId (req: Request, res: Response) {
+function getArticleById (req: Request, res: Response) {
   const { id } = req.params;
   return getArticle()
     .read(id)
@@ -13,9 +13,9 @@ function getArticleId (req: Request, res: Response) {
 }
 
 function postArticleList (req: Request, res: Response) {
-  const { skip, limit } = req.body;
+  const { searchParams } = req.body;
   return getArticle()
-    .readList({ skip, limit })
+    .readList(searchParams)
     .then((list) => res.status(200).send(list));
 }
 
@@ -42,19 +42,51 @@ function deleteArticle (req: Request, res: Response) {
 
 // Translations per area
 
-function getArticleIdAreaName (req: Request, res: Response) {
-  const { idArticle, nameArea } = req.params;
+function getArticleByIdArea (req: Request, res: Response) {
+  const { idArticle, area } = req.params;
   return getArticle()
-    .readInfoArea(idArticle, nameArea)
+    .readByArea(idArticle, area)
     .then((obj) => res.status(200).send(obj))
     .catch((err) => errorResponse(err, res));
 }
 
+function postArticleListByArea (req: Request, res: Response) {
+  const { searchParams, area } = req.body;
+  return getArticle()
+    .readListByArea(searchParams, area)
+    .then((list) => res.status(200).send(list));
+}
+
+function postArticleArea (req: Request, res: Response) {
+  const { id, articleArea } = req.body;
+  return getArticle()
+    .createArticleArea(id, articleArea)
+    .then((list) => res.status(200).send(list));
+}
+
+function putArticleArea (req: Request, res: Response) {
+  const { articleArea } = req.body;
+  return getArticle()
+    .updateArticleArea(articleArea)
+    .then((list) => res.status(200).send(list));
+}
+
+function deleteArticleArea (req: Request, res: Response) {
+  const { id, articleArea } = req.body;
+  return getArticle()
+    .deleteArticleArea(id, articleArea)
+    .then((list) => res.status(200).send(list));
+}
+
 export {
-  getArticleId,
+  getArticleById,
   postArticleList,
   postArticle,
   putArticle,
   deleteArticle,
-  getArticleIdAreaName
+  getArticleByIdArea,
+  postArticleListByArea,
+  postArticleArea,
+  putArticleArea,
+  deleteArticleArea
 };

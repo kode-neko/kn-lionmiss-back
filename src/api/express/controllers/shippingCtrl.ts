@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { getShipping } from '../../../data-access';
 import { errorResponse } from './utils';
 
+// RUD Shipping
+
 function getShippingId (req: Request, res: Response) {
   const { id } = req.params;
   return getShipping()
@@ -11,16 +13,10 @@ function getShippingId (req: Request, res: Response) {
 }
 
 function postShippingList (req: Request, res: Response) {
-  const { skip, limit } = req.body;
+  const { searchParams } = req.body;
   return getShipping()
-    .readList({ skip, limit })
+    .readList(searchParams)
     .then((list) => res.status(200).send(list));
-}
-
-function postShipping (req: Request, res: Response) {
-  return getShipping()
-    .create(req)
-    .then((objId) => res.status(201).send(objId));
 }
 
 function putShipping (req: Request, res: Response) {
@@ -36,6 +32,15 @@ function deleteShipping (req: Request, res: Response) {
     .delete(id)
     .then(() => res.status(200))
     .catch((err) => errorResponse(err, res));
+}
+
+// Create from Cart
+
+function postShipping (req: Request, res: Response) {
+  const { cartId } = req.params;
+  return getShipping()
+    .createFromCart(cartId)
+    .then((objId) => res.status(201).send(objId));
 }
 
 export {
