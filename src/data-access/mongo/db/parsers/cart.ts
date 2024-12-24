@@ -18,12 +18,12 @@ function parseCartToMongo (obj: Cart): CartMongo {
 
 function parseMongoToCart (cartMongo: CartMongo, articleMongoList: ArticleMongo[]): Cart {
   return {
-    id: cartMongo._id.toString(),
+    id: cartMongo._id?.toString(),
     cartLineList: cartMongo.cartLineList.map((cl, i) => {
       const articleFound = articleMongoList
         .find((am) => cl.article.toString() === am._id.toString());
       return {
-        order: i,
+        order: i.toString(),
         qty: cl.qty,
         article: parseMongoToArticle(articleFound as ArticleMongo)
       } as CartLine;

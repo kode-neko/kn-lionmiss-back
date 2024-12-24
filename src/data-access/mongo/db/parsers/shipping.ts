@@ -21,7 +21,7 @@ function parseShipingToMongo (obj: Shipping): ShippingMongo {
 
 function parseMongoToShiping (shippingMongo: ShippingMongo, articleMongoList: ArticleMongo[]): Shipping {
   return {
-    id: shippingMongo._id.toString(),
+    id: shippingMongo._id?.toString(),
     idTracking: shippingMongo.idTracking,
     state: shippingMongo.state,
     idPayment: shippingMongo.idPayment,
@@ -30,7 +30,7 @@ function parseMongoToShiping (shippingMongo: ShippingMongo, articleMongoList: Ar
       const articleFound = articleMongoList
         .find((am) => cl.article.toString() === am._id.toString());
       return {
-        order: i,
+        order: i.toString(),
         qty: cl.qty,
         article: parseMongoToArticle(articleFound as ArticleMongo)
       } as ShippingLine;

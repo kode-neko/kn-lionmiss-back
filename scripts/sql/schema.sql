@@ -24,7 +24,7 @@ CREATE TABLE article_tag(
 CREATE TABLE article_materials(
 	article MEDIUMINT UNSIGNED NOT NULL,
 	material VARCHAR(50) NOT NULL,
-	percentage INT(3) NOT NULL,
+	percentage TINYINT NOT NULL,
 	
 	FOREIGN KEY (article) REFERENCES article(id)
 	ON DELETE CASCADE
@@ -37,8 +37,15 @@ CREATE TABLE instruct(
 );
 CREATE TABLE article_instruct(
 	article MEDIUMINT UNSIGNED NOT NULL,
-	instruct VARCHAR(25) NOT NULL,
-    descrip VARCHAR(25) NOT NULL, 
+	instruct 
+		ENUM(
+			'whasing', 
+			'ironning', 
+			'spinning', 
+			'dryCleaning'
+		) 
+		NOT NULL,
+  descrip VARCHAR(25) NOT NULL, 
 	
 	FOREIGN KEY (article) REFERENCES article(id)
 	ON DELETE CASCADE
@@ -123,7 +130,7 @@ CREATE TABLE cart_line(
 	cart MEDIUMINT UNSIGNED NOT NULL,
 	orderr TINYINT NOT NULL,
 	article MEDIUMINT UNSIGNED NOT NULL,
-	qty TINYINT(2) NOT NULL,
+	qty TINYINT NOT NULL,
 
 	FOREIGN KEY (cart) REFERENCES cart(id)
 	ON DELETE CASCADE
@@ -137,15 +144,15 @@ CREATE TABLE cart_line(
 );
 CREATE TABLE measures(
 	id MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	shoulder TINYINT(23) UNSIGNED,
-	chest TINYINT(23) UNSIGNED,
-	waist TINYINT(23) UNSIGNED,
-	hips TINYINT(23) UNSIGNED,
-	foot TINYINT(23) UNSIGNED,
-	height TINYINT(23) UNSIGNED,
-	weight TINYINT(23) UNSIGNED,
-	unitsHeight ENUM('cm', 'inch'),
-	unitsWeight ENUM('kg', 'lb')
+	shoulder TINYINT UNSIGNED,
+	chest TINYINT UNSIGNED,
+	waist TINYINT UNSIGNED,
+	hips TINYINT UNSIGNED,
+	foot TINYINT UNSIGNED,
+	height TINYINT UNSIGNED,
+	weight TINYINT UNSIGNED,
+	unitsHeight ENUM('cm', 'inch') NOT NULL,
+	unitsWeight ENUM('kg', 'lb') NOT NULL
 );
 CREATE TABLE user(
 	id MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -154,7 +161,7 @@ CREATE TABLE user(
 	salt VARCHAR(250) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	bday VARCHAR(255) NOT NULL,
-	sex ENUM('female', 'male'),
+	sex ENUM('female', 'male') NOT NULL,
 
 	area MEDIUMINT UNSIGNED NOT NULL,
 	measures MEDIUMINT UNSIGNED NOT NULL,
@@ -176,7 +183,7 @@ CREATE TABLE comment(
 	article MEDIUMINT UNSIGNED NOT NULL,
 	title TINYTEXT NOT NULL,
 	text TEXT NOT NULL,
-	rating TINYINT(1) UNSIGNED NOT NULL,
+	rating TINYINT UNSIGNED NOT NULL,
 	
 	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
@@ -259,7 +266,13 @@ CREATE TABLE shipping(
 	user MEDIUMINT UNSIGNED NOT NULL,
 	idTracking VARCHAR(36) NOT NULL,
 	idPayment VARCHAR(36) NOT NULL,
-	payment ENUM('transfer', 'card', 'crypto', 'paypal') NOT NULL,
+	payment 
+		ENUM(
+			'transfer', 
+			'card', 
+			'crypto', 
+			'paypal'
+			) NOT NULL,
 
 	FOREIGN KEY (user) REFERENCES user(id)
 	ON DELETE CASCADE
@@ -272,14 +285,13 @@ CREATE TABLE shipping_state(
 	date DATETIME NOT NULL,
 	status 
 		ENUM(
-			'order_recieved', 
+			'orderRecieved', 
 			'processing', 
 			'shipped', 
 			'delivering', 
 			'returned',
 			'exception'
-		) 
-		NOT NULL,
+		) NOT NULL,
 	
 	FOREIGN KEY (shipping) REFERENCES shipping(id)
 	ON DELETE CASCADE
@@ -288,10 +300,10 @@ CREATE TABLE shipping_state(
 	PRIMARY KEY(id, shipping)
 );
 CREATE TABLE shipping_line(
-	orderr INT(4) NOT NULL,
+	orderr INT NOT NULL,
 	shipping MEDIUMINT UNSIGNED NOT NULL,
 	article MEDIUMINT UNSIGNED NOT NULL,
-	qty TINYINT(2) NOT NULL,
+	qty TINYINT NOT NULL,
 
 	FOREIGN KEY (shipping) REFERENCES shipping(id)
 	ON DELETE CASCADE
