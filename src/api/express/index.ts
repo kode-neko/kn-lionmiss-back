@@ -11,18 +11,18 @@ import helmet from 'helmet';
 import xss from 'express-xss-sanitizer';
 import hpp from 'hpp';
 import { chkAuthMid, errorMid } from './middlewares';
-import { createConn } from '../../data-access';
+import { Server } from 'http';
 
-// Env bars
-const {
-  HOST_API, PORT_API, AUTH_SYS, KEY_SECRET
-} = process.env;
+function initExpress (okCallback: () => void): Server {
+  // Env bars
+  const {
+    HOST_API, PORT_API, AUTH_SYS, KEY_SECRET
+  } = process.env;
 
-// Create server app...
-const app = express();
+  // Create server app...
+  const app = express();
 
-function initExpress () {
-// Security
+  // Security
   app.use(cors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -55,15 +55,11 @@ function initExpress () {
   app.use(errorMid);
 
   // Launch server
-  createConn()
-    .then(() => {
-      app.listen(
-        Number(PORT_API),
-        HOST_API as string,
-        () => console.log(`🚀 Express server up in ${HOST_API}:${PORT_API}`)
-      );
-    })
-    .catch((err: Error) => `🔥 There was an error: ${err.message}`);
+  return app.listen(
+    Number(PORT_API),
+    HOST_API as string,
+    okCallback
+  );
 }
 
 export { initExpress };
