@@ -12,7 +12,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import xss from 'express-xss-sanitizer';
 import hpp from 'hpp';
-import { chkAuthMid } from './middlewares';
+import { chkAuthMid, errorMid } from './middlewares';
 import { createConn } from '../../data-access';
 
 // Env bars
@@ -53,12 +53,7 @@ app.use(cartRouter);
 app.use(shippingRouter);
 
 // Error management
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (res.headersSent) {
-    return next(err);
-  }
-  res.status(500).send({ error: err.message });
-});
+app.use(errorMid);
 
 // Launch server
 createConn()
@@ -66,8 +61,8 @@ createConn()
     app.listen(
       Number(PORT_API),
       HOST_API as string,
-      () => console.log(`Express server up in ${HOST_API}:${PORT_API}`)
+      () => console.log(`🚀 Express server up in ${HOST_API}:${PORT_API}`)
     );
   })
-  .catch((err: Error) => `There was an error: ${err.message}`);
+  .catch((err: Error) => `🔥 There was an error: ${err.message}`);
 

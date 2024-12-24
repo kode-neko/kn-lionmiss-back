@@ -11,3 +11,4 @@ export {
   chkSessionMid,
   chkAuthMid
 } from './authMid';
+export { errorMid } from './errorMid';
