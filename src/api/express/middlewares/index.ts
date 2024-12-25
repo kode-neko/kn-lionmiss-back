@@ -10,7 +10,6 @@ export {
 } from './validationsMid';
 export {
   chkAuthJwtMid,
-  chkSessionMid,
   chkAuthMid
 } from './authMid';
 export { errorMid } from './errorMid';

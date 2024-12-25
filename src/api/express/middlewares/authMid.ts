@@ -5,7 +5,6 @@ import { extractHeader } from './utils';
 import {
   checkHeaderAuthJwt, checkSubAuthJwt, getPaylaodAuthJwt
 } from '../../../utils';
-import { AuthException } from './error';
 
 async function chkAuthJwtMid (req: Request) {
   const authHeader = extractHeader(req);
@@ -14,18 +13,11 @@ async function chkAuthJwtMid (req: Request) {
   checkSubAuthJwt(payload);
 }
 
-function chkSessionMid (req: Request) {
-  if (!req.session.loggedIn) throw new AuthException('There is no session');
-}
-
 function chkAuthMid (req: Request, res: Response, next: NextFunction) {
   const { AUTH_SYS } = process.env;
   switch (AUTH_SYS) {
     case 'jwt':
       chkAuthJwtMid(req);
-      break;
-    case 'session':
-      chkSessionMid(req);
       break;
     default:
       chkAuthJwtMid(req);
@@ -35,6 +27,4 @@ function chkAuthMid (req: Request, res: Response, next: NextFunction) {
 
 // TODO - OpenIDC
 
-export {
-  chkAuthJwtMid, chkSessionMid, chkAuthMid
-};
+export { chkAuthJwtMid, chkAuthMid };
