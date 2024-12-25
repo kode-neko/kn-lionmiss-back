@@ -1,16 +1,16 @@
-import { ObjectId } from 'mongodb';
-import PictureMongo from './PictureMongo';
-import ArticleMongo from './ArticleMongo';
-import UserMongo from './UserMongo';
+import { ArticleMongo } from './ArticleMongo';
+import { PictureMongo } from './PictureMongo';
+import { UserMongo } from './UserMongo';
 
 interface CommentMongo {
-  _id?: ObjectId;
+  _id?: string;
   title: string;
   body: string;
   rating: number;
   pictureList: PictureMongo[];
+
   idArticle: ArticleMongo['_id'];
-  idUser: UserMongo['userName'];
+  idUser: UserMongo['_id'];
 }
 
-export default CommentMongo;
+export { CommentMongo };

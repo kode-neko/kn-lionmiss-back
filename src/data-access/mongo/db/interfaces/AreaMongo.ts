@@ -1,7 +1,5 @@
-import { ObjectId } from 'mongodb';
-
 interface AreaMongo {
-  _id?: ObjectId;
+  _id?: string;
   name: string;
   country: string;
   locale: string;
@@ -10,4 +8,4 @@ interface AreaMongo {
   gen: boolean;
 }
 
-export default AreaMongo;
+export { AreaMongo };
