@@ -9,14 +9,21 @@ import { constFixListArea } from './constFix';
 
 function createFixArea (area?: Area): Area {
   const {
-    name, locale, country, symbol
+    name,
+    country,
+    locale,
+    currency,
+    dateFormat,
+    gen
   }: Area = area || faker.helpers.arrayElement(constFixListArea);
   return {
     id: faker.database.mongodbObjectId(),
     name,
-    locale,
     country,
-    symbol
+    locale,
+    currency,
+    dateFormat,
+    gen
   };
 }
 
