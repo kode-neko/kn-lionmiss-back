@@ -5,6 +5,9 @@ import {
   putCartLine,
   deleteCartLine
 } from '../controllers';
+import {
+  attrValidMidCreate, bodyParamValidMidCreate, idParamValidMid
+} from '../middlewares/validationsMid';
 
 const router = Router();
 
@@ -12,6 +15,7 @@ const router = Router();
 
 router.get(
   '/:id',
+  idParamValidMid,
   getCartById
 );
 
@@ -19,14 +23,20 @@ router.get(
 
 router.post(
   '/line',
+  attrValidMidCreate('idCart', 'body'),
+  bodyParamValidMidCreate('cartLine'),
   postCartLine
 );
 router.put(
   '/line',
+  attrValidMidCreate('idCart', 'body'),
+  bodyParamValidMidCreate('cartLine'),
   putCartLine
 );
 router.delete(
   '/line',
+  attrValidMidCreate('idCart', 'body'),
+  bodyParamValidMidCreate('cartLine'),
   deleteCartLine
 );
 

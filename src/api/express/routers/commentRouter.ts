@@ -6,6 +6,9 @@ import {
   putComment,
   deleteComment
 } from '../controllers';
+import {
+  bodyValidMidCreate, idBodyValidMid, idParamValidMid, searchParamsBodyValidMid
+} from '../middlewares/validationsMid';
 
 const router = Router();
 
@@ -13,22 +16,28 @@ const router = Router();
 
 router.get(
   '/:id',
+  idParamValidMid,
   getCommentById
 );
 router.post(
   '/list',
+  searchParamsBodyValidMid,
   postCommentList
 );
 router.post(
   '/',
+  bodyValidMidCreate('comment'),
   postComment
 );
 router.put(
   '/',
+  idBodyValidMid,
+  bodyValidMidCreate('comment'),
   putComment
 );
 router.delete(
   '/:id',
+  idParamValidMid,
   deleteComment
 );
 

@@ -6,6 +6,11 @@ import {
   putShipping,
   deleteShipping
 } from '../controllers';
+import {
+  attrValidMidCreate,
+  bodyValidMidCreate, idBodyValidMid, idParamValidMid,
+  searchParamsBodyParamValidMid
+} from '../middlewares/validationsMid';
 
 const router = Router();
 
@@ -13,18 +18,23 @@ const router = Router();
 
 router.get(
   '/:id',
+  idParamValidMid,
   getShippingById
 );
 router.post(
   '/',
+  searchParamsBodyParamValidMid,
   postShippingList
 );
 router.put(
   '/',
+  idBodyValidMid,
+  bodyValidMidCreate('shipping'),
   putShipping
 );
 router.delete(
   '/:id',
+  idParamValidMid,
   deleteShipping
 );
 
@@ -32,6 +42,7 @@ router.delete(
 
 router.get(
   '/cart/:cartId',
+  attrValidMidCreate('cartId'),
   postShipping
 );
 
