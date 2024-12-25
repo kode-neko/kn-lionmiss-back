@@ -1,5 +1,5 @@
 interface PictureMongo {
-  _id?: string;
+  id?: string;
   ext: string;
   src: string;
   alt: string;

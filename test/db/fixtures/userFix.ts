@@ -1,110 +1,88 @@
-import { shipping } from '@fixtures/shipping';
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ObjectId } from 'mongodb';
 import { faker } from '@faker-js/faker';
 import {
-  createFixArea, createFixArticle, createFixListArticle
-} from './articleFix';
+  PaymentEnum, UnitsHeightEnum, UnitsWeightEnum
+} from '../../../src/model';
+import { ArticleMongo } from '../../../src/data-access';
 import {
-  Comment, Address, UnitsHeightEnum, UnitsWeightEnum, SexEnum, User
-} from '@model/index';
-import { createFixCart, createFixShipping } from './cartFix';
+  AddressMongo, CartLineMongo, CartMongo, MeasuresMongo, ShippingLineMongo, ShippingMongo, UserMongo
+} from '../../../src/data-access/mongo';
 
-// Comment
-
-function createFixComment (): Comment {
+function createFixCartLineMongo (article: ArticleMongo['_id']): CartLineMongo {
   return {
-    id: faker.database.mongodbObjectId(),
-    title: faker.lorem.words(),
-    text: faker.lorem.words(),
-    rating: faker.helpers.rangeToNumber({ min: 0, max: 5 }),
-    pics: [],
-    user: faker.internet.userName(),
-    article: faker.database.mongodbObjectId()
+    order: faker.string.ulid(),
+    qty: faker.number.int(),
+
+    article
   };
 }
 
-function createFixCommentNoId (): Comment {
-  const { id, ...rest } = createFixComment();
-  return rest;
-}
-
-function createFixListComment (size = 10): Comment[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixComment());
-}
-
-// Address
-
-function createFixAddress (): Address {
+function createFixCartMongo (articleList: ArticleMongo['_id'][]): CartMongo {
   return {
-    id: faker.database.mongodbObjectId(),
-    alias: faker.internet.userName(),
-    name: faker.person.firstName(),
-    surname: faker.person.lastName(),
-    address: faker.location.streetAddress(),
-    city: faker.location.city(),
-    state: faker.location.state(),
-    country: faker.location.country(),
-    phone: Number(faker.phone.number()),
-    obs: faker.lorem.paragraph()
+    id: faker.string.ulid(),
+
+    cartLineList: articleList.map(createFixCartLineMongo)
   };
 }
 
-function createFixAddressNoId (): Address {
-  const { id, ...rest } = createFixAddress();
-  return rest;
-}
-
-function createFixListAddress (size = 3): Address[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixAddress());
-}
-
-// Measures
-
-function createFixMeasures () {
+function createFixMeasuresMongo (): MeasuresMongo {
   return {
-    shoulder: faker.helpers.rangeToNumber({ min: 38, max: 46 }),
-    chest: faker.helpers.rangeToNumber({ min: 90, max: 110 }),
-    waist: faker.helpers.rangeToNumber({ min: 60, max: 90 }),
-    hips: faker.helpers.rangeToNumber({ min: 90, max: 110 }),
-    foot: faker.helpers.rangeToNumber({ min: 36, max: 42 }),
-    height: faker.helpers.rangeToNumber({ min: 150, max: 200 }),
-    weight: faker.helpers.rangeToNumber({ min: 55, max: 75 }),
+    shoulder: faker.number.int({ min: 38, max: 44 }),
+    chest: faker.number.int({ min: 90, max: 110 }),
+    waist: faker.number.int({ min: 70, max: 80 }),
+    hips: faker.number.int({ min: 96, max: 106 }),
+    foot: faker.number.int({ min: 38, max: 42 }),
+    height: faker.number.int({ min: 156, max: 180 }),
+    weight: faker.number.int({ min: 52, max: 68 }),
     unitsHeight: UnitsHeightEnum.CM,
     unitsWeight: UnitsWeightEnum.KG
   };
 }
 
-// Users
-
-function createFixUser (): User {
+function createFixAddressMongo (): AddressMongo {
   return {
-    id: faker.database.mongodbObjectId(),
-    userName: faker.internet.userName(),
+    id: faker.string.ulid(),
+    alias: faker.lorem.words(),
+    name: faker.person.firstName(),
+    surname: faker.person.lastName(),
+    address: faker.location.direction(),
+    city: faker.location.city(),
+    state: faker.location.state(),
+    country: faker.location.country(),
+    phone: faker.phone.number(),
+    obs: faker.lorem.paragraph()
+  };
+}
+
+function createFixUserMongo (
+  favList: ArticleMongo['_id'][],
+  cartArtList: ArticleMongo['_id'][],
+  shippingList: ShippingMongo['_id'][]
+): UserMongo {
+  return {
+    _id: new ObjectId(),
+    userName: faker.internet.username(),
+    pass: faker.internet.password(),
+    salt: faker.internet.password(),
     email: faker.internet.email(),
     bday: faker.date.birthdate(),
-    sex: faker.helpers.arrayElement(Object.values(SexEnum)),
-    area: createFixArea(),
-    measures: createFixMeasures(),
-    addresses: createFixListAddress(),
-    favs: createFixListArticle(),
-    cart: createFixCart(),
-    shippings: [createFixShipping()]
+    sex: faker.person.sex(),
+    area: 'spanish',
+    measures: createFixMeasuresMongo(),
+    addressList: [
+      createFixAddressMongo(),
+      createFixAddressMongo()
+    ],
+    favList,
+    cart: createFixCartMongo(cartArtList),
+    shippingList
   };
 }
 
 export {
-  createFixComment,
-  createFixCommentNoId,
-  createFixListComment,
-
-  createFixAddress,
-  createFixAddressNoId,
-  createFixListAddress,
-
-  createFixMeasures,
-  createFixUser
+  createFixCartLineMongo,
+  createFixCartMongo,
+  createFixMeasuresMongo,
+  createFixAddressMongo,
+  createFixUserMongo
 };

@@ -1,5 +1,7 @@
+import { ObjectId } from 'mongodb';
 import { InstructEnum } from '@model/index';
 import { PictureMongo } from './PictureMongo';
+import { AreaMongo } from './AreaMongo';
 
 interface ArticleVariantMongo {
   name: string;
@@ -7,18 +9,18 @@ interface ArticleVariantMongo {
 }
 
 interface ArticleAreaMongo {
-  _id?: string;
+  id?: string;
   title: string;
   desc: string;
   variantList: Record<ArticleVariantMongo['name'], string>;
   price: number;
   tax: number;
 
-  area: string;
+  area: AreaMongo['name'];
 }
 
 interface ArticleMongo {
-  _id?: string;
+  _id?: ObjectId;
   tags: string[];
   materials: Record<string, number>;
   instructs: Partial<Record<InstructEnum, string>>;

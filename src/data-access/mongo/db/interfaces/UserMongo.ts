@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import {
   UnitsHeightEnum, UnitsWeightEnum, SexEnum
 } from '@model/index';
@@ -9,11 +10,11 @@ interface CartLineMongo {
   order: string;
   qty: number;
 
-  article: ArticleMongo['id'];
+  article: ArticleMongo['_id'];
 }
 
 interface CartMongo {
-  _id?: string;
+  id?: string;
 
   cartLineList: CartLineMongo[];
 }
@@ -31,7 +32,7 @@ interface MeasuresMongo {
 }
 
 interface AddressMongo {
-  _id?: string;
+  id?: string;
   alias: string;
   name: string;
   surname: string;
@@ -44,7 +45,7 @@ interface AddressMongo {
 }
 
 interface UserMongo {
-  _id?: string;
+  _id?: ObjectId;
   userName: string;
   pass: string;
   salt: string;
@@ -54,13 +55,14 @@ interface UserMongo {
   area: AreaMongo['name'];
   measures: MeasuresMongo;
   addressList: AddressMongo[];
-  favList: ArticleMongo['id'][];
+  favList: ArticleMongo['_id'][];
   cart: CartMongo;
-  shippingList: ShippingMongo[];
+  shippingList: ShippingMongo['_id'][];
 }
 
 export {
   CartLineMongo,
+  CartMongo,
   MeasuresMongo,
   AddressMongo,
   UserMongo

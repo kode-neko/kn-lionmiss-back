@@ -1,9 +1,10 @@
+import { ObjectId } from 'mongodb';
 import { ArticleMongo } from './ArticleMongo';
 import { PictureMongo } from './PictureMongo';
 import { UserMongo } from './UserMongo';
 
 interface CommentMongo {
-  _id?: string;
+  _id?: ObjectId;
   title: string;
   body: string;
   rating: number;

@@ -1,13 +1,17 @@
 export {
-  AreaMongoModelDB,
-  ArticleAreaMongoModelDB,
-  ArticleMongoModelDB,
-  CartMongoModelDB,
-  CommentMongoModelDB,
-  ShippingMongoModelDB,
-  UserMongoModelDB
-} from './data';
-export {
+  AreaMongo,
+  ArticleVariantMongo,
+  ArticleAreaMongo,
+  ArticleMongo,
+  CommentMongo,
+  PictureMongo,
+  ShippingLineMongo,
+  ShippingMongo,
+  CartLineMongo,
+  CartMongo,
+  MeasuresMongo,
+  AddressMongo,
+  UserMongo,
   createConnMongo,
   getConnMongo
 } from './db';

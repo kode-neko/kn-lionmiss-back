@@ -1,0 +1,154 @@
+// AREA
+
+{
+  id
+  name
+  country
+  locale
+  currency
+  dateFormat
+  gen
+}
+
+
+// ARTICLE
+
+{
+  id
+  tags: ['', '', '']
+  materials: {
+    cotton: ''
+  }
+  instructs: {
+    ironning: ''
+  }
+  discolor
+
+  articleVariantList: [
+    {
+      name: red
+      sizes
+    },
+    {
+      name: green
+      sizes
+    }
+  ],
+    pictureList: [
+      {
+        id
+        ext
+        src
+        alt
+      }
+    ]
+  articleAreaList: [
+    {
+      id
+      title
+      desc
+      variantList: {
+        red: 'Rojo',
+        green: 'Verde'
+      }
+      price
+      tax
+      area: 'spain'
+    },
+    {
+      id
+      title
+      desc
+      variantList: {
+        red: 'Red',
+        green: 'Green'
+      }
+      price
+      tax
+      area: 'spain'
+    }
+  ]
+}
+
+
+// CART
+
+{
+  id
+  userName
+  pass
+  salt
+  email
+  bday
+  sex
+  area
+  measures: {
+    shoulder
+    chest
+    waist
+    hips
+    foot
+    height
+    weight
+    unitsHeight
+    unitsWeight
+  }
+  addressList: [
+    {
+      id
+      alias
+      name
+      surname
+      address
+      city
+      state
+      country
+      phone
+      obs
+    }
+  ]
+  favList: ['', '']
+  cart: {
+    id:
+    cartLineList: [
+      {
+        order,
+        qty,
+        article
+      }
+    ]
+  },
+  shippingList: ['', '']
+}
+
+
+// SHIPPING
+
+{
+  id
+  idTracking
+  state
+  idPayment
+  payment
+  shippingLineList: [
+    {
+      order,
+      qty,
+      article
+    }
+  ]
+}
+
+
+// COMMENT
+
+{
+  id
+  title
+  body
+  rating
+  pictureList
+
+  idArticle
+  idUser
+}

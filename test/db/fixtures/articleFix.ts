@@ -1,105 +1,80 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  InstructEnum, Article, ArticleArea, Area
-} from '@model/index';
+import { InstructEnum } from '@model/index';
+import { ObjectId } from 'mongodb';
 import { faker } from '@faker-js/faker';
-import { constFixListArea } from './constFix';
+import {
+  ArticleAreaMongo, ArticleMongo, ArticleVariantMongo
+} from '../../../src/data-access';
+import { createFixPictureMongo } from './pictureFix';
 
-// Area
-
-function createFixArea (area?: Area): Area {
-  const {
-    name,
-    country,
-    locale,
-    currency,
-    dateFormat,
-    gen
-  }: Area = area || faker.helpers.arrayElement(constFixListArea);
+function createFixArticleVariantMongo (): ArticleVariantMongo {
   return {
-    id: faker.database.mongodbObjectId(),
-    name,
-    country,
-    locale,
-    currency,
-    dateFormat,
-    gen
+    name: faker.vehicle.color(),
+    sizes: {
+      xs: faker.number.int(100),
+      s: faker.number.int(100),
+      m: faker.number.int(100),
+      l: faker.number.int(100),
+      xl: faker.number.int(100)
+    }
   };
 }
 
-function createFixAreaNoId (area?: Area): Area {
-  const { id, ...rest } = createFixArea(area);
-  return rest;
-}
-
-function createFixListArea (size = 10): Area[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixArea());
-}
-
-// Article Area
-
-function createFixArticleArea (area?): ArticleArea {
+function createFixArticleAreaMongo (variantList: ArticleVariantMongo[], area: string): ArticleAreaMongo {
+  const variantObj: ArticleAreaMongo['variantList'] = {};
+  variantList.forEach((v) => variantObj[v.name] = faker.lorem.word());
   return {
-    id: faker.database.mongodbObjectId(),
+    id: faker.string.ulid(),
     title: faker.lorem.words(),
-    desc: faker.lorem.sentence(),
-    price: faker.number.float({
-      min: 6, max: 100, fractionDigits: 2
-    }),
-    tax: faker.helpers.rangeToNumber({ min: 0, max: 99 }),
-    area: area || createFixArea()
+    desc: faker.lorem.paragraph(),
+    variantList: variantObj,
+    price: parseFloat(faker.commerce.price()),
+    tax: faker.number.int(100),
+
+    area
   };
 }
 
-function createFixArticleAreaNoId (area?): ArticleArea {
-  const { id, ...rest } = createFixArticleArea(area);
-  return rest;
-}
-
-function createFixListArticleArea (size = 10): ArticleArea[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixArticleArea());
-}
-
-// Article
-
-function createFixArticle (): Article {
+function createFixArticleMongo (): ArticleMongo {
+  const articleVariantList = [
+    createFixArticleVariantMongo(),
+    createFixArticleVariantMongo(),
+    createFixArticleVariantMongo()
+  ];
+  const articleAreaList = [
+    createFixArticleAreaMongo(articleVariantList, 'spanish'),
+    createFixArticleAreaMongo(articleVariantList, 'english-uk')
+  ];
   return {
-    id: faker.database.mongodbObjectId(),
-    instructs: { [InstructEnum.IRONING]: '100º' },
-    sizes: { sm: 12 },
-    materials: { cotton: 30 },
-    tags: [faker.lorem.word()],
-    variants: [faker.lorem.word()],
+    _id: new ObjectId(),
+    tags: [
+      faker.word.noun(),
+      faker.word.noun(),
+      faker.word.noun()
+    ],
+    materials: {
+      cotton: faker.number.int(100),
+      nylon: faker.number.int(100)
+    },
+    instructs: {
+      [InstructEnum.WHASING]: faker.word.noun(),
+      [InstructEnum.IRONING]: faker.word.noun(),
+      [InstructEnum.SPINNING]: faker.word.noun(),
+      [InstructEnum.DRY_CLEANING]: faker.word.noun()
+    },
     discolor: faker.datatype.boolean(),
-    articleAreaList: []
+
+    articleVariantList: articleVariantList,
+    pictureList: [
+      createFixPictureMongo(),
+      createFixPictureMongo(),
+      createFixPictureMongo()
+    ],
+    articleAreaList
   };
-}
-
-function createFixArticleNoId (): Article {
-  const { id, ...rest } = createFixArticle();
-  return rest;
-}
-
-function createFixListArticle (size = 10): Article[] {
-  return Array(size)
-    .fill({})
-    .map(() => createFixArticle());
 }
 
 export {
-  createFixArea,
-  createFixAreaNoId,
-  createFixListArea,
-
-  createFixArticleArea,
-  createFixArticleAreaNoId,
-  createFixListArticleArea,
-
-  createFixArticle,
-  createFixArticleNoId,
-  createFixListArticle
+  createFixArticleVariantMongo,
+  createFixArticleAreaMongo,
+  createFixArticleMongo
 };

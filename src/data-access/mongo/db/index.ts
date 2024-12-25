@@ -1,14 +1,17 @@
 export {
-  IAreaMongo,
-  IArticleAreaMongo,
-  IArticleMongo,
-  ICartLineMongo,
-  ICartMongo,
-  IShippingLineMongo,
-  IShippingMongo,
-  IUserMeasuresMongo,
-  IAddressMongo,
-  IUserMongo
+  AreaMongo,
+  ArticleVariantMongo,
+  ArticleAreaMongo,
+  ArticleMongo,
+  CommentMongo,
+  PictureMongo,
+  ShippingLineMongo,
+  ShippingMongo,
+  CartMongo,
+  CartLineMongo,
+  MeasuresMongo,
+  AddressMongo,
+  UserMongo
 } from './interfaces';
 export {
   createConnMongo,
