@@ -2,13 +2,19 @@ export {
   NotFoundDbException,
   IdRequiredDbException
 } from './error';
-export { createConn } from './utils';
-
+export {
+  createConn,
+  getArea,
+  getArticle,
+  getCart,
+  getComment,
+  getShipping,
+  getUser
+} from './utils';
 export {
   IModelDB,
   IModelDBArea,
   IModelDBArticle,
-  IModelDBArticleArea,
   IModelDBCart,
   IModelDBComment,
   IModelDBShipping,

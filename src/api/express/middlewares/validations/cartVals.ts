@@ -6,7 +6,9 @@ const CartLineValSchema = z.object({
   order: z
     .string(),
   qty: z
-    .number(),
+    .number()
+    .positive()
+    .int(),
   article:
     ArticleValSchema
 });
@@ -23,7 +25,9 @@ const ShippingtLineValSchema = z.object({
   order: z
     .string(),
   qty: z
-    .number(),
+    .number()
+    .positive()
+    .int(),
   article:
     ArticleValSchema
 });
@@ -45,7 +49,8 @@ const ShippingValSchema = z.object({
     .string()
     .nullable(),
   payment:
-    PaymentEnumValSchema,
+    PaymentEnumValSchema
+      .nullable(),
   shippingLineList: z
     .array(ShippingtLineValSchema)
 });

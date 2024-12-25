@@ -32,11 +32,11 @@ INSERT INTO lionmiss.article_instruct (article,instruct,descrip) VALUES
 	 ('1','washing','30º'),
 	 ('1','ironning','180º'),
 	 ('1','spinning','1000'),
-	 ('1','dryCleanning','no'),
+	 ('1','dryCleaning','no'),
 	 ('2','washing','20º'),
 	 ('2','ironning','no'),
 	 ('2','spinning','800'),
-	 ('2','dryCleanning','no');
+	 ('2','dryCleaning','no');
 INSERT INTO lionmiss.article_variant (id,article,name) VALUES
 	 ('1','1','red'),
 	 ('2','1','black'),

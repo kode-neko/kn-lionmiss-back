@@ -4,7 +4,7 @@ import { IdRequiredDbException, NotFoundDbException } from '../../../data-access
 
 function errorResponse (err: Error, res: Response): Response<any, Record<string, any>> {
   let code: number = 400;
-  let msg: string = '';
+  let msg: string = 'Undefined error';
   if (err instanceof NotFoundDbException) {
     code = 404;
     msg = 'Resource not found';

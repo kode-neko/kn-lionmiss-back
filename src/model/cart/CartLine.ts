@@ -1,9 +1,10 @@
 import { Article } from '../article';
 
 interface CartLine {
-  order: number;
-  article: Article;
+  order: string;
   qty: number;
+
+  article: Article;
 }
 
 export default CartLine;

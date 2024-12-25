@@ -5,6 +5,16 @@ import { errorResponse } from './utils';
 import { compare } from 'bcrypt';
 import { createTokenJwt } from '../../../utils';
 
+// Controllers
+
+function getUserById (req: Request, res: Response) {
+  const { user } = req.params;
+  return getUser()
+    .read(user)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
+}
+
 // Factories
 
 function userLogoutSession (req: Request) {
@@ -46,16 +56,6 @@ function factoryUserLogin (req: Request, res: Response, loginFunc: (req: Request
     .catch((err) => errorResponse(err, res));
 }
 
-// Controllers
-
-function getUserId (req: Request, res: Response) {
-  const { username } = req.params;
-  return getUser()
-    .read(username)
-    .then((obj) => res.status(200).send(obj))
-    .catch((err) => errorResponse(err, res));
-}
-
 function postUserLoginJwt (req: Request, res: Response) {
   return factoryUserLogin(req, res, userLoginSession);
 }
@@ -73,7 +73,7 @@ function postUserLogoutJwt (req: Request, res: Response) {
 }
 
 export {
-  getUserId,
+  getUserById,
   postUserLoginJwt,
   postUserLoginSession,
   portUserLogoutSession,

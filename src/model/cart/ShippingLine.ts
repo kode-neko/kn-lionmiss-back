@@ -1,7 +1,7 @@
 import { Article } from '../article';
 
 interface ShippingLine {
-  order: number;
+  order: string;
   qty: number;
   article: Article;
 }

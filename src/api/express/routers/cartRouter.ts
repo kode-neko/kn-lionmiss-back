@@ -1,45 +1,42 @@
 import { Router } from 'express';
 import {
-  getCartId,
+  getCartById,
   postCartLine,
   putCartLine,
-  deleteCartLine,
-  postCartNewUser
+  deleteCartLine
 } from '../controllers';
 import {
-  idParamValidMid,
-  idBodyValidMid,
-  bodyValidMidCreate,
-  attrValidMidCreate
-} from '../middlewares';
+  attrValidMidCreate, bodyParamValidMidCreate, idParamValidMid
+} from '../middlewares/validationsMid';
 
 const router = Router();
+
+// R Cart
 
 router.get(
   '/:id',
   idParamValidMid,
-  getCartId
+  getCartById
 );
-router.post(
-  '/new/user/:username',
-  attrValidMidCreate('username'),
-  postCartNewUser
-);
+
+// CartLine
+
 router.post(
   '/line',
-  bodyValidMidCreate('cartLine'),
+  attrValidMidCreate('idCart', 'body'),
+  bodyParamValidMidCreate('cartLine'),
   postCartLine
 );
 router.put(
   '/line',
-  idBodyValidMid,
-  bodyValidMidCreate('cartLine'),
+  attrValidMidCreate('idCart', 'body'),
+  bodyParamValidMidCreate('cartLine'),
   putCartLine
 );
 router.delete(
-  '/:idCart/line/:numLine',
-  attrValidMidCreate('idCart'),
-  attrValidMidCreate('numLine'),
+  '/line',
+  attrValidMidCreate('idCart', 'body'),
+  bodyParamValidMidCreate('cartLine'),
   deleteCartLine
 );
 

@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import {
-  getUserId,
+  getUserById,
   postUserLoginJwt,
   postUserLoginSession,
   portUserLogoutSession,
   postUserLogoutJwt
 } from '../controllers';
-import { attrValidMidCreate, loginValidMid } from '../middlewares';
+import { attrValidMidCreate, loginValidMid } from '../middlewares/validationsMid';
 
 const { AUTH_SYS } = process.env;
 
@@ -28,7 +28,7 @@ switch (AUTH_SYS) {
 router.get(
   '/:userName',
   attrValidMidCreate('userName'),
-  getUserId
+  getUserById
 );
 router.post(
   '/login',

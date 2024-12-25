@@ -1,19 +1,21 @@
 import { Router } from 'express';
 import {
-  getArticleId,
+  getArticleById,
   postArticleList,
   postArticle,
   putArticle,
   deleteArticle,
-  getArticleIdAreaName
+  getArticleByIdArea,
+  postArticleListByArea,
+  postArticleArea,
+  putArticleArea,
+  deleteArticleArea
 } from '../controllers';
 import {
-  idBodyValidMid,
-  idParamValidMid,
-  searchParamsValidMid,
-  bodyValidMidCreate,
-  attrValidMidCreate
-} from '../middlewares';
+  attrValidMidCreate,
+  bodyParamValidMidCreate,
+  bodyValidMidCreate, idBodyValidMid, idParamValidMid, searchParamsBodyParamValidMid, searchParamsBodyValidMid
+} from '../middlewares/validationsMid';
 
 const router = Router();
 
@@ -21,11 +23,11 @@ const router = Router();
 router.get(
   '/:id',
   idParamValidMid,
-  getArticleId
+  getArticleById
 );
 router.post(
   '/list',
-  searchParamsValidMid,
+  searchParamsBodyValidMid,
   postArticleList
 );
 router.post(
@@ -40,17 +42,40 @@ router.put(
   putArticle
 );
 router.delete(
-  '/',
+  '/:id',
   idParamValidMid,
   deleteArticle
 );
 
 // Translations per area
 router.get(
-  '/:idArticle/area/:nameArea',
+  '/:idArticle/area/:area',
   attrValidMidCreate('idArticle'),
-  attrValidMidCreate('nameArea'),
-  getArticleIdAreaName
+  attrValidMidCreate('area'),
+  getArticleByIdArea
+);
+router.post(
+  '/area/list',
+  searchParamsBodyParamValidMid,
+  bodyParamValidMidCreate('area'),
+  postArticleListByArea
+);
+router.post(
+  '/area',
+  idBodyValidMid,
+  bodyParamValidMidCreate('articleArea'),
+  postArticleArea
+);
+router.put(
+  '/area',
+  bodyParamValidMidCreate('articleArea'),
+  putArticleArea
+);
+router.delete(
+  '/:idArticle/area/:area',
+  idParamValidMid,
+  bodyParamValidMidCreate('articleArea'),
+  deleteArticleArea
 );
 
 export default router;

@@ -2,8 +2,10 @@ export {
   attrValidMidCreate,
   idBodyValidMid,
   idParamValidMid,
-  searchParamsValidMid,
+  searchParamsBodyValidMid,
+  searchParamsBodyParamValidMid,
   bodyValidMidCreate,
+  bodyParamValidMidCreate,
   loginValidMid
 } from './validationsMid';
 export {
@@ -11,3 +13,4 @@ export {
   chkSessionMid,
   chkAuthMid
 } from './authMid';
+export { errorMid } from './errorMid';

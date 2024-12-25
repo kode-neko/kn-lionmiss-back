@@ -1,33 +1,30 @@
 import { Router } from 'express';
 import {
-  getShippingId,
+  getShippingById,
   postShippingList,
   postShipping,
   putShipping,
   deleteShipping
 } from '../controllers';
 import {
-  idBodyValidMid,
-  idParamValidMid,
-  searchParamsValidMid,
-  bodyValidMidCreate
-} from '../middlewares';
+  attrValidMidCreate,
+  bodyValidMidCreate, idBodyValidMid, idParamValidMid,
+  searchParamsBodyParamValidMid
+} from '../middlewares/validationsMid';
+
 const router = Router();
+
+// RUD Shipping
 
 router.get(
   '/:id',
   idParamValidMid,
-  getShippingId
-);
-router.post(
-  '/list',
-  searchParamsValidMid,
-  postShippingList
+  getShippingById
 );
 router.post(
   '/',
-  bodyValidMidCreate('shipping'),
-  postShipping
+  searchParamsBodyParamValidMid,
+  postShippingList
 );
 router.put(
   '/',
@@ -39,6 +36,14 @@ router.delete(
   '/:id',
   idParamValidMid,
   deleteShipping
+);
+
+// Create from Cart
+
+router.get(
+  '/cart/:cartId',
+  attrValidMidCreate('cartId'),
+  postShipping
 );
 
 export default router;

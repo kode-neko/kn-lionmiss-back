@@ -16,8 +16,7 @@ const SearchParamsValSchema = z.object({
   skip: z
     .number(),
   tags: z
-    .array(z.string())
-    .nullable(),
+    .array(z.string()),
   terms: z
     .array(z.string())
     .nullable()

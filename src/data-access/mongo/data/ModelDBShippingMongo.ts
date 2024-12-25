@@ -1,5 +1,4 @@
-import { shipping } from '@fixtures/shipping';
-import { SearchParams } from '@model/index';
+import { SearchParams, Shipping } from '@model/index';
 import {
   Collection, Db, MongoClient,
   ObjectId
@@ -10,9 +9,6 @@ import {
   ArticleMongo, CartMongo, ShippingMongo
 } from '../db/interfaces';
 import { getConnMongo } from '../db/utils';
-import {
-  SearchParams, Shipping, ShippingLine
-} from '../../../model';
 import { parseMongoToShiping, parseShipingToMongo } from '../db/parsers';
 
 class ShippingMongoModelDB implements IModelDBShipping {

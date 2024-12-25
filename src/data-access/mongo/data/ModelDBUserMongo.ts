@@ -58,7 +58,12 @@ class UserMongoModelDB implements IModelDBUser {
     let shippingMongoArtList: ArticleMongo[];
 
     return this.collUser
-      .findOne({ _id: new ObjectId(id) })
+      .findOne({
+        OR: [
+          { _id: new ObjectId(id) },
+          { userName: id }
+        ]
+      })
       .then((res) => {
         if (!res) throw new NotFoundDbException('User');
         userMongo = res;
