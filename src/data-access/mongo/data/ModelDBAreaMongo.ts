@@ -29,7 +29,7 @@ class AreaMongoModelDB implements IModelDBArea {
   private constructor () {
     [this.client,
       this.db] = getConnMongo();
-    this.collArea = this.db.collection<AreaMongo>('area');
+    this.collArea = this.db.collection<AreaMongo>('Area');
   }
 
   read (id: string): Promise<Area> {

@@ -21,7 +21,23 @@ class AreaMongoModelDB implements IModelDBArea {
   private constructor () {
     this.prisma = getPrismaClient();
   }
+  read(id: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+  readList(searchParams?: SearchParams<Area>): Promise<Area[]> {
+    throw new Error('Method not implemented.');
+  }
+  create(obj: Area): Promise<Area> {
+    throw new Error('Method not implemented.');
+  }
+  update(obj: Area): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+  delete(id: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
 
+  /*
   read (id: string): Promise<Area> {
     return this.prisma.area
       .findFirst({ where: { OR: [{ id: idToNum(id) }, { name: id }] } })
@@ -74,6 +90,7 @@ class AreaMongoModelDB implements IModelDBArea {
         throw new NotFoundDbException('Area');
       });
   }
+*/
 
 }
 

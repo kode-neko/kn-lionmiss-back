@@ -1,14 +1,11 @@
-import { CartLine } from '@model/cart';
 import {
-  Collection, Db, MongoClient,
-  ObjectId
+  Collection, Db, MongoClient
 } from 'mongodb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBCart } from '../../interfaces';
 import { ArticleMongo, CartMongo } from '../db/interfaces';
-import { Cart } from '../../../model';
 import { getConnMongo } from '../db/utils';
-import { parseMongoToCart } from '../db/parsers';
+import { Cart, CartLine } from '../../../model';
 
 class CartMongoModelDB implements IModelDBCart {
 
@@ -20,9 +17,9 @@ class CartMongoModelDB implements IModelDBCart {
 
   private collArt: Collection<ArticleMongo>;
 
-  private static instance: IModelDBCart;
+  private static instance: CartMongoModelDB;
 
-  public static getIntance (): IModelDBCart {
+  public static getIntance (): CartMongoModelDB {
     if (!CartMongoModelDB.instance) {
       CartMongoModelDB.instance = new CartMongoModelDB();
     }
@@ -36,6 +33,23 @@ class CartMongoModelDB implements IModelDBCart {
     this.collArt = this.db.collection<ArticleMongo>('article');
   }
 
+  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  updateLine (idCart: string, cartLine: CartLine): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  deleteLine (idCart: string, orderLine: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  read (id: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+
+  /*
   read (id: string): Promise<Cart> {
     let cartMongo: CartMongo;
     return this.collCart
@@ -127,6 +141,7 @@ class CartMongoModelDB implements IModelDBCart {
         if (deletedCount === 0) throw new NotFoundDbException('Cart');
       });
   }
+*/
 
 }
 

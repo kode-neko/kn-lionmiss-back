@@ -1,7 +1,5 @@
-import { SearchParams, Shipping } from '@model/index';
 import {
-  Collection, Db, MongoClient,
-  ObjectId
+  Collection, Db, MongoClient
 } from 'mongodb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBShipping } from '../../interfaces';
@@ -9,7 +7,7 @@ import {
   ArticleMongo, CartMongo, ShippingMongo
 } from '../db/interfaces';
 import { getConnMongo } from '../db/utils';
-import { parseMongoToShiping, parseShipingToMongo } from '../db/parsers';
+import { SearchParams, Shipping } from '../../../model';
 
 class ShippingMongoModelDB implements IModelDBShipping {
 
@@ -40,6 +38,27 @@ class ShippingMongoModelDB implements IModelDBShipping {
     this.collCart = this.db.collection<CartMongo>('cart');
   }
 
+  createFromCart (cartId: string): Promise<Shipping> {
+    throw new Error('Method not implemented.');
+  }
+
+  read (id: string): Promise<Shipping | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  readList (searchParams?: SearchParams<Shipping>): Promise<Shipping[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  update (obj: Shipping): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete (id: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  /*
   read (id: string): Promise<Shipping> {
     let shippingMongo: ShippingMongo;
     return this.collShipping
@@ -113,6 +132,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
       .then((list) => list.toArray())
       .then((list) => parseMongoToShiping(shippingMongo, list));
   }
+*/
 
 }
 

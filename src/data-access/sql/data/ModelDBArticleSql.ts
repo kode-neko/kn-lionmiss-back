@@ -1,19 +1,16 @@
-import { area, picture_article } from './../../../../node_modules/.prisma/client/index.d';
-import { SearchParams } from '@model/index';
-import Article from '../../../model/article/Article';
-import ArticleArea from '../../../model/article/ArticleArea';
-import Area from '../../../model/article/Area';
+import {
+  Article, ArticleArea, SearchParams
+} from '../../../model';
 import { NotFoundDbException } from '../../error';
 import { IModelDBArticle } from '../../interfaces';
 import { getPrismaClient } from '../db/utils';
 import { PrismaClient } from '@prisma/client';
-import { idToNum, idToStr } from './utils';
 
 class ArticleMongoModelDB implements IModelDBArticle {
 
   private prisma: PrismaClient;
 
-  private static instance: IModelDBArticle;
+  private static instance: ArticleMongoModelDB;
 
   public static getIntance (): IModelDBArticle {
     if (!ArticleMongoModelDB.instance) {
@@ -26,6 +23,47 @@ class ArticleMongoModelDB implements IModelDBArticle {
     this.prisma = getPrismaClient();
   }
 
+  readByArea (id: string, area: string): Promise<Article | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  readListByArea (searchParams: SearchParams<Article>, area: string): Promise<Article[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  createArticleArea (id: string, articleArea: ArticleArea): Promise<Article> {
+    throw new Error('Method not implemented.');
+  }
+
+  updateArticleArea (articleArea: ArticleArea): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  deleteArticleArea (id: string, articleAreaId: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  read (id: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+
+  readList (searchParams?: SearchParams<Article>): Promise<Article[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  create (obj: Article): Promise<Article> {
+    throw new Error('Method not implemented.');
+  }
+
+  update (obj: Article): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete (id: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  /*
   private includeArticle = {
     tags: { include: { tag: true } },
     materials: true,
@@ -111,21 +149,6 @@ class ArticleMongoModelDB implements IModelDBArticle {
 
   createArticleArea (id: string, articleArea: ArticleArea): Promise<Article> {
     throw new Error('Method not implemented.');
-
-    /*
-    const {
-      id, area, article, ...rest
-    } = articleArea;
-    return this.prisma.articleArea
-      .create({
-        data: {
-          ...rest,
-          areaId: idToNum(area.id as string),
-          articleId: idToNum(article.id)
-        }
-      })
-      .then((res) => ({ ...articleArea, id: idToStr(res.id) }));
-      */
   }
 
   updateArticleArea (articleArea: ArticleArea): Promise<void | NotFoundDbException> {
@@ -155,6 +178,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
   delete (id: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
+*/
 
 }
 

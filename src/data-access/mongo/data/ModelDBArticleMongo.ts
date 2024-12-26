@@ -1,18 +1,20 @@
 import {
-  Collection, Db, MongoClient,
+  Collection,
+  Db,
+  MongoClient,
   ObjectId
 } from 'mongodb';
 import { IModelDBArticle } from '../../interfaces';
 import { NotFoundDbException } from '../../error';
+import { ArticleAreaMongo, ArticleMongo } from '../db/interfaces';
 import {
-  AreaMongo, ArticleAreaMongo, ArticleMongo
-} from '../db/interfaces';
-import {
-  Area, Article, ArticleArea, SearchParams
+  Article, ArticleArea, SearchParams
 } from '../../../model';
 import { getConnMongo } from '../db/utils';
 import {
-  parseArticleAreaToMongo, parseArticleToMongo, parseMongoToArticle,
+  parseArticleAreaToMongo,
+  parseArticleToMongo,
+  parseMongoToArticle,
   parseMongoToArticleArea
 } from '../db/parsers';
 
@@ -23,8 +25,6 @@ class ArticleMongoModelDB implements IModelDBArticle {
   private db: Db;
 
   private collArt: Collection<ArticleMongo>;
-
-  private collArtArea: Collection<ArticleAreaMongo>;
 
   private static instance: IModelDBArticle;
 
@@ -39,27 +39,71 @@ class ArticleMongoModelDB implements IModelDBArticle {
     [this.client,
       this.db] = getConnMongo();
     this.collArt = this.db.collection<ArticleMongo>('article');
-    this.collArtArea = this.db.collection<ArticleAreaMongo>('articleArticle');
   }
 
+  readByArea (id: string, area: string): Promise<Article | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  readListByArea (searchParams: SearchParams<Article>, area: string): Promise<Article[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  createArticleArea (id: string, articleArea: ArticleArea): Promise<Article> {
+    throw new Error('Method not implemented.');
+  }
+
+  updateArticleArea (articleArea: ArticleArea): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  deleteArticleArea (id: string, articleAreaId: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  read (id: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+
+  readList (searchParams?: SearchParams<Article>): Promise<Article[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  create (obj: Article): Promise<Article> {
+    throw new Error('Method not implemented.');
+  }
+
+  update (obj: Article): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete (id: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  /*
   read (id: string): Promise<Article> {
     return this.collArt
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
         if (!res) throw new NotFoundDbException('Article');
-        return parseMongoToArticle(res);
+        return parseMongoToArticle(res, [], []);
       });
   }
 
   readList (searchParams: SearchParams<Article>): Promise<Article[]> {
     const { limit, skip } = searchParams;
-    const filter = searchParams.tags.map((t) => ({ name: t }));
     return this.collArt
-      .find({ $or: filter }, { limit, skip })
-      .toArray()
-      .then((list) => {
-        return list.map((e) => parseMongoToArticle(e));
-      });
+      .aggregate([
+        {
+          $lookup: {
+            from: 'area',
+            localField: 'articleAreaList.area',
+            foreignField: '_id',
+            as: 'joinedArtAreaList'
+          }
+        }
+      ]);
   }
 
   create (obj: Article): Promise<Article> {
@@ -189,7 +233,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
       .then((res) => {
         if (!res) throw new NotFoundDbException('Article');
         return this.collArt
-          .updateOne({ _id: new ObjectId(id) }, { $pull: { articleAreaList: { $eq: new ObjectId(articleAreaId) } } });
+          .updateOne({ _id: new ObjectId(id) }, { $pull: { 'articleAreaList._id': { $eq: new ObjectId(articleAreaId) } } });
       })
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('ArticleArea');
@@ -199,6 +243,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
         if (deletedCount === 0) throw new NotFoundDbException('ArticleArea');
       });
   }
+*/
 
 }
 

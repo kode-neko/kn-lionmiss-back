@@ -1,6 +1,5 @@
 import {
-  Collection, Db, MongoClient,
-  ObjectId
+  Collection, Db, MongoClient
 } from 'mongodb';
 import { IModelDBUser } from '../../interfaces';
 import {
@@ -9,10 +8,6 @@ import {
 import { NotFoundDbException } from '../../error';
 import { getConnMongo } from '../db/utils';
 import { User } from '../../../model';
-import {
-  parseMongoToArea,
-  parseMongoToCart, parseMongoToShiping, parseMongoToUser
-} from '../db/parsers';
 
 class UserMongoModelDB implements IModelDBUser {
 
@@ -49,6 +44,11 @@ class UserMongoModelDB implements IModelDBUser {
     this.collShipping = this.db.collection<ShippingMongo>('shipping');
   }
 
+  read (id: string): Promise<User | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  /*
   read (id: string): Promise<User> {
     let userMongo: UserMongo;
     let artFavList: ArticleMongo[];
@@ -108,6 +108,7 @@ class UserMongoModelDB implements IModelDBUser {
         return parseMongoToUser(userMongo, area, artFavList, cart, shippingList);
       });
   }
+*/
 
 }
 

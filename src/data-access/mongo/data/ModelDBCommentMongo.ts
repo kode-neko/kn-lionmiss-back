@@ -32,6 +32,27 @@ class CommentMongoModelDB implements IModelDBComment {
     this.collComment = this.db.collection<CommentMongo>('cart');
   }
 
+  read (id: string): Promise<Comment | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  readList (searchParams?: SearchParams<Comment>): Promise<Comment[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  create (obj: Comment): Promise<Comment> {
+    throw new Error('Method not implemented.');
+  }
+
+  update (obj: Comment): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete (id: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  /*
   read (id: string): Promise<Comment> {
     return this.collComment
       .findOne({ $or: [{ _id: new ObjectId(id) }, { name: id }] })
@@ -81,6 +102,7 @@ class CommentMongoModelDB implements IModelDBComment {
         if (deletedCount === 0) throw new NotFoundDbException('Comment');
       });
   }
+*/
 
 }
 

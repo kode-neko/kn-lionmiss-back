@@ -1,4 +1,5 @@
-import { Shipping } from '@model/article';
+
+import { Shipping } from '../../model';
 import IModelDB from './IModelDB';
 
 interface IModelDBShipping extends Omit<IModelDB<Shipping>, 'create'> {
