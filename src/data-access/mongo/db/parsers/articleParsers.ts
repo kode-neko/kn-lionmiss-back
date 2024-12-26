@@ -7,7 +7,7 @@ import {
 } from '../interfaces';
 import ArticleArea from '../../../../model/article/ArticleArea';
 import ArticleVariant from '../../../../model/article/ArticleVariant';
-import { parseMongoToarea } from './areaParsers';
+import { parseMongoToArea } from './areaParsers';
 import { parseMongoToPicture, parsePictureToMongo } from './pictureParsers';
 
 function parseArticleVariantToMongo (articleVariant: ArticleVariant): ArticleVariantMongo {
@@ -58,7 +58,7 @@ function parseMongoToArticleArea (mongo: ArticleAreaMongo, areaMongo: AreaMongo)
     price: mongo.price,
     tax: mongo.tax,
 
-    area: parseMongoToarea(areaMongo)
+    area: parseMongoToArea(areaMongo)
   };
 }
 function parseMongoToArticle (mongo: ArticleMongo, pictureListMongo: PictureMongo[], areaListMongo: AreaMongo[]): Article {
@@ -71,10 +71,9 @@ function parseMongoToArticle (mongo: ArticleMongo, pictureListMongo: PictureMong
 
     articleVariantList: mongo.articleVariantList.map(parseMongoToArticleVariant),
     pictureList: pictureListMongo.map(parseMongoToPicture),
-    articleAreaList: mongo.articleAreaList.map((aa) => parseMongoToArticleArea(
-      aa,
-      areaListMongo.find((a) => a.name === aa.area) as AreaMongo
-    ))
+    articleAreaList: areaListMongo.length === mongo.articleAreaList.length
+      ? mongo.articleAreaList.map((aa) => parseMongoToArticleArea(aa, areaListMongo.find((a) => a.name === aa.area) as AreaMongo))
+      : []
   };
 }
 

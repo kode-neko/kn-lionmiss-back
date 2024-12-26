@@ -11,7 +11,7 @@ interface CommentMongo {
   pictureList: PictureMongo[];
 
   idArticle: ArticleMongo['_id'];
-  idUser: UserMongo['_id'];
+  idUser: UserMongo['userName'];
 }
 
 export { CommentMongo };

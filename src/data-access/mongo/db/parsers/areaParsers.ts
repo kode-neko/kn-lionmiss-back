@@ -14,7 +14,7 @@ function parseAreaToMongo (area: Area): AreaMongo {
   };
 }
 
-function parseMongoToarea (mongo: AreaMongo): Area {
+function parseMongoToArea (mongo: AreaMongo): Area {
   return {
     id: mongo._id?.toString(),
     name: mongo.name,
@@ -28,5 +28,5 @@ function parseMongoToarea (mongo: AreaMongo): Area {
 
 export {
   parseAreaToMongo,
-  parseMongoToarea
+  parseMongoToArea
 };

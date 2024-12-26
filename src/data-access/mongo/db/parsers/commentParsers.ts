@@ -3,16 +3,16 @@ import { Comment } from '../../../../model';
 import { CommentMongo } from '../interfaces';
 import { parseMongoToPicture, parsePictureToMongo } from './pictureParsers';
 
-function parseCommentToMongo (picture: Comment): CommentMongo {
+function parseCommentToMongo (comment: Comment): CommentMongo {
   return {
-    _id: new ObjectId(picture.id),
-    title: picture.title,
-    body: picture.body,
-    rating: picture.rating,
-    pictureList: picture.pictureList.map(parsePictureToMongo),
+    _id: new ObjectId(comment.id),
+    title: comment.title,
+    body: comment.body,
+    rating: comment.rating,
+    pictureList: comment.pictureList.map(parsePictureToMongo),
 
-    idArticle: new ObjectId(picture.idArticle),
-    idUser: new ObjectId(picture.idUser)
+    idArticle: new ObjectId(comment.idArticle),
+    idUser: comment.idUser
   };
 }
 
