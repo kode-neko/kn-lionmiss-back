@@ -7,6 +7,7 @@
     "docker": "docker-compose --env-file ./config/env/.env.dev up --detach",
     "docker:down": "docker-compose down",
     "build": "npx tsc --project ./config/tsconfig.json",
+    "mongo:fix": "dotenvx run -f ./config/env/.env.dev -- node ./public/fixtures/app.js",
     "express": "dotenvx run -f ./config/env/.env.dev -- node ./public/api/express/index.js",
     "pass:app": "node ./scripts/pass-app.mjs",
     "scratch": "tsc --module esnext ./scripts/scratches.ts && node ./scripts/scratches.js",
