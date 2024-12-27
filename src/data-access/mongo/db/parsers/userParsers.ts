@@ -3,14 +3,20 @@ import {
   Address,
   Cart,
   CartLine,
-  Measures
+  Measures,
+  User
 } from '../../../../model';
 import {
   AddressMongo,
+  AreaMongo,
   CartLineMongo,
   CartMongo,
-  MeasuresMongo
+  MeasuresMongo,
+  ShippingMongo,
+  UserMongo
 } from '../interfaces';
+import { parseMongoToArea } from './areaParsers';
+import { parseMongoToShipping } from './shippingParsers';
 
 function parseCartLineToMongo (cartLine: CartLine): CartLineMongo {
   const article = cartLine.articleId
@@ -107,6 +113,42 @@ function parseMongoToAddress (mongo: AddressMongo): Address {
   };
 }
 
+function parseMongoToUser (mongo: UserMongo, areaMongo: AreaMongo, shippingMongoList: ShippingMongo[]): User {
+  return {
+    id: mongo.id,
+    userName: mongo.userName,
+    pass: mongo.pass,
+    salt: mongo.salt,
+    email: mongo.email,
+    bday: mongo.bday,
+    sex: mongo.sex,
+    area: parseMongoToArea(areaMongo),
+    measures: mongo.measures,
+    addressList: mongo.addressList,
+    favList: mongo.favList.map((f) => f?.toString()),
+    cart: parseMongoToCart(mongo.cart),
+    shippingList: shippingMongoList.map(parseMongoToShipping)
+  };
+}
+
+function parseUserToMongo (user: User): UserMongo {
+  return {
+    _id: new ObjectId(user.id),
+    userName: user.userName,
+    pass: user.pass,
+    salt: user.salt,
+    email: user.email,
+    bday: user.bday,
+    sex: user.sex,
+    area: user.area.name,
+    measures: user.measures,
+    addressList: user.addressList,
+    favList: user.favList.map((f) => new ObjectId(f)),
+    cart: parseCartToMongo(user.cart),
+    shippingList: user.shippingList.map((s) => new ObjectId(s.id))
+  };
+}
+
 export {
   parseCartLineToMongo,
   parseCartToMongo,
@@ -115,5 +157,7 @@ export {
   parseMeasuresToMongo,
   parseMongoToMeasures,
   parseAddressToMongo,
-  parseMongoToAddress
+  parseMongoToAddress,
+  parseMongoToUser,
+  parseUserToMongo
 };

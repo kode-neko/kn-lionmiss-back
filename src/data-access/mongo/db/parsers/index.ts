@@ -32,5 +32,7 @@ export {
   parseMeasuresToMongo,
   parseMongoToMeasures,
   parseAddressToMongo,
-  parseMongoToAddress
+  parseMongoToAddress,
+  parseMongoToUser,
+  parseUserToMongo
 } from './userParsers';
