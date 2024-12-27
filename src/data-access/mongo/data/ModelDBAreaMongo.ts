@@ -29,7 +29,7 @@ class AreaMongoModelDB implements IModelDBArea {
   private constructor () {
     [this.client,
       this.db] = getConnMongo();
-    this.collArea = this.db.collection<AreaMongo>('Area');
+    this.collArea = this.db.collection<AreaMongo>('area');
   }
 
   read (id: string): Promise<Area> {
@@ -45,8 +45,11 @@ class AreaMongoModelDB implements IModelDBArea {
     const {
       limit, skip, tags
     } = searchParams;
+    const filter = tags.length !== 0
+      ? { name: { $in: tags } }
+      : {};
     return this.collArea
-      .find({ name: { $in: tags } }, { limit, skip })
+      .find(filter, { limit, skip })
       .toArray()
       .then((list) => {
         return list.map((e) => parseMongoToArea(e));
@@ -57,13 +60,13 @@ class AreaMongoModelDB implements IModelDBArea {
     const areaMongo = parseAreaToMongo(obj);
     return this.collArea
       .insertOne(areaMongo)
-      .then(({ insertedId }) => ({ ...obj, _id: insertedId.toString() }));
+      .then(({ insertedId }) => ({ ...obj, id: insertedId.toString() }));
   }
 
   update (obj: Area): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = parseAreaToMongo(obj);
     return this.collArea
-      .updateOne({ _id }, { ...rest })
+      .updateOne({ _id }, { $set: { ...rest } })
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Area');
       });
@@ -71,7 +74,7 @@ class AreaMongoModelDB implements IModelDBArea {
 
   delete (id: string): Promise<void | NotFoundDbException> {
     return this.collArea
-      .deleteOne(new ObjectId(id))
+      .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {
         if (deletedCount === 0) throw new NotFoundDbException('Area');
       });

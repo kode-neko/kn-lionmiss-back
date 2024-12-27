@@ -115,7 +115,7 @@ function parseMongoToAddress (mongo: AddressMongo): Address {
 
 function parseMongoToUser (mongo: UserMongo, areaMongo: AreaMongo, shippingMongoList: ShippingMongo[]): User {
   return {
-    id: mongo.id,
+    id: mongo._id?.toString(),
     userName: mongo.userName,
     pass: mongo.pass,
     salt: mongo.salt,

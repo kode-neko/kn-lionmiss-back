@@ -1,4 +1,4 @@
-import { Shipping, SearchParams } from '@model/index';
+import { SearchParams, Shipping } from '../../../model';
 import { NotFoundDbException } from '../../error';
 import { IModelDBShipping } from '../../interfaces';
 
@@ -17,15 +17,15 @@ class ShippingMongoModelDB implements IModelDBShipping {
 
   }
 
-  createFromCart (cartId: string): Promise<Shipping> {
+  createFromUserCart (userId: string, shippingOps: Pick<Shipping, 'idTracking' | 'state' | 'idPayment' | 'payment'>): Promise<Shipping> {
     throw new Error('Method not implemented.');
   }
 
-  read (id: string): Promise<Shipping> {
+  read (id: string): Promise<Shipping | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  readList (searchParams?: SearchParams<Shipping>): Promise<Shipping[]> {
+  readList (searchParams: SearchParams<Shipping>): Promise<Shipping[]> {
     throw new Error('Method not implemented.');
   }
 
