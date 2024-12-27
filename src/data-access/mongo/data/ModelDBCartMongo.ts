@@ -70,17 +70,16 @@ class CartMongoModelDB implements IModelDBCart {
 
   // CartLine
 
-  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
+  createLine (idCart: string, cartLine: CartLine): Promise<CartLine | NotFoundDbException> {
+    const mongo = parseCartLineToMongo(cartLine);
     return this.collUser
-      .aggregate([
-        { $match: { 'cart.id': idCart } },
-        this.projectionCart
-      ])
-      .toArray()
-      .then((list) => {
-        if (list.length === 0) throw new NotFoundDbException('Cart');
-        const cart = list[0] as CartMongo;
-        return parseMongoToCart(cart);
+      .updateOne(
+        { 'cart.id': idCart, 'cart.cartLineList.order': cartLine.order },
+        { $set: { 'cart.cartLineList.$': mongo } }
+      )
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('Cart');
+        return cartLine;
       });
   }
 
