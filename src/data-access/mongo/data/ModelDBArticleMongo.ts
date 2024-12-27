@@ -199,7 +199,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     return this.collArt
       .updateOne(
         { _id: new ObjectId(id) },
-        { $pull: { 'articleAreaList.$.id': articleAreaId } }
+        { $pull: { articleAreaList: { id: articleAreaId } } }
       )
       .then((res) => {
         if (!res) throw new NotFoundDbException('Article');

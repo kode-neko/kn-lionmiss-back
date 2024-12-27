@@ -1,11 +1,15 @@
 import {
-  Collection, Db, MongoClient
+  Collection, Db, MongoClient,
+  ObjectId
 } from 'mongodb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBCart } from '../../interfaces';
-import { ArticleMongo, CartMongo } from '../db/interfaces';
+import {
+  ArticleMongo, CartMongo, UserMongo
+} from '../db/interfaces';
 import { getConnMongo } from '../db/utils';
 import { Cart, CartLine } from '../../../model';
+import { parseCartLineToMongo, parseMongoToCart } from '../db/parsers';
 
 class CartMongoModelDB implements IModelDBCart {
 
@@ -13,9 +17,7 @@ class CartMongoModelDB implements IModelDBCart {
 
   private db: Db;
 
-  private collCart: Collection<CartMongo>;
-
-  private collArt: Collection<ArticleMongo>;
+  private collUser: Collection<UserMongo>;
 
   private static instance: CartMongoModelDB;
 
@@ -29,102 +31,65 @@ class CartMongoModelDB implements IModelDBCart {
   private constructor () {
     [this.client,
       this.db] = getConnMongo();
-    this.collCart = this.db.collection<CartMongo>('cart');
-    this.collArt = this.db.collection<ArticleMongo>('article');
+    this.collUser = this.db.collection<UserMongo>('user');
   }
 
-  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
-    throw new Error('Method not implemented.');
-  }
-
-  updateLine (idCart: string, cartLine: CartLine): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
-  }
-
-  deleteLine (idCart: string, orderLine: string): Promise<void | NotFoundDbException> {
-    throw new Error('Method not implemented.');
-  }
-
-  read (id: string): Promise<any> {
-    throw new Error('Method not implemented.');
-  }
-
-  /*
-  read (id: string): Promise<Cart> {
-    let cartMongo: CartMongo;
-    return this.collCart
-      .findOne({ _id: new ObjectId(id) })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Cart');
-        cartMongo = res;
-        const idArticleList = res.cartLineList.map((cl) => new ObjectId(cl.article));
-        return this.collArt
-          .find({ _id: { $in: idArticleList } });
-      })
-      .then((res) => res.toArray())
-      .then((list) => parseMongoToCart(cartMongo, list));
-  }
-
-  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
-    return this.collCart
-      .updateOne({ _id: new ObjectId(idCart) }, {
-        $push: {
-          cartLineList: {
-            ...cartLine,
-            order: cartLine.order.toString(),
-            article: new ObjectId(cartLine.article.id)
+  private projectionCart = {
+    $project: {
+      _id: 0,
+      cartId: '$cart.id',
+      cartLineList: {
+        $map: {
+          input: '$cart.cartLineList',
+          as: 'line',
+          in: {
+            order: '$$line.order',
+            qty: '$$line.qty',
+            articleId: '$$line.article' // Rename "article" to "articleId"
           }
         }
-      })
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('Cart');
-        return this.collCart.aggregate([
-          { $unwind: '$cartLineList' },
-          {
-            $lookup: {
-              from: 'articles',
-              localField: 'cartLineList.article',
-              foreignField: '_id',
-              as: 'cartLineList.articleInfo'
-            }
-          },
-          { $unwind: '$cartLineList.articleInfo' },
-          {
-            $group: {
-              _id: '$_id',
-              cartLineList: {
-                $push: {
-                  order: '$cartLineList.order',
-                  qty: '$cartLineList.qty',
-                  article: '$cartLineList.articleInfo'
-                }
-              }
-            }
-          }
-        ]);
-      })
-      .then((list) => list.toArray())
-      .then(([cartMongoAgg]) => {
-        const { _id, cartlineList } = cartMongoAgg;
-        const cartLineListMongo = cartlineList
-          .map((cl) => cl.article._id.toString());
-        const cartMongo: CartMongo = { _id, cartLineList: cartLineListMongo };
-        const articleMongoList: ArticleMongo[] = cartlineList
-          .map((cl) => cl.article);
-        return parseMongoToCart(cartMongo, articleMongoList);
+      }
+    }
+  };
+
+  // R
+
+  read (id: string): Promise<Cart> {
+    return this.collUser
+      .aggregate([
+        { $match: { 'cart.id': id } },
+        this.projectionCart
+      ])
+      .toArray()
+      .then((list) => {
+        if (list.length === 0) throw new NotFoundDbException('Cart');
+        const cart = list[0] as CartMongo;
+        return parseMongoToCart(cart);
+      });
+  }
+
+  // CartLine
+
+  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
+    return this.collUser
+      .aggregate([
+        { $match: { 'cart.id': idCart } },
+        this.projectionCart
+      ])
+      .toArray()
+      .then((list) => {
+        if (list.length === 0) throw new NotFoundDbException('Cart');
+        const cart = list[0] as CartMongo;
+        return parseMongoToCart(cart);
       });
   }
 
   updateLine (idCart: string, cartLine: CartLine): Promise<void | NotFoundDbException> {
-    const cartLineMongo: CartMongo['cartLineList'][number] = {
-      order: cartLine.order.toString(),
-      qty: cartLine.qty,
-      article: new ObjectId(cartLine.article.id as string)
-    };
-    return this.collCart
+    const mongo = parseCartLineToMongo(cartLine);
+    return this.collUser
       .updateOne(
-        { _id: new ObjectId(idCart), 'cartLineList.order': cartLine.order },
-        { $set: { 'cartLineList.$': cartLineMongo } }
+        { 'cart.id': idCart, 'cart.cartLineList.order': cartLine.order },
+        { $set: { 'cart.cartLineList.$': mongo } }
       )
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Cart');
@@ -132,16 +97,21 @@ class CartMongoModelDB implements IModelDBCart {
   }
 
   deleteLine (idCart: string, orderLine: string): Promise<void | NotFoundDbException> {
-    return this.collCart
-      .deleteOne({
-        _id: new ObjectId(idCart),
-        $pull: { lineCartList: { $eq: orderLine } }
+    return this.collUser
+      .findOne({ 'cart.id': idCart })
+      .then((res) => {
+        if (!res) throw new NotFoundDbException('Cart');
+        const mongoLines = res.cart.cartLineList.filter((cl) => cl.order === orderLine);
+        return this.collUser
+          .updateOne(
+            { 'cart.id': idCart },
+            { '$currentDate.cartLine': mongoLines }
+          );
       })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('Cart');
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('Cart');
       });
   }
-*/
 
 }
 
