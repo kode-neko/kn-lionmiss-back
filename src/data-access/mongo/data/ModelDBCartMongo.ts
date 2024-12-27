@@ -1,12 +1,9 @@
 import {
-  Collection, Db, MongoClient,
-  ObjectId
+  Collection, Db, MongoClient
 } from 'mongodb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBCart } from '../../interfaces';
-import {
-  ArticleMongo, CartMongo, UserMongo
-} from '../db/interfaces';
+import { CartMongo, UserMongo } from '../db/interfaces';
 import { getConnMongo } from '../db/utils';
 import { Cart, CartLine } from '../../../model';
 import { parseCartLineToMongo, parseMongoToCart } from '../db/parsers';
