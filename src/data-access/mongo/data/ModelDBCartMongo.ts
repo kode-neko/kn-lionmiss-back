@@ -3,10 +3,13 @@ import {
 } from 'mongodb';
 import { NotFoundDbException } from '../../error';
 import { IModelDBCart } from '../../interfaces';
-import { CartMongo, UserMongo } from '../db/interfaces';
+import {
+  CartLineMongo, CartMongo, UserMongo
+} from '../db/interfaces';
 import { getConnMongo } from '../db/utils';
 import { Cart, CartLine } from '../../../model';
 import { parseCartLineToMongo, parseMongoToCart } from '../db/parsers';
+import { v7 as uuidv7 } from 'uuid';
 
 class CartMongoModelDB implements IModelDBCart {
 
@@ -68,15 +71,22 @@ class CartMongoModelDB implements IModelDBCart {
   // CartLine
 
   createLine (idCart: string, cartLine: CartLine): Promise<CartLine | NotFoundDbException> {
-    const mongo = parseCartLineToMongo(cartLine);
+    const orderCartLine = uuidv7();
+    const cartLineMongo: CartLineMongo = {
+      ...parseCartLineToMongo(cartLine),
+      order: orderCartLine
+    };
     return this.collUser
       .updateOne(
-        { 'cart.id': idCart, 'cart.cartLineList.order': cartLine.order },
-        { $set: { 'cart.cartLineList.$': mongo } }
+        { 'cart.id': idCart },
+        { $push: { 'cart.cartLineList': cartLineMongo } }
       )
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Cart');
-        return cartLine;
+        return {
+          ...cartLine,
+          irder: orderCartLine
+        };
       });
   }
 
@@ -85,7 +95,7 @@ class CartMongoModelDB implements IModelDBCart {
     return this.collUser
       .updateOne(
         { 'cart.id': idCart, 'cart.cartLineList.order': cartLine.order },
-        { $set: { 'cart.cartLineList.$': mongo } }
+        { $push: { 'cart.cartLineList.$': mongo } }
       )
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Cart');
@@ -94,16 +104,10 @@ class CartMongoModelDB implements IModelDBCart {
 
   deleteLine (idCart: string, orderLine: string): Promise<void | NotFoundDbException> {
     return this.collUser
-      .findOne({ 'cart.id': idCart })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Cart');
-        const mongoLines = res.cart.cartLineList.filter((cl) => cl.order === orderLine);
-        return this.collUser
-          .updateOne(
-            { 'cart.id': idCart },
-            { '$currentDate.cartLine': mongoLines }
-          );
-      })
+      .updateOne(
+        { 'cart.id': idCart },
+        { $pull: { 'cart.cartLineList': { order: orderLine } } }
+      )
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Cart');
       });

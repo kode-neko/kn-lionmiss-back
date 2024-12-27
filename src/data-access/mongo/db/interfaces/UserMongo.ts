@@ -1,16 +1,17 @@
+
 import { ObjectId } from 'mongodb';
-import {
-  UnitsHeightEnum, UnitsWeightEnum, SexEnum
-} from '@model/index';
 import { ArticleMongo } from './ArticleMongo';
 import { AreaMongo } from './AreaMongo';
 import { ShippingMongo } from './ShippingMongo';
+import {
+  SexEnum, UnitsHeightEnum, UnitsWeightEnum
+} from '../../../../model';
 
 interface CartLineMongo {
   order: string;
   qty: number;
 
-  article: ArticleMongo['_id'];
+  article: ObjectId;
 }
 
 interface CartMongo {

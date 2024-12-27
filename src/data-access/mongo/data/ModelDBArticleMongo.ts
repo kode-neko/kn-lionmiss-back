@@ -6,9 +6,7 @@ import {
 } from 'mongodb';
 import { IModelDBArticle } from '../../interfaces';
 import { NotFoundDbException } from '../../error';
-import {
-  AreaMongo, ArticleAreaMongo, ArticleMongo
-} from '../db/interfaces';
+import { AreaMongo, ArticleMongo } from '../db/interfaces';
 import {
   Article, ArticleArea, SearchParams
 } from '../../../model';
@@ -16,8 +14,7 @@ import { getConnMongo } from '../db/utils';
 import {
   parseArticleAreaToMongo,
   parseArticleToMongo,
-  parseMongoToArticle,
-  parseMongoToArticleArea
+  parseMongoToArticle
 } from '../db/parsers';
 import { v7 as uuidv7 } from 'uuid';
 
@@ -112,9 +109,8 @@ class ArticleMongoModelDB implements IModelDBArticle {
   }
 
   delete (id: string): Promise<void | NotFoundDbException> {
-    const { _id, ...rest } = parseArticleToMongo(obj);
     return this.collArt
-      .deleteOne({ _id })
+      .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {
         if (deletedCount === 0) throw new NotFoundDbException('Article');
       });
@@ -175,7 +171,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     return this.collArt
       .updateOne(
         { _id: new ObjectId(id) },
-        { articleAreaList: { $set: { id: idArtArea, ...mongo } } }
+        { $push: { articleAreaList: { id: idArtArea, ...mongo } } }
       )
       .then((res) => {
         if (!res) throw new NotFoundDbException('Article');
@@ -188,7 +184,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
     return this.collArt
       .updateOne(
         { _id: new ObjectId(id), 'articleAreaList.id': mongo.id },
-        { $set: { 'articleAreaList.$': articleArea } }
+        { $push: { 'articleAreaList.$': articleArea } }
       )
       .then((res) => {
         if (!res) throw new NotFoundDbException('Article');
