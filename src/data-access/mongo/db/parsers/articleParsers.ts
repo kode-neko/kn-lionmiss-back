@@ -61,7 +61,7 @@ function parseMongoToArticleArea (mongo: ArticleAreaMongo, areaMongo: AreaMongo)
     area: parseMongoToArea(areaMongo)
   };
 }
-function parseMongoToArticle (mongo: ArticleMongo, pictureListMongo: PictureMongo[], areaListMongo: AreaMongo[]): Article {
+function parseMongoToArticle (mongo: ArticleMongo, areaListMongo: AreaMongo[]): Article {
   return {
     id: mongo._id?.toString(),
     tags: mongo.tags,
@@ -70,7 +70,7 @@ function parseMongoToArticle (mongo: ArticleMongo, pictureListMongo: PictureMong
     discolor: mongo.discolor,
 
     articleVariantList: mongo.articleVariantList.map(parseMongoToArticleVariant),
-    pictureList: pictureListMongo.map(parseMongoToPicture),
+    pictureList: mongo.pictureList.map(parseMongoToPicture),
     articleAreaList: areaListMongo.length === mongo.articleAreaList.length
       ? mongo.articleAreaList.map((aa) => parseMongoToArticleArea(aa, areaListMongo.find((a) => a.name === aa.area) as AreaMongo))
       : []
