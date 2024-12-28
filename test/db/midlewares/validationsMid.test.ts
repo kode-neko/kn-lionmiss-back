@@ -55,6 +55,7 @@ describe('Validation Middleware', () => {
     expect(() => bodyValidMidCreate('area')(req, res, next))
       .not
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(1);
   });
 
   test('bodyValidMidCreate wrong', () => {
@@ -62,6 +63,7 @@ describe('Validation Middleware', () => {
 
     expect(() => bodyValidMidCreate('area')(req, res, next))
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(0);
   });
 
   test('bodyParamValidMidCreate', () => {
@@ -79,6 +81,7 @@ describe('Validation Middleware', () => {
     expect(() => bodyParamValidMidCreate('area')(req, res, next))
       .not
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(1);
   });
 
   test('bodyParamValidMidCreate wrong', () => {
@@ -86,6 +89,7 @@ describe('Validation Middleware', () => {
 
     expect(() => bodyParamValidMidCreate('area')(req, res, next))
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(0);
   });
 
   test('searchParamsBodyValidMid', () => {
@@ -98,6 +102,7 @@ describe('Validation Middleware', () => {
     expect(() => searchParamsBodyValidMid(req, res, next))
       .not
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(1);
   });
 
   test('searchParamsBodyValidMid wrong', () => {
@@ -105,6 +110,7 @@ describe('Validation Middleware', () => {
 
     expect(() => searchParamsBodyValidMid(req, res, next))
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(0);
   });
 
   test('idParamValidMid', () => {
@@ -113,6 +119,7 @@ describe('Validation Middleware', () => {
     expect(() => idParamValidMid()(req, res, next))
       .not
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(1);
   });
 
   test('idParamValidMid wrong', () => {
@@ -120,6 +127,7 @@ describe('Validation Middleware', () => {
 
     expect(() => idParamValidMid()(req, res, next))
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(0);
   });
 
   test('idBodyValidMid', () => {
@@ -128,6 +136,7 @@ describe('Validation Middleware', () => {
     expect(() => idBodyValidMid()(req, res, next))
       .not
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(1);
   });
 
   test('idBodyValidMid wrong', () => {
@@ -135,6 +144,7 @@ describe('Validation Middleware', () => {
 
     expect(() => idBodyValidMid()(req, res, next))
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(0);
   });
 
   test('attrValidMidCreate', () => {
@@ -143,6 +153,7 @@ describe('Validation Middleware', () => {
     expect(() => attrValidMidCreate('patata', 'body')(req, res, next))
       .not
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(1);
   });
 
   test('attrValidMidCreate wrong', () => {
@@ -150,5 +161,6 @@ describe('Validation Middleware', () => {
 
     expect(() => attrValidMidCreate('patata', 'body')(req, res, next))
       .toThrow(Error);
+    expect(next.mock.calls.length).toBe(0);
   });
 });
