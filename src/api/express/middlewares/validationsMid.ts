@@ -18,13 +18,13 @@ import {
 function attrValidMidCreate (idName = 'id', petition = 'params') {
   return (req: Request, _: Response, next: NextFunction) => {
     const ValidSchemaIdName = idValSchemaCreateFunc(idName);
-    ValidSchemaIdName.parse(req[petition][idName]);
+    ValidSchemaIdName.parse(req[petition]);
     next();
   };
 }
 
 function idBodyValidMid () {
-  attrValidMidCreate('id', 'body');
+  return attrValidMidCreate('id', 'body');
 }
 
 function idParamValidMid () {

@@ -19,7 +19,7 @@ const SearchParamsValSchema = z.object({
     .array(z.string()),
   terms: z
     .array(z.string())
-    .nullable()
+    .optional()
 });
 // SearchParams.obj is generic type T. We cannot set in zod for the moment...
 

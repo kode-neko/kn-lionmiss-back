@@ -7,7 +7,7 @@ const InstructEnumValSchema = z.nativeEnum(InstructEnum);
 const AreaValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   name: z
     .string(),
   country: z
@@ -25,7 +25,7 @@ const AreaValSchema = z.object({
 const ArticleAreaValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   title: z
     .string(),
   desc: z
@@ -49,7 +49,7 @@ const ArticleAreaValSchema = z.object({
 const ArticleVariantValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   name: z
     .string(),
   sizes: z
@@ -64,7 +64,7 @@ const ArticleVariantValSchema = z.object({
 const ArticleValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   tags: z
     .array(z.string()),
   materials: z

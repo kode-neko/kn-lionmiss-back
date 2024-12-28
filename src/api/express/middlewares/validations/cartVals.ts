@@ -16,7 +16,7 @@ const CartLineValSchema = z.object({
 const CartValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   cartLineList: z
     .array(CartLineValSchema)
 });
@@ -39,18 +39,18 @@ const PaymentEnumValSchema = z.nativeEnum(PaymentEnum);
 const ShippingValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   idTracking: z
     .string()
-    .nullable(),
+    .optional(),
   state: z
     .record(ShipStateEnumValSchema, z.date()),
   idPayment: z
     .string()
-    .nullable(),
+    .optional(),
   payment:
     PaymentEnumValSchema
-      .nullable(),
+      .optional(),
   shippingLineList: z
     .array(ShippingtLineValSchema)
 });

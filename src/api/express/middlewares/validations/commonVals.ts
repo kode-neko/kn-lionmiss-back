@@ -3,7 +3,7 @@ import { z } from 'zod';
 const PictureValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   ext: z
     .string(),
   src: z
@@ -15,7 +15,7 @@ const PictureValSchema = z.object({
 const CommentValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   title: z
     .string(),
   body: z
