@@ -23,7 +23,7 @@ describe('AreaMongooseModelDB', () => {
     [client, db] = getConnMongo();
     db = client.db('lionmiss');
     collArea = await db.createCollection('area');
-    areaMongooseModel = ModelDBAreaMongo.getIntance();
+    areaMongooseModel = ModelDBAreaMongo.getInstance();
   });
 
   beforeEach(async () => {

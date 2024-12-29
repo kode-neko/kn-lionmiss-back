@@ -37,12 +37,12 @@ const dataAccess = {
   }
 };
 
-const getArea = () => dataAccess[DATA_ACCESS]['area'];
-const getArticle = () => dataAccess[DATA_ACCESS]['article'];
-const getCart = () => dataAccess[DATA_ACCESS]['cart'];
-const getComment = () => dataAccess[DATA_ACCESS]['comment'];
-const getShipping = () => dataAccess[DATA_ACCESS]['shipping'];
-const getUser = () => dataAccess[DATA_ACCESS]['user'];
+const getArea = () => dataAccess[DATA_ACCESS]['area'].getInstance();
+const getArticle = () => dataAccess[DATA_ACCESS]['article'].getInstance();
+const getCart = () => dataAccess[DATA_ACCESS]['cart'].getInstance();
+const getComment = () => dataAccess[DATA_ACCESS]['comment'].getInstance();
+const getShipping = () => dataAccess[DATA_ACCESS]['shipping'].getInstance();
+const getUser = () => dataAccess[DATA_ACCESS]['user'].getInstance();
 
 export {
   createConn,

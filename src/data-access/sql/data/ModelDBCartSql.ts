@@ -6,7 +6,7 @@ class CartMongoModelDB implements IModelDBCart {
 
   private static instance: CartMongoModelDB;
 
-  public static getIntance (): CartMongoModelDB {
+  public static getInstance (): CartMongoModelDB {
     if (!CartMongoModelDB.instance) {
       CartMongoModelDB.instance = new CartMongoModelDB();
     }

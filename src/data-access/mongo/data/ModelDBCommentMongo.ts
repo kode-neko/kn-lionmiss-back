@@ -19,7 +19,7 @@ class CommentMongoModelDB implements IModelDBComment {
 
   private static instance: CommentMongoModelDB;
 
-  public static getIntance (): CommentMongoModelDB {
+  public static getInstance (): CommentMongoModelDB {
     if (!CommentMongoModelDB.instance) {
       CommentMongoModelDB.instance = new CommentMongoModelDB();
     }

@@ -11,7 +11,7 @@ class AreaMongoModelDB implements IModelDBArea {
 
   private static instance: AreaMongoModelDB;
 
-  public static getIntance (): AreaMongoModelDB {
+  public static getInstance (): AreaMongoModelDB {
     if (!AreaMongoModelDB.instance) {
       AreaMongoModelDB.instance = new AreaMongoModelDB();
     }

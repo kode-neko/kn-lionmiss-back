@@ -12,7 +12,7 @@ class ArticleMongoModelDB implements IModelDBArticle {
 
   private static instance: ArticleMongoModelDB;
 
-  public static getIntance (): ArticleMongoModelDB {
+  public static getInstance (): ArticleMongoModelDB {
     if (!ArticleMongoModelDB.instance) {
       ArticleMongoModelDB.instance = new ArticleMongoModelDB();
     }

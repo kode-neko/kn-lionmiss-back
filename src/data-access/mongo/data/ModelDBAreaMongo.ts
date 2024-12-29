@@ -19,7 +19,7 @@ class AreaMongoModelDB implements IModelDBArea {
 
   private static instance: AreaMongoModelDB;
 
-  public static getIntance (): AreaMongoModelDB {
+  public static getInstance (): AreaMongoModelDB {
     if (!AreaMongoModelDB.instance) {
       AreaMongoModelDB.instance = new AreaMongoModelDB();
     }
@@ -66,7 +66,7 @@ class AreaMongoModelDB implements IModelDBArea {
   update (obj: Area): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = parseAreaToMongo(obj);
     return this.collArea
-      .updateOne({ _id }, { $set: { ...rest } })
+      .updateOne({ _id }, { $set: rest })
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Area');
       });

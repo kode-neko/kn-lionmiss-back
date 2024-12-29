@@ -6,7 +6,7 @@ class ShippingMongoModelDB implements IModelDBShipping {
 
   private static instance: IModelDBShipping;
 
-  public static getIntance (): IModelDBShipping {
+  public static getInstance (): IModelDBShipping {
     if (!ShippingMongoModelDB.instance) {
       ShippingMongoModelDB.instance = new ShippingMongoModelDB();
     }
