@@ -13,21 +13,20 @@ function getCommentById (req: Request, res: Response) {
 }
 
 function postCommentList (req: Request, res: Response) {
-  const { searchParams } = req.body;
   return getComment()
-    .readList(searchParams)
+    .readList(req.body)
     .then((list) => res.status(200).send(list));
 }
 
 function postComment (req: Request, res: Response) {
   return getComment()
-    .create(req)
+    .create(req.body)
     .then((objId) => res.status(201).send(objId));
 }
 
 function putComment (req: Request, res: Response) {
   return getComment()
-    .update(req)
+    .update(req.body)
     .then(() => res.status(200))
     .catch((err) => errorResponse(err, res));
 }

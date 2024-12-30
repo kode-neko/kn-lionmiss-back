@@ -5,7 +5,7 @@ class UserMongoModelDB implements IModelDBUser {
 
   private static instance: IModelDBUser;
 
-  public static getIntance (): IModelDBUser {
+  public static getInstance (): IModelDBUser {
     if (!UserMongoModelDB.instance) {
       UserMongoModelDB.instance = new UserMongoModelDB();
     }

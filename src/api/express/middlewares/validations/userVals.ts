@@ -12,7 +12,7 @@ const UnitsWeightEnumValSchema = z.nativeEnum(UnitsWeightEnum);
 const AddressValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   alias: z
     .string(),
   name: z
@@ -31,7 +31,7 @@ const AddressValSchema = z.object({
     .string(),
   obs: z
     .string()
-    .nullable()
+    .optional()
 });
 
 const MeasuresValSchema = z.object({
@@ -39,37 +39,37 @@ const MeasuresValSchema = z.object({
     .number()
     .positive()
     .int()
-    .nullable(),
+    .optional(),
   chest: z
     .number()
     .positive()
     .int()
-    .nullable(),
+    .optional(),
   waist: z
     .number()
     .positive()
     .int()
-    .nullable(),
+    .optional(),
   hips: z
     .number()
     .positive()
     .int()
-    .nullable(),
+    .optional(),
   foot: z
     .number()
     .positive()
     .int()
-    .nullable(),
+    .optional(),
   height: z
     .number()
     .positive()
     .int()
-    .nullable(),
+    .optional(),
   weight: z
     .number()
     .positive()
     .int()
-    .nullable(),
+    .optional(),
   unitsHeight:
     UnitsHeightEnumValSchema,
   unitsWeight:
@@ -79,7 +79,7 @@ const MeasuresValSchema = z.object({
 const UserValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   userName: z
     .string(),
   pass: z

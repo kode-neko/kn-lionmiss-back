@@ -13,21 +13,20 @@ function getAreaById (req: Request, res: Response) {
 }
 
 function postAreaList (req: Request, res: Response) {
-  const { skip, limit } = req.body;
   return getArea()
-    .readList({ skip, limit })
+    .readList(req.body)
     .then((list) => res.status(200).send(list));
 }
 
 function postArea (req: Request, res: Response) {
   return getArea()
-    .create(req)
-    .then((objId) => res.status(201).send(objId));
+    .create(req.body)
+    .then((obj) => res.status(201).send(obj));
 }
 
 function putArea (req: Request, res: Response) {
   return getArea()
-    .update(req)
+    .update(req.body)
     .then(() => res.status(200))
     .catch((err) => errorResponse(err, res));
 }

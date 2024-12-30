@@ -4,15 +4,15 @@ import { Db, MongoClient } from 'mongodb';
 const {
   ENV,
   DB,
-  USER,
-  PASS_USER,
+  USER_ADMIN,
+  PASS_USER_ADMIN,
   HOST_MONGO,
   PORT_MONGO,
   DB_POOL,
   DB_POOL_MIN
 } = process.env;
 
-const urlConnect = `mongodb://${USER}:${PASS_USER}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
+const urlConnect = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=admin`;
 
 let client: MongoClient;
 let db: Db;

@@ -13,21 +13,20 @@ function getArticleById (req: Request, res: Response) {
 }
 
 function postArticleList (req: Request, res: Response) {
-  const { searchParams } = req.body;
   return getArticle()
-    .readList(searchParams)
+    .readList(req.body)
     .then((list) => res.status(200).send(list));
 }
 
 function postArticle (req: Request, res: Response) {
   return getArticle()
-    .create(req)
+    .create(req.body)
     .then((objId) => res.status(201).send(objId));
 }
 
 function putArticle (req: Request, res: Response) {
   return getArticle()
-    .update(req)
+    .update(req.body)
     .then(() => res.status(200))
     .catch((err) => errorResponse(err, res));
 }
@@ -58,23 +57,23 @@ function postArticleListByArea (req: Request, res: Response) {
 }
 
 function postArticleArea (req: Request, res: Response) {
-  const { id, articleArea } = req.body;
+  const { idArticle, articleArea } = req.body;
   return getArticle()
-    .createArticleArea(id, articleArea)
+    .createArticleArea(idArticle, articleArea)
     .then((list) => res.status(200).send(list));
 }
 
 function putArticleArea (req: Request, res: Response) {
-  const { articleArea } = req.body;
+  const { idArticle, articleArea } = req.body;
   return getArticle()
-    .updateArticleArea(articleArea)
+    .updateArticleArea(idArticle, articleArea)
     .then((list) => res.status(200).send(list));
 }
 
 function deleteArticleArea (req: Request, res: Response) {
-  const { id, articleArea } = req.params;
+  const { idArticle, idArticleArea } = req.params;
   return getArticle()
-    .deleteArticleArea(id, articleArea)
+    .deleteArticleArea(idArticle, idArticleArea)
     .then((list) => res.status(200).send(list));
 }
 

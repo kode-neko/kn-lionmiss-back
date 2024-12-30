@@ -16,7 +16,7 @@ interface User {
   area: Area;
   measures: Measures;
   addressList: Address[];
-  favList: Article[];
+  favList: Article['id'][];
   cart: Cart;
   shippingList: Shipping[];
 }

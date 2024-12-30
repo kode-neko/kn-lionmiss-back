@@ -5,7 +5,7 @@ import ShipStateEnum from './ShipStateEnum';
 interface Shipping {
   id?: string;
   idTracking?: string;
-  state: Partial<Record<ShipStateEnum, Date>>;
+  state?: Partial<Record<ShipStateEnum, Date>>;
   idPayment?: string;
   payment?: PaymentEnum;
   shippingLineList: ShippingLine[];

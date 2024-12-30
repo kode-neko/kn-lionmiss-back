@@ -9,14 +9,18 @@ const CartLineValSchema = z.object({
     .number()
     .positive()
     .int(),
+  articleId: z
+    .string()
+    .optional(),
   article:
     ArticleValSchema
+      .optional()
 });
 
 const CartValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   cartLineList: z
     .array(CartLineValSchema)
 });
@@ -28,8 +32,12 @@ const ShippingtLineValSchema = z.object({
     .number()
     .positive()
     .int(),
+  articleId: z
+    .string()
+    .optional(),
   article:
     ArticleValSchema
+      .optional()
 });
 
 const ShipStateEnumValSchema = z.nativeEnum(ShipStateEnum);
@@ -39,25 +47,34 @@ const PaymentEnumValSchema = z.nativeEnum(PaymentEnum);
 const ShippingValSchema = z.object({
   id: z
     .string()
-    .nullable(),
+    .optional(),
   idTracking: z
     .string()
-    .nullable(),
+    .optional(),
   state: z
-    .record(ShipStateEnumValSchema, z.date()),
+    .record(ShipStateEnumValSchema, z.date())
+    .optional(),
   idPayment: z
     .string()
-    .nullable(),
+    .optional(),
   payment:
     PaymentEnumValSchema
-      .nullable(),
+      .optional(),
   shippingLineList: z
     .array(ShippingtLineValSchema)
+});
+
+const ShippingOpsValSchema = ShippingValSchema.pick({
+  idTracking: true,
+  state: true,
+  idPayment: true,
+  payment: true
 });
 
 export {
   CartLineValSchema,
   CartValSchema,
   ShippingtLineValSchema,
-  ShippingValSchema
+  ShippingValSchema,
+  ShippingOpsValSchema
 };

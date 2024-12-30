@@ -1,6 +1,7 @@
 import {
   NextFunction, Request, Response
 } from 'express';
+import { Session, SessionData } from 'express-session';
 import { extractHeader } from './utils';
 import {
   checkHeaderAuthJwt, checkSubAuthJwt, getPaylaodAuthJwt
@@ -14,8 +15,12 @@ async function chkAuthJwtMid (req: Request) {
   checkSubAuthJwt(payload);
 }
 
+interface CustomSession extends Session {
+  loggedIn?: boolean;
+}
+
 function chkSessionMid (req: Request) {
-  if (!req.session.loggedIn) throw new AuthException('There is no session');
+  if (!(req.session as CustomSession).loggedIn) throw new AuthException('There is no session');
 }
 
 function chkAuthMid (req: Request, res: Response, next: NextFunction) {
@@ -35,6 +40,4 @@ function chkAuthMid (req: Request, res: Response, next: NextFunction) {
 
 // TODO - OpenIDC
 
-export {
-  chkAuthJwtMid, chkSessionMid, chkAuthMid
-};
+export { chkAuthJwtMid, chkAuthMid };

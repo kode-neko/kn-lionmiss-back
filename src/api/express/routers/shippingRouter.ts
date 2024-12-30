@@ -8,8 +8,10 @@ import {
 } from '../controllers';
 import {
   attrValidMidCreate,
-  bodyValidMidCreate, idBodyValidMid, idParamValidMid,
-  searchParamsBodyParamValidMid
+  bodyParamValidMidCreate,
+  idBodyValidMid,
+  idParamValidMid,
+  searchParamsBodyValidMid
 } from '../middlewares/validationsMid';
 
 const router = Router();
@@ -23,13 +25,13 @@ router.get(
 );
 router.post(
   '/',
-  searchParamsBodyParamValidMid,
+  searchParamsBodyValidMid,
   postShippingList
 );
 router.put(
   '/',
   idBodyValidMid,
-  bodyValidMidCreate('shipping'),
+  bodyParamValidMidCreate('shipping'),
   putShipping
 );
 router.delete(
@@ -40,9 +42,10 @@ router.delete(
 
 // Create from Cart
 
-router.get(
-  '/cart/:cartId',
-  attrValidMidCreate('cartId'),
+router.post(
+  '/cart',
+  attrValidMidCreate('userId', 'body'),
+  bodyParamValidMidCreate('shipping'),
   postShipping
 );
 

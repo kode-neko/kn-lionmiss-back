@@ -13,15 +13,14 @@ function getShippingById (req: Request, res: Response) {
 }
 
 function postShippingList (req: Request, res: Response) {
-  const { searchParams } = req.body;
   return getShipping()
-    .readList(searchParams)
+    .readList(req.body)
     .then((list) => res.status(200).send(list));
 }
 
 function putShipping (req: Request, res: Response) {
   return getShipping()
-    .update(req)
+    .update(req.body)
     .then(() => res.status(200))
     .catch((err) => errorResponse(err, res));
 }
@@ -37,9 +36,9 @@ function deleteShipping (req: Request, res: Response) {
 // Create from Cart
 
 function postShipping (req: Request, res: Response) {
-  const { cartId } = req.params;
+  const { userId, shipping } = req.body;
   return getShipping()
-    .createFromCart(cartId)
+    .createFromUserCart(userId, shipping)
     .then((objId) => res.status(201).send(objId));
 }
 

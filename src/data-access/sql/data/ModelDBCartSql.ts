@@ -1,13 +1,12 @@
-import { CartLine } from '@model/index';
-import { Cart } from '@model/cart';
 import { NotFoundDbException } from '../../error';
 import { IModelDBCart } from '../../interfaces';
+import { CartLine, Cart } from '../../../model';
 
 class CartMongoModelDB implements IModelDBCart {
 
-  private static instance: IModelDBCart;
+  private static instance: CartMongoModelDB;
 
-  public static getIntance (): IModelDBCart {
+  public static getInstance (): CartMongoModelDB {
     if (!CartMongoModelDB.instance) {
       CartMongoModelDB.instance = new CartMongoModelDB();
     }
@@ -17,7 +16,7 @@ class CartMongoModelDB implements IModelDBCart {
   private constructor () {
   }
 
-  createLine (idCart: string, cartLine: CartLine): Promise<Cart | NotFoundDbException> {
+  createLine (idCart: string, cartLine: CartLine): Promise<CartLine | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
@@ -25,11 +24,11 @@ class CartMongoModelDB implements IModelDBCart {
     throw new Error('Method not implemented.');
   }
 
-  deleteLine (idCart: string, idCartLine: string): Promise<void | NotFoundDbException> {
+  deleteLine (idCart: string, orderLine: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 
-  read (id: string): Promise<Cart> {
+  read (id: string): Promise<Cart | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 

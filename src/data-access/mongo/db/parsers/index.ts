@@ -1,39 +1,38 @@
 export {
   parseAreaToMongo,
   parseMongoToArea
-} from './area';
-
+} from './areaParsers';
 export {
-  parseArticleToMongo,
-  parseMongoToArticle
-} from './article';
-
-export {
+  parseArticleVariantToMongo,
   parseArticleAreaToMongo,
-  parseMongoToArticleArea
-} from './articleArea';
-
-export {
-  parseCartToMongo,
-  parseMongoToCart
-} from './cart';
-
+  parseArticleToMongo,
+  parseMongoToArticleVariant,
+  parseMongoToArticleArea,
+  parseMongoToArticle
+} from './articleParsers';
 export {
   parseCommentToMongo,
   parseMongoToComment
-} from './comment';
-
+} from './commentParsers';
 export {
   parsePictureToMongo,
   parseMongoToPicture
-} from './picture';
-
+} from './pictureParsers';
 export {
-  parseShipingToMongo,
-  parseMongoToShiping
-} from './shipping';
-
+  parseShippingLineToMongo,
+  parseShippingToMongo,
+  parseMongoToShippingLine,
+  parseMongoToShipping
+} from './shippingParsers';
 export {
-  parseUserToMongo,
-  parseMongoToUser
-} from './user';
+  parseCartLineToMongo,
+  parseCartToMongo,
+  parseMongoToCartLine,
+  parseMongoToCart,
+  parseMeasuresToMongo,
+  parseMongoToMeasures,
+  parseAddressToMongo,
+  parseMongoToAddress,
+  parseMongoToUser,
+  parseUserToMongo
+} from './userParsers';

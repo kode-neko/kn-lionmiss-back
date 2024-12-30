@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
-import PictureMongo from './PictureMongo';
-import ArticleMongo from './ArticleMongo';
-import UserMongo from './UserMongo';
+import { ArticleMongo } from './ArticleMongo';
+import { PictureMongo } from './PictureMongo';
+import { UserMongo } from './UserMongo';
 
 interface CommentMongo {
   _id?: ObjectId;
@@ -9,8 +9,9 @@ interface CommentMongo {
   body: string;
   rating: number;
   pictureList: PictureMongo[];
+
   idArticle: ArticleMongo['_id'];
   idUser: UserMongo['userName'];
 }
 
-export default CommentMongo;
+export { CommentMongo };

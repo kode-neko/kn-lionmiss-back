@@ -1,9 +1,8 @@
-import { SearchParams, Comment } from '@model/index';
 import { NotFoundDbException } from '../../error';
 import { IModelDBComment } from '../../interfaces';
 import { PrismaClient } from '@prisma/client';
 import { getPrismaClient } from '../db/utils';
-import { idToNum } from './utils';
+import { Comment, SearchParams } from '../../../model';
 
 class CommentMongoModelDB implements IModelDBComment {
 
@@ -11,7 +10,7 @@ class CommentMongoModelDB implements IModelDBComment {
 
   private static instance: IModelDBComment;
 
-  public static getIntance (): IModelDBComment {
+  public static getInstance (): IModelDBComment {
     if (!CommentMongoModelDB.instance) {
       CommentMongoModelDB.instance = new CommentMongoModelDB();
     }
@@ -22,6 +21,27 @@ class CommentMongoModelDB implements IModelDBComment {
     this.prisma = getPrismaClient();
   }
 
+  read (id: string): Promise<Comment | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  readList (searchParams?: SearchParams<Comment>): Promise<Comment[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  create (obj: Comment): Promise<Comment> {
+    throw new Error('Method not implemented.');
+  }
+
+  update (obj: Comment): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete (id: string): Promise<void | NotFoundDbException> {
+    throw new Error('Method not implemented.');
+  }
+
+  /*
   read (id: string): Promise<Comment> {
     return this.prisma.comment
       .findFirst({
@@ -83,6 +103,7 @@ class CommentMongoModelDB implements IModelDBComment {
         throw new NotFoundDbException('Area');
       });
   }
+*/
 
 }
 

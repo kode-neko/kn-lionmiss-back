@@ -7,6 +7,7 @@
     "docker": "docker-compose --env-file ./config/env/.env.dev up --detach",
     "docker:down": "docker-compose down",
     "build": "npx tsc --project ./config/tsconfig.json",
+    "mongo:fix": "dotenvx run -f ./config/env/.env.dev -- node ./public/fixtures/app.js",
     "express": "dotenvx run -f ./config/env/.env.dev -- node ./public/api/express/index.js",
     "pass:app": "node ./scripts/pass-app.mjs",
     "scratch": "tsc --module esnext ./scripts/scratches.ts && node ./scripts/scratches.js",
@@ -23,6 +24,7 @@
     "@inquirer/select": "^4.0.2",
     "@stylistic/eslint-plugin": "^2.7.2",
     "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.1",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.9.0",
     "bcrypt": "^5.1.1",
@@ -60,6 +62,6 @@
     "rate-limiter-flexible": "^5.0.4",
     "sequelize": "^6.37.3",
     "uuid": "^11.0.3",
-    "zod": "^3.23.8"
+    "zod": "^3.24.1"
   }
 }

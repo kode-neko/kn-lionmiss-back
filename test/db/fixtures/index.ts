@@ -1,38 +1,19 @@
+export { createAreaMongoListFix } from './areaFix';
 export {
-  // Article
-  createFixArticle,
-  createFixArticleNoId,
-  createFixListArticle,
-  // Area
-  createFixArea,
-  createFixAreaNoId,
-  createFixListArea,
-  // Article-Area
-  createFixArticleArea,
-  createFixArticleAreaNoId,
-  createFixListArticleArea
+  createFixArticleVariantMongo,
+  createFixArticleAreaMongo,
+  createFixArticleMongo
 } from './articleFix';
-
+export { createFixCommentMongo } from './commentFix';
+export { createFixPictureMongo } from './pictureFix';
 export {
-  // Cart
-  createFixCartLine,
-  createFixCart,
-  createFixCartNoId,
-  // Shipping
-  createFixShipping,
-  createFixShippingNoId
-} from './cartFix';
-
+  createFixShippingLineMongo,
+  createFixShippingMongo
+} from './shippingFix';
 export {
-  // Comment
-  createFixComment,
-  createFixCommentNoId,
-  createFixListComment,
-  // Address
-  createFixAddress,
-  createFixAddressNoId,
-  createFixListAddress,
-  // User
-  createFixMeasures,
-  createFixUser
+  createFixCartLineMongo,
+  createFixCartMongo,
+  createFixMeasuresMongo,
+  createFixAddressMongo,
+  createFixUserMongo
 } from './userFix';

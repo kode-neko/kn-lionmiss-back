@@ -21,3 +21,19 @@ export {
   IModelDBUser,
   IModelDBType
 } from './interfaces';
+export {
+  AreaMongo,
+  ArticleVariantMongo,
+  ArticleAreaMongo,
+  ArticleMongo,
+  CommentMongo,
+  PictureMongo,
+  ShippingLineMongo,
+  ShippingMongo,
+  CartLineMongo,
+  MeasuresMongo,
+  AddressMongo,
+  UserMongo,
+  createConnMongo,
+  getConnMongo
+} from './mongo';

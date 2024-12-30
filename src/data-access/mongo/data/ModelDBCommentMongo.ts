@@ -17,9 +17,9 @@ class CommentMongoModelDB implements IModelDBComment {
 
   private collComment: Collection<CommentMongo>;
 
-  private static instance: IModelDBComment;
+  private static instance: CommentMongoModelDB;
 
-  public static getIntance (): IModelDBComment {
+  public static getInstance (): CommentMongoModelDB {
     if (!CommentMongoModelDB.instance) {
       CommentMongoModelDB.instance = new CommentMongoModelDB();
     }
@@ -29,32 +29,25 @@ class CommentMongoModelDB implements IModelDBComment {
   private constructor () {
     [this.client,
       this.db] = getConnMongo();
-    this.collComment = this.db.collection<CommentMongo>('cart');
+    this.collComment = this.db.collection<CommentMongo>('comment');
   }
 
-  read (id: string): Promise<Comment> {
+  read (id: string): Promise<Comment | NotFoundDbException> {
     return this.collComment
-      .findOne({ $or: [{ _id: new ObjectId(id) }, { name: id }] })
+      .findOne({ _id: new ObjectId(id) })
       .then((res) => {
         if (!res) throw new NotFoundDbException('Comment');
         return parseMongoToComment(res);
       });
   }
 
-  readList (searchParams?: SearchParams<Comment>): Promise<Comment[]> {
-    const {
-      limit, skip, obj
-    } = searchParams;
-    let filter;
-    if (obj) filter = [
-      { article: obj.article },
-      { user: obj.user }
-    ];
+  readList (searchParams: SearchParams<Comment>): Promise<Comment[]> {
+    const { skip, limit } = searchParams;
     return this.collComment
-      .find({ $or: filter }, { limit, skip })
+      .find({}, { skip, limit })
       .toArray()
       .then((list) => {
-        return list.map((e) => parseMongoToComment(e));
+        return list.map(parseMongoToComment);
       });
   }
 

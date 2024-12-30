@@ -7,7 +7,11 @@ import {
   deleteComment
 } from '../controllers';
 import {
-  bodyValidMidCreate, idBodyValidMid, idParamValidMid, searchParamsBodyValidMid
+  bodyParamValidMidCreate,
+  bodyValidMidCreate,
+  idBodyValidMid,
+  idParamValidMid,
+  searchParamsBodyValidMid
 } from '../middlewares/validationsMid';
 
 const router = Router();
@@ -32,7 +36,7 @@ router.post(
 router.put(
   '/',
   idBodyValidMid,
-  bodyValidMidCreate('comment'),
+  bodyParamValidMidCreate('comment'),
   putComment
 );
 router.delete(

@@ -1,4 +1,3 @@
-import { SearchParams, Shipping } from '@model/index';
 import {
   Collection, Db, MongoClient,
   ObjectId
@@ -6,10 +5,14 @@ import {
 import { NotFoundDbException } from '../../error';
 import { IModelDBShipping } from '../../interfaces';
 import {
-  ArticleMongo, CartMongo, ShippingMongo
+  CartMongo,
+  ShippingMongo,
+  UserMongo
 } from '../db/interfaces';
 import { getConnMongo } from '../db/utils';
-import { parseMongoToShiping, parseShipingToMongo } from '../db/parsers';
+import { SearchParams, Shipping } from '../../../model';
+import { parseMongoToShipping, parseShippingToMongo } from '../db/parsers';
+import { v7 as uuidv7 } from 'uuid';
 
 class ShippingMongoModelDB implements IModelDBShipping {
 
@@ -19,13 +22,11 @@ class ShippingMongoModelDB implements IModelDBShipping {
 
   private collShipping: Collection<ShippingMongo>;
 
-  private collArt: Collection<ArticleMongo>;
-
-  private collCart: Collection<CartMongo>;
+  private collUser: Collection<UserMongo>;
 
   private static instance: IModelDBShipping;
 
-  public static getIntance (): IModelDBShipping {
+  public static getInstance (): IModelDBShipping {
     if (!ShippingMongoModelDB.instance) {
       ShippingMongoModelDB.instance = new ShippingMongoModelDB();
     }
@@ -36,82 +37,92 @@ class ShippingMongoModelDB implements IModelDBShipping {
     [this.client,
       this.db] = getConnMongo();
     this.collShipping = this.db.collection<ShippingMongo>('shipping');
-    this.collArt = this.db.collection<ArticleMongo>('article');
-    this.collCart = this.db.collection<CartMongo>('cart');
+    this.collUser = this.db.collection<UserMongo>('user');
   }
 
-  read (id: string): Promise<Shipping> {
+  // New Shipping From Cart
+
+  createFromUserCart (userId: string, shippingOps: Pick<Shipping, 'idTracking' | 'state' | 'idPayment' | 'payment'>): Promise<Shipping> {
     let shippingMongo: ShippingMongo;
+    return this.collUser
+      .findOne({ _id: new ObjectId(userId) })
+      // Find User
+      .then((res) => {
+        if (!res) throw new NotFoundDbException('User');
+        shippingMongo = {
+          ...shippingOps,
+          _id: new ObjectId(res.cart.id),
+          shippingLineList: res.cart.cartLineList.map((cl) => ({
+            order: cl.order,
+            qty: cl.qty,
+            article: cl.article
+          }))
+        };
+        return this.collShipping
+          .insertOne(shippingMongo);
+      })
+      // New Shipping
+      .then(() => this.collUser
+        .updateOne(
+          { _id: new ObjectId(userId) },
+          { $push: { shippingList: shippingMongo._id } }
+        ))
+      // New Add new Shipping to User account
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('Cart');
+        const cartMongo: CartMongo = {
+          id: uuidv7(),
+          cartLineList: []
+        };
+        return this.collUser
+          .updateOne(
+            { _id: new ObjectId(userId) },
+            { cart: cartMongo }
+          );
+      })
+      // New empty Cart
+      .then(({ modifiedCount }) => {
+        if (modifiedCount === 0) throw new NotFoundDbException('Cart');
+        return parseMongoToShipping(shippingMongo);
+      });
+  }
+
+  // CRUD
+
+  read (id: string): Promise<Shipping | NotFoundDbException> {
     return this.collShipping
       .findOne({ _id: new ObjectId(id) })
       .then((res) => {
-        if (!res) throw new NotFoundDbException('Cart');
-        shippingMongo = res;
-        const idArticleList = res.shippingLineList.map((sl) => new ObjectId(sl.article));
-        return this.collArt
-          .find({ _id: { $in: idArticleList } });
-      })
-      .then((res) => res.toArray())
-      .then((list) => parseMongoToShiping(shippingMongo, list));
+        if (!res) throw new NotFoundDbException('Shipping');
+        return parseMongoToShipping(res);
+      });
   }
 
-  readList (searchParams?: SearchParams<Shipping>): Promise<Shipping[]> {
-    const {
-      limit, skip, tags
-    } = searchParams;
-    const idsList = tags.map((t) => new ObjectId(t));
-    let shippingMongoList: ShippingMongo[];
+  readList (searchParams: SearchParams<Shipping>): Promise<Shipping[]> {
+    const { limit, skip } = searchParams;
     return this.collShipping
-      .find({ _id: { $in: idsList } }, { limit, skip })
+      .find({}, { limit, skip })
       .toArray()
       .then((list) => {
-        shippingMongoList = list;
-        const idArticleList = shippingMongoList.flatMap((sml) => sml.shippingLineList.map((slm) => new ObjectId(slm.article)));
-        return this.collArt
-          .find({ _id: { $in: idArticleList } });
-      })
-      .then((res) => res.toArray())
-      .then((list) => shippingMongoList.map((sm) => parseMongoToShiping(sm, list)));
+        return list.map(parseMongoToShipping);
+      });
   }
 
   update (obj: Shipping): Promise<void | NotFoundDbException> {
-    const { _id, ...rest } = parseShipingToMongo(obj);
+    const { _id, ...rest } = parseShippingToMongo(obj);
     return this.collShipping
       .updateOne({ _id }, { ...rest })
       .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('shipping');
+        if (modifiedCount === 0) throw new NotFoundDbException('Shipping');
       });
   }
 
   delete (id: string): Promise<void | NotFoundDbException> {
     return this.collShipping
-      .deleteOne({ _id: new ObjectId(id) })
+      .deleteOne(new ObjectId(id))
       .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('shipping');
+        if (deletedCount === 0) throw new NotFoundDbException('Shipping');
       });
-  }
-
-  createFromCart (cartId: string): Promise<Shipping> {
-    let shippingMongo: ShippingMongo;
-    return this.collCart
-      .findOne({ _id: new ObjectId(cartId) })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Cart');
-        shippingMongo = {
-          state: {},
-          shippingLineList: res.cartLineList
-        };
-        return this.collShipping
-          .insertOne(shippingMongo);
-      })
-      .then(({ insertedId }) => {
-        shippingMongo = { _id: insertedId, ...shippingMongo };
-        const artIds = shippingMongo.shippingLineList.map((slm) => slm.article);
-        return this.collArt
-          .find({ _id: { $in: artIds } });
-      })
-      .then((list) => list.toArray())
-      .then((list) => parseMongoToShiping(shippingMongo, list));
   }
 
 }

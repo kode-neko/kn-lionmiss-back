@@ -1,20 +1,22 @@
 import {
-  Collection, Db, MongoClient,
+  Collection,
+  Db,
+  MongoClient,
   ObjectId
 } from 'mongodb';
 import { IModelDBArticle } from '../../interfaces';
 import { NotFoundDbException } from '../../error';
+import { AreaMongo, ArticleMongo } from '../db/interfaces';
 import {
-  AreaMongo, ArticleAreaMongo, ArticleMongo
-} from '../db/interfaces';
-import {
-  Area, Article, ArticleArea, SearchParams
+  Article, ArticleArea, SearchParams
 } from '../../../model';
 import { getConnMongo } from '../db/utils';
 import {
-  parseArticleAreaToMongo, parseArticleToMongo, parseMongoToArticle,
-  parseMongoToArticleArea
+  parseArticleAreaToMongo,
+  parseArticleToMongo,
+  parseMongoToArticle
 } from '../db/parsers';
+import { v7 as uuidv7 } from 'uuid';
 
 class ArticleMongoModelDB implements IModelDBArticle {
 
@@ -24,11 +26,9 @@ class ArticleMongoModelDB implements IModelDBArticle {
 
   private collArt: Collection<ArticleMongo>;
 
-  private collArtArea: Collection<ArticleAreaMongo>;
+  private static instance: ArticleMongoModelDB;
 
-  private static instance: IModelDBArticle;
-
-  public static getIntance (): IModelDBArticle {
+  public static getInstance (): ArticleMongoModelDB {
     if (!ArticleMongoModelDB.instance) {
       ArticleMongoModelDB.instance = new ArticleMongoModelDB();
     }
@@ -39,51 +39,70 @@ class ArticleMongoModelDB implements IModelDBArticle {
     [this.client,
       this.db] = getConnMongo();
     this.collArt = this.db.collection<ArticleMongo>('article');
-    this.collArtArea = this.db.collection<ArticleAreaMongo>('articleArticle');
   }
+
+  private pipeLookupArea =
+    {
+      $lookup: {
+        from: 'area',
+        localField: 'articleAreaList.area',
+        foreignField: 'name',
+        as: 'areaList'
+      }
+    };
+
+  // CRUD
 
   read (id: string): Promise<Article> {
     return this.collArt
-      .findOne({ _id: new ObjectId(id) })
-      .then((res) => {
-        if (!res) throw new NotFoundDbException('Article');
-        return parseMongoToArticle(res);
+      .aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        this.pipeLookupArea
+      ])
+      .toArray()
+      .then((list) => {
+        if (list.length === 0) throw new NotFoundDbException('Article');
+        const article = list[0] as ArticleMongo;
+        const areaList = list[0].areaList as AreaMongo[];
+        return parseMongoToArticle(article, areaList);
       });
   }
 
   readList (searchParams: SearchParams<Article>): Promise<Article[]> {
-    const { limit, skip } = searchParams;
-    const filter = searchParams.tags.map((t) => ({ name: t }));
+    const {
+      tags, limit, skip
+    } = searchParams;
     return this.collArt
-      .find({ $or: filter }, { limit, skip })
+      .aggregate([
+        { $match: { tags: { $in: tags } } },
+        this.pipeLookupArea,
+        { $skip: skip },
+        { $limit: limit }
+      ])
       .toArray()
       .then((list) => {
-        return list.map((e) => parseMongoToArticle(e));
+        if (list.length === 0) throw new NotFoundDbException('Article');
+        return list.map((am) => {
+          const article = am as ArticleMongo;
+          const areaList = am.areaList as AreaMongo[];
+          return parseMongoToArticle(article, areaList);
+        });
       });
   }
 
   create (obj: Article): Promise<Article> {
-    const artMongo = parseArticleToMongo(obj);
-    let artAreaMongoList = obj.articleAreaList.map((aa) => parseArticleAreaToMongo(aa));
-    return this.collArtArea
-      .insertMany(artAreaMongoList)
-      .then(({ insertedIds }) => {
-        artAreaMongoList = artAreaMongoList.map((aa, i) => ({ ...aa, _id: insertedIds[i] }));
-        return this.collArt
-          .insertOne(artMongo);
-      })
+    const mongo = parseArticleToMongo(obj);
+    return this.collArt
+      .insertOne(mongo)
       .then(({ insertedId }) => {
-        const articleAreaList = artAreaMongoList.map((aam) => parseMongoToArticleArea(aam));
-        return {
-          ...obj, _id: insertedId.toString(), articleAreaList
-        };
+        return { id: insertedId.toString(), ...obj };
       });
   }
 
   update (obj: Article): Promise<void | NotFoundDbException> {
     const { _id, ...rest } = parseArticleToMongo(obj);
     return this.collArt
-      .updateOne({ _id }, { ...rest })
+      .updateOne({ _id }, rest)
       .then(({ modifiedCount }) => {
         if (modifiedCount === 0) throw new NotFoundDbException('Article');
       });
@@ -91,112 +110,95 @@ class ArticleMongoModelDB implements IModelDBArticle {
 
   delete (id: string): Promise<void | NotFoundDbException> {
     return this.collArt
-      .deleteOne(new ObjectId(id))
+      .deleteOne({ _id: new ObjectId(id) })
       .then(({ deletedCount }) => {
         if (deletedCount === 0) throw new NotFoundDbException('Article');
       });
   }
 
-  private static mongoProjectionArea = (area: string) => ({
-    $project: {
-      articleAreaList: {
-        $filter: {
-          input: '$articleAreaList',
-          cond: {
-            $or: [
-              { $eq: ['$articleAreaList.area.name', area] },
-              { $eq: ['$articleAreaList.area._id', new ObjectId(area)] }
-            ]
-          }
-        }
-      }
-    }
-  });
+  // Article Area
 
   readByArea (id: string, area: string): Promise<Article | NotFoundDbException> {
     return this.collArt
       .aggregate([
-        { $match: { _id: new ObjectId(id) } },
-        ArticleMongoModelDB.mongoProjectionArea(area)
+        {
+          $match: {
+            _id: new ObjectId(id),
+            'articleAreaList.area': area
+          }
+        },
+        this.pipeLookupArea
       ])
       .toArray()
       .then((list) => {
         if (list.length === 0) throw new NotFoundDbException('Article');
-        return parseMongoToArticle(list[0] as ArticleMongo);
+        const article = list[0] as ArticleMongo;
+        const areaList = list[0].areaList as AreaMongo[];
+        return parseMongoToArticle(article, areaList);
       });
   }
 
   readListByArea (searchParams: SearchParams<Article>, area: string): Promise<Article[]> {
     const {
-      limit, skip, tags
+      tags, limit, skip
     } = searchParams;
     return this.collArt
       .aggregate([
-        { $match: { tags: { $elemMatch: { $in: tags } } } },
-        { $limit: limit, $kip: skip },
-        ArticleMongoModelDB.mongoProjectionArea(area)
+        {
+          $match: {
+            tags: { $in: tags },
+            'articleAreaList.area': area
+          }
+        },
+        this.pipeLookupArea,
+        { $skip: skip },
+        { $limit: limit }
       ])
       .toArray()
       .then((list) => {
-        return list.map((e) => parseMongoToArticle(e as ArticleMongo));
+        if (list.length === 0) throw new NotFoundDbException('Article');
+        return list.map((am) => {
+          const article = am as ArticleMongo;
+          const areaList = am.areaList as AreaMongo[];
+          return parseMongoToArticle(article, areaList);
+        });
       });
   }
 
-  createArticleArea (id: string, articleArea: ArticleArea): Promise<Article> {
-    let artMongo: ArticleMongo;
-    let artAreaMongo: ArticleAreaMongo;
+  createArticleArea (id: string, articleArea: ArticleArea): Promise<ArticleArea> {
+    const idArtArea = uuidv7();
+    const mongo = parseArticleAreaToMongo(articleArea);
     return this.collArt
-      .findOne({ _id: new ObjectId(id) })
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $push: { articleAreaList: { id: idArtArea, ...mongo } } }
+      )
       .then((res) => {
         if (!res) throw new NotFoundDbException('Article');
-        artMongo = res;
-        const artAreaMongo = parseArticleAreaToMongo(articleArea);
-        return this.collArtArea
-          .insertOne(artAreaMongo);
-      })
-      .then(({ insertedId }) => {
-        artAreaMongo = parseArticleAreaToMongo({ ...articleArea, _id: insertedId });
-        return this.collArt
-          .updateOne(
-            { _id: new ObjectId(id) },
-            { $push: { articleAreaList: { ...artAreaMongo } } }
-          );
-      })
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('Article');
-        const article = parseMongoToArticle(artMongo);
-        const articleAreaListMongo = [artAreaMongo, ...artMongo.articleAreaList];
-        const articleAreaList = articleAreaListMongo.map((aam) => parseMongoToArticleArea(aam));
-        return { ...article, articleAreaList };
+        return { id, ...articleArea };
       });
   }
 
-  updateArticleArea (articleArea: ArticleArea): Promise<void | NotFoundDbException> {
-    const { id, ...rest } = articleArea;
-    return this.collArtArea
-      .updateOne({ _id: new ObjectId(id) }, { ...rest })
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('ArticleArea');
+  updateArticleArea (id: string, articleArea: ArticleArea): Promise<void | NotFoundDbException> {
+    const mongo = parseArticleAreaToMongo(articleArea);
+    return this.collArt
+      .updateOne(
+        { _id: new ObjectId(id), 'articleAreaList.id': mongo.id },
+        { $push: { 'articleAreaList.$': articleArea } }
+      )
+      .then((res) => {
+        if (!res) throw new NotFoundDbException('Article');
       });
   }
 
   deleteArticleArea (id: string, articleAreaId: string): Promise<void | NotFoundDbException> {
     return this.collArt
-      .findOne({
-        _id: new ObjectId(id),
-        articleAreaList: { $elemMatch: { $eq: { _id: new ObjectId(articleAreaId) } } }
-      })
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $pull: { articleAreaList: { id: articleAreaId } } }
+      )
       .then((res) => {
         if (!res) throw new NotFoundDbException('Article');
-        return this.collArt
-          .updateOne({ _id: new ObjectId(id) }, { $pull: { articleAreaList: { $eq: new ObjectId(articleAreaId) } } });
-      })
-      .then(({ modifiedCount }) => {
-        if (modifiedCount === 0) throw new NotFoundDbException('ArticleArea');
-        return this.collArtArea.deleteOne({ _id: new ObjectId(articleAreaId) });
-      })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 0) throw new NotFoundDbException('ArticleArea');
       });
   }
 

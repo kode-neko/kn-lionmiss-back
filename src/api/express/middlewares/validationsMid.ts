@@ -12,19 +12,20 @@ import {
   CartLineValSchema,
   UserLoginValSchema,
   ArticleAreaValSchema,
-  AreaValSchema
+  AreaValSchema,
+  ShippingOpsValSchema
 } from './validations';
 
 function attrValidMidCreate (idName = 'id', petition = 'params') {
   return (req: Request, _: Response, next: NextFunction) => {
     const ValidSchemaIdName = idValSchemaCreateFunc(idName);
-    ValidSchemaIdName.parse(req[petition][idName]);
+    ValidSchemaIdName.parse(req[petition]);
     next();
   };
 }
 
 function idBodyValidMid () {
-  attrValidMidCreate('id', 'body');
+  return attrValidMidCreate('id', 'body');
 }
 
 function idParamValidMid () {
@@ -74,6 +75,11 @@ function loginValidMid (req: Request, res: Response, next: NextFunction) {
   next();
 }
 
+function shippingOpsMid (req: Request, res: Response, next: NextFunction) {
+  ShippingOpsValSchema.parse(req.body.shippingOps);
+  next();
+}
+
 export {
   attrValidMidCreate,
   idBodyValidMid,
@@ -82,5 +88,6 @@ export {
   searchParamsBodyParamValidMid,
   bodyValidMidCreate,
   bodyParamValidMidCreate,
-  loginValidMid
+  loginValidMid,
+  shippingOpsMid
 };

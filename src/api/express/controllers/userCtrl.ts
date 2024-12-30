@@ -5,26 +5,18 @@ import { errorResponse } from './utils';
 import { compare } from 'bcrypt';
 import { createTokenJwt } from '../../../utils';
 
-// Controllers
+// Factory and bricks
 
-function getUserById (req: Request, res: Response) {
-  const { user } = req.params;
-  return getUser()
-    .read(user)
-    .then((obj) => res.status(200).send(obj))
+function factoryUserLogin (req: Request, res: Response, loginFunc: (req: Request, user: User) => Promise<Record<string, string | boolean>>) {
+  const { userName, pass } = req.params;
+  getUser()
+    .read(userName)
+    .then((user: User) => {
+      if (!compare(pass, `${user.salt}${user.hash}`)) throw new Error('User not found');
+      return loginFunc(req, user);
+    })
+    .then((info) => res.status(201).send(info))
     .catch((err) => errorResponse(err, res));
-}
-
-// Factories
-
-function userLogoutSession (req: Request) {
-  req.session.destroy;
-  return Promise.resolve({ logout: 'Session destroyed' });
-}
-
-function userLogoutJwt () {
-  // TODO - Blacklist tokens
-  return Promise.resolve({ logout: 'Token revoked' });
 }
 
 function factoryUserLogout (req: Request, res: Response, logoutFunc: (req: Request) => Promise<Record<string, string | boolean>>) {
@@ -32,9 +24,19 @@ function factoryUserLogout (req: Request, res: Response, logoutFunc: (req: Reque
     .then(() => res.status(200).send({ logout: true }));
 }
 
+function userLogoutJwt () {
+  // TODO - Blacklist tokens
+  return Promise.resolve({ logout: 'Token revoked' });
+}
+
 async function userLoginJwt (_: Request, user: User) {
   const token = await createTokenJwt(user);
   return { token };
+}
+
+function userLogoutSession (req: Request) {
+  req.session.destroy(() => {});
+  return Promise.resolve({ logout: 'Session destroyed' });
 }
 
 function userLoginSession (req: Request, user: User) {
@@ -44,15 +46,13 @@ function userLoginSession (req: Request, user: User) {
   });
 }
 
-function factoryUserLogin (req: Request, res: Response, loginFunc: (req: Request, user: User) => Promise<Record<string, string | boolean>>) {
-  const { userName, pass } = req.params;
-  getUser()
-    .read(userName)
-    .then((user) => {
-      if (!compare(pass, `${user.salt}${user.hash}`)) throw new Error('User not found');
-      return loginFunc(req, user);
-    })
-    .then((info) => res.status(201).send(info))
+// Controllers
+
+function getUserById (req: Request, res: Response) {
+  const { user } = req.params;
+  return getUser()
+    .read(user)
+    .then((obj) => res.status(200).send(obj))
     .catch((err) => errorResponse(err, res));
 }
 
