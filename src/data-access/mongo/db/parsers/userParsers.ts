@@ -20,7 +20,7 @@ import { parseMongoToShipping } from './shippingParsers';
 
 function parseCartLineToMongo (cartLine: CartLine): CartLineMongo {
   const article = cartLine.articleId
-    ? new ObjectId(cartLine.articleId)
+    ? new ObjectId(cartLine.articleId as string)
     : undefined;
   return {
     order: cartLine.order,

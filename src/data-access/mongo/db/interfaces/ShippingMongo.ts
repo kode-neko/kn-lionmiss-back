@@ -6,7 +6,7 @@ interface ShippingLineMongo {
   order: string;
   qty: number;
 
-  article: ArticleMongo['_id'];
+  article?: ArticleMongo['_id'];
 }
 
 interface ShippingMongo {

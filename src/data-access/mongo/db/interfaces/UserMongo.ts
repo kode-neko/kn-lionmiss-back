@@ -11,7 +11,7 @@ interface CartLineMongo {
   order: string;
   qty: number;
 
-  article: ObjectId;
+  article: ArticleMongo['_id'];
 }
 
 interface CartMongo {

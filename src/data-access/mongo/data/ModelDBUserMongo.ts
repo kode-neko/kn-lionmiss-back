@@ -1,5 +1,6 @@
 import {
-  Collection, Db, MongoClient
+  Collection, Db, MongoClient,
+  ObjectId
 } from 'mongodb';
 import { IModelDBUser } from '../../interfaces';
 import { UserMongo } from '../db/interfaces';
@@ -34,6 +35,7 @@ class UserMongoModelDB implements IModelDBUser {
   read (id: string): Promise<User | NotFoundDbException> {
     return this.collUser
       .aggregate([
+        { $match: { $or: [{ _id: new ObjectId(id) }, { name: id }] } },
         {
           $lookup: {
             from: 'area',
