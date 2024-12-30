@@ -75,5 +75,6 @@ export {
   CartLineValSchema,
   CartValSchema,
   ShippingtLineValSchema,
-  ShippingValSchema
+  ShippingValSchema,
+  ShippingOpsValSchema
 };

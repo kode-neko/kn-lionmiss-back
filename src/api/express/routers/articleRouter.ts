@@ -14,7 +14,10 @@ import {
 import {
   attrValidMidCreate,
   bodyParamValidMidCreate,
-  bodyValidMidCreate, idBodyValidMid, idParamValidMid, searchParamsBodyParamValidMid, searchParamsBodyValidMid
+  bodyValidMidCreate,
+  idBodyValidMid,
+  idParamValidMid,
+  searchParamsBodyValidMid
 } from '../middlewares/validationsMid';
 
 const router = Router();
@@ -38,7 +41,7 @@ router.post(
 router.put(
   '/',
   idBodyValidMid,
-  bodyValidMidCreate('article'),
+  bodyParamValidMidCreate('article'),
   putArticle
 );
 router.delete(
@@ -56,24 +59,25 @@ router.get(
 );
 router.post(
   '/area/list',
-  searchParamsBodyParamValidMid,
+  attrValidMidCreate('idArticle', 'body'),
   bodyParamValidMidCreate('area'),
   postArticleListByArea
 );
 router.post(
   '/area',
-  idBodyValidMid,
+  attrValidMidCreate('idArticle', 'body'),
   bodyParamValidMidCreate('articleArea'),
   postArticleArea
 );
 router.put(
   '/area',
+  attrValidMidCreate('idArticle', 'body'),
   bodyParamValidMidCreate('articleArea'),
   putArticleArea
 );
 router.delete(
   '/:idArticle/area/:area',
-  idParamValidMid,
+  attrValidMidCreate('idArticle', 'body'),
   bodyParamValidMidCreate('articleArea'),
   deleteArticleArea
 );

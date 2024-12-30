@@ -6,7 +6,9 @@ import {
   deleteCartLine
 } from '../controllers';
 import {
-  attrValidMidCreate, bodyParamValidMidCreate, idParamValidMid
+  attrValidMidCreate,
+  bodyParamValidMidCreate,
+  idParamValidMid
 } from '../middlewares/validationsMid';
 
 const router = Router();

@@ -6,7 +6,8 @@ export {
   searchParamsBodyParamValidMid,
   bodyValidMidCreate,
   bodyParamValidMidCreate,
-  loginValidMid
+  loginValidMid,
+  shippingOpsMid
 } from './validationsMid';
 export {
   chkAuthJwtMid,
