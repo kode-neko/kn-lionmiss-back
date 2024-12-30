@@ -1,17 +1,19 @@
-export { default as IAreaMongo } from './IAreaMongo';
-export { default as IArticleAreaMongo } from './IArticleAreaMongo';
-export { default as IArticleMongo } from './IArticleMongo';
+export { AreaMongo } from './AreaMongo';
 export {
-  ICartLineMongo,
-  ICartMongo
-} from './ICartMongo';
-export { default as ICommentMongo } from './ICommentMongo';
+  ArticleVariantMongo,
+  ArticleAreaMongo,
+  ArticleMongo
+} from './ArticleMongo';
+export { CommentMongo } from './CommentMongo';
+export { PictureMongo } from './PictureMongo';
 export {
-  IShippingLineMongo,
-  IShippingMongo
-} from './IShippingMongo';
+  ShippingLineMongo,
+  ShippingMongo
+} from './ShippingMongo';
 export {
-  IUserMeasuresMongo,
-  IAddressMongo,
-  IUserMongo
-} from './IUserMongo';
+  CartLineMongo,
+  CartMongo,
+  MeasuresMongo,
+  AddressMongo,
+  UserMongo
+} from './UserMongo';

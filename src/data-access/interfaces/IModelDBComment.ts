@@ -1,4 +1,4 @@
-import { Comment } from '@model/article';
+import { Comment } from '../../model';
 import IModelDB from './IModelDB';
 
 type IModelDBComment = IModelDB<Comment>;

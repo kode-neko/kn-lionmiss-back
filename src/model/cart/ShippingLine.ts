@@ -1,8 +1,10 @@
-import { Article } from '@model/index';
+import { Article } from '../article';
 
 interface ShippingLine {
-  id: number;
+  order: string;
   qty: number;
+
+  articleId?: string;
   article?: Article;
 }
 

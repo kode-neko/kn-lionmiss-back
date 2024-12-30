@@ -1,27 +1,49 @@
 import { Request, Response } from 'express';
+import { getShipping } from '../../../data-access';
+import { errorResponse } from './utils';
 
-function getShippingId (req: Request, res: Response) {
-  res.status(200).send({ created: 'getShippingId' });
+// RUD Shipping
+
+function getShippingById (req: Request, res: Response) {
+  const { id } = req.params;
+  return getShipping()
+    .read(id)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
 }
 
 function postShippingList (req: Request, res: Response) {
-  res.status(200).send({ created: 'postShippingList' });
-}
-
-function postShipping (req: Request, res: Response) {
-  res.status(201).send({ created: 'postShipping' });
+  return getShipping()
+    .readList(req.body)
+    .then((list) => res.status(200).send(list));
 }
 
 function putShipping (req: Request, res: Response) {
-  res.status(200).send({ created: 'putShipping' });
+  return getShipping()
+    .update(req.body)
+    .then(() => res.status(200))
+    .catch((err) => errorResponse(err, res));
 }
 
 function deleteShipping (req: Request, res: Response) {
-  res.status(200).send({ created: 'deleteShipping' });
+  const { id } = req.params;
+  return getShipping()
+    .delete(id)
+    .then(() => res.status(200))
+    .catch((err) => errorResponse(err, res));
+}
+
+// Create from Cart
+
+function postShipping (req: Request, res: Response) {
+  const { userId, shipping } = req.body;
+  return getShipping()
+    .createFromUserCart(userId, shipping)
+    .then((objId) => res.status(201).send(objId));
 }
 
 export {
-  getShippingId,
+  getShippingById,
   postShippingList,
   postShipping,
   putShipping,

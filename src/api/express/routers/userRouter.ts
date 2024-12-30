@@ -1,20 +1,43 @@
 import { Router } from 'express';
 import {
-  getUserId,
-  getUserIdCart,
-  postUserLogin,
-  postUserLogout
+  getUserById,
+  postUserLoginJwt,
+  postUserLoginSession,
+  portUserLogoutSession,
+  postUserLogoutJwt
 } from '../controllers';
-import {
-  validationIdCreateFunc,
-  validationLoginMid
-} from '../middlewares';
+import { attrValidMidCreate, loginValidMid } from '../middlewares/validationsMid';
+
+const { AUTH_SYS } = process.env;
 
 const router = Router();
 
-router.get('/:userame', validationIdCreateFunc('username'), getUserId);
-router.post('/login', validationLoginMid, postUserLogin);
-router.post('/logout', postUserLogout);
-router.get('/:username/cart', validationIdCreateFunc('username'), getUserIdCart);
+let postUserLogin;
+let postUserLogout;
+
+switch (AUTH_SYS) {
+  case 'session':
+    postUserLogin = postUserLoginJwt;
+    postUserLogout = postUserLogoutJwt;
+    break;
+  default:
+    postUserLogin = postUserLoginSession;
+    postUserLogout = portUserLogoutSession;
+}
+
+router.get(
+  '/:userName',
+  attrValidMidCreate('userName'),
+  getUserById
+);
+router.post(
+  '/login',
+  loginValidMid,
+  postUserLogin
+);
+router.post(
+  '/logout',
+  postUserLogout
+);
 
 export default router;

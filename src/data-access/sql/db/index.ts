@@ -1,6 +1,4 @@
 export {
-  createConn,
-  getConn,
-  parseObjToStrCrit,
-  prepareInsertStatement
+  createPrismaClient,
+  getPrismaClient
 } from './utils';

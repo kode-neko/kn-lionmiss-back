@@ -1,49 +1,53 @@
-import { Db, MongoClient } from 'mongodb';
 
-let conn;
+import { Db, MongoClient } from 'mongodb';
 
 const {
   ENV,
   DB,
-  USER,
-  PASS_USER,
+  USER_ADMIN,
+  PASS_USER_ADMIN,
   HOST_MONGO,
-  PORT_MONGO
+  PORT_MONGO,
+  DB_POOL,
+  DB_POOL_MIN
 } = process.env;
 
-const urlConnect = `mongodb://${USER}:${PASS_USER}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=${DB}`;
+const urlConnect = `mongodb://${USER_ADMIN}:${PASS_USER_ADMIN}@${HOST_MONGO}:${PORT_MONGO}/${DB}?authSource=admin`;
 
 let client: MongoClient;
 let db: Db;
 
-async function createClient () {
+async function createClient (): Promise<MongoClient> {
   const client = new MongoClient(urlConnect);
   await client.connect();
   return client;
 }
 
-async function createClientPool () {
+async function createClientPool (): Promise<MongoClient> {
   const client = new MongoClient(
     urlConnect,
-    { minPoolSize: 2, maxPoolSize: 10 }
+    { minPoolSize: Number(DB_POOL_MIN), maxPoolSize: Number(DB_POOL) }
   );
   await client.connect();
   return client;
 }
 
-async function createConn () {
-  if (conn) return;
-  conn = await ENV === 'dev'
-    ? createClient()
-    : createClientPool();
-  db = conn.db(DB);
+async function createConnMongo (): Promise<void> {
+  if (client) return;
+  client = ENV === 'dev'
+    ? await createClient()
+    : await createClientPool();
+  db = client.db(DB);
 }
 
-function getClientDb (): [MongoClient, Db] {
+function getConnMongo (): [MongoClient, Db] {
   return [
     client,
     db
   ];
 }
 
-export { createConn, getClientDb };
+export {
+  createConnMongo,
+  getConnMongo
+};

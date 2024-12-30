@@ -4,15 +4,15 @@ import tseslint from 'typescript-eslint';
 import stylistic from '@stylistic/eslint-plugin';
 
 export default [
-  {files: ['**/*.{js,mjs,cjs,ts}']},
-  {languageOptions: {globals: globals.browser}},
+  { files: ['**/*.{js,mjs,cjs,ts}'] },
+  { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    plugins: {'@stylistic': stylistic},
+    plugins: { '@stylistic': stylistic },
     rules: {
       ...stylistic.configs['all-flat'].rules,
-      '@stylistic/no-confusing-arrow': ["error", {"onlyOneSimpleParam": true}],
+      '@stylistic/no-confusing-arrow': ["error", { "onlyOneSimpleParam": true }],
       '@stylistic/dot-location': ["error", "property"],
       '@stylistic/object-curly-spacing': ['error', 'always'],
       '@stylistic/multiline-comment-style': ["error", "bare-block"],
@@ -24,6 +24,10 @@ export default [
         2
       ],
       '@stylistic/array-bracket-newline': [
+        'error',
+        'consistent'
+      ],
+      '@stylistic/array-element-newline': [
         'error',
         'consistent'
       ],

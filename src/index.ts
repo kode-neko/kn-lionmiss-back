@@ -1,10 +1,24 @@
-import {console} from './utils';
+import { initExpress } from './api';
+import { createConn } from './data-access';
 
-function test (a: number, b: number) {
-  return a + b;
+// Env bars
+const {
+  HOST_API, PORT_API, PORT_MONGO
+} = process.env;
+
+// Msgs
+const msgOkDb = `🗃️ DB server up in ${HOST_API}:${PORT_MONGO}`;
+const msgOkServer = `🚀 Express server up in ${HOST_API}:${PORT_API}`;
+const msgErr = (err) => `💥 There was a problem:\n${err}`;
+
+// Init App
+function initApp () {
+  createConn()
+    .then(() => {
+      console.log(msgOkDb);
+      initExpress(() => console.log(msgOkServer));
+    })
+    .catch((err) => console.log(msgErr(err)));
 }
 
-console.log(test(
-  2,
-  3
-));
+initApp();

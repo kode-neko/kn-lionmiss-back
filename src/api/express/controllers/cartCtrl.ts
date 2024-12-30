@@ -1,28 +1,45 @@
 import { Request, Response } from 'express';
+import { getCart } from '../../../data-access';
+import { errorResponse } from './utils';
 
-function getCart (req: Request, res: Response) {
-  res.status(200).send({ created: 'getCart' });
+// R Cart
+
+function getCartById (req: Request, res: Response) {
+  const { id } = req.params;
+  return getCart()
+    .read(id)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
 }
 
-function postCart (req: Request, res: Response) {
-  res.status(200).send({ created: 'getCart' });
-}
+// CartLine
 
 function postCartLine (req: Request, res: Response) {
-  res.status(201).send({ created: 'postCartLine' });
+  const { idCart, cartLine } = req.body;
+  return getCart()
+    .createLine(idCart, cartLine)
+    .then((list) => res.status(200).send(list))
+    .catch((err) => errorResponse(err, res));
 }
 
 function putCartLine (req: Request, res: Response) {
-  res.status(200).send({ created: 'putCartLine' });
+  const { idCart, cartLine } = req.body;
+  return getCart()
+    .updateLine(idCart, cartLine)
+    .then(() => res.status(200))
+    .catch((err) => errorResponse(err, res));
 }
 
 function deleteCartLine (req: Request, res: Response) {
-  res.status(200).send({ created: 'deleteCartLine' });
+  const { idCart, orderLine } = req.body;
+  return getCart()
+    .deleteLine(idCart, orderLine)
+    .then((obj) => res.status(200).send(obj))
+    .catch((err) => errorResponse(err, res));
 }
 
 export {
-  getCart,
-  postCart,
+  getCartById,
   postCartLine,
   putCartLine,
   deleteCartLine

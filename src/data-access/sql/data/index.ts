@@ -1,7 +1,6 @@
-export { default as AreaSqlModelDB } from './AreaSqlModelDB';
-export { default as ArticleAreaSqlModelDB } from './ArticleAreaSqlModelDB';
-export { default as ArticleSqlModelDB } from './ArticleSqlModelDB';
-export { default as CartSqlModelDB } from './CartSqlModelDB';
-export { default as CommentSqlModelDB } from './CommentSqlModelDB';
-export { default as ShippingSqlModelDB } from './ShippingSqlModelDB';
-export { default as UserSqlModelDB } from './UserSqlModelDB';
+export { default as ModelDBAreaSql } from './ModelDBAreaSql';
+export { default as ModelDBArticleSql } from './ModelDBArticleSql';
+export { default as ModelDBCartSql } from './ModelDBCartSql';
+export { default as ModelDBCommentSql } from './ModelDBCommentSql';
+export { default as ModelDBShippingSql } from './ModelDBShippingSql';
+export { default as ModelDBUserSql } from './ModelDBUserSql';

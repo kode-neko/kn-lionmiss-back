@@ -1,39 +1,46 @@
 export {
-  getArticleId,
+  getAreaById,
+  postAreaList,
+  postArea,
+  putArea,
+  deleteArea
+} from './areaCtrl';
+export {
+  getArticleById,
   postArticleList,
   postArticle,
   putArticle,
   deleteArticle,
-
-  getArticleIdAreaId,
-  getArticleIdAreaList,
-
-  getArticleIdCommentId,
-  postArticleIdCommentIdList,
-  postArticleIdCommentId,
-  putArticleIdCommentId,
-  deleteArticleIdCommentId
+  getArticleByIdArea,
+  postArticleListByArea,
+  postArticleArea,
+  putArticleArea,
+  deleteArticleArea
 } from './articleCtrl';
-
 export {
-  getCart,
-  postCart,
+  getCartById,
   postCartLine,
   putCartLine,
   deleteCartLine
 } from './cartCtrl';
-
 export {
-  getShippingId,
+  getCommentById,
+  postCommentList,
+  postComment,
+  putComment,
+  deleteComment
+} from './commentCtrl';
+export {
+  getShippingById,
   postShippingList,
   postShipping,
   putShipping,
   deleteShipping
 } from './shippingCtrl';
-
 export {
-  getUserId,
-  postUserLogin,
-  postUserLogout,
-  getUserIdCart
+  getUserById,
+  postUserLoginJwt,
+  postUserLoginSession,
+  portUserLogoutSession,
+  postUserLogoutJwt
 } from './userCtrl';

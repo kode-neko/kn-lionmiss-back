@@ -5,40 +5,48 @@ import {
   ArticleValSchema,
   CartValSchema,
   CommentValSchema,
-  IdValSchema,
   idValSchemaCreateFunc,
-  LoginValSchema,
-  SearParamsValSchema,
+  SearchParamsValSchema,
   ShippingValSchema,
   UserValSchema,
-  CartLineValSchema
-} from '@utils/validations';
+  CartLineValSchema,
+  UserLoginValSchema,
+  ArticleAreaValSchema,
+  AreaValSchema,
+  ShippingOpsValSchema
+} from './validations';
 
-function validationIdCreateFunc (idName: string) {
-  return (req: Request, res: Response, next: NextFunction) => {
+function attrValidMidCreate (idName = 'id', petition = 'params') {
+  return (req: Request, _: Response, next: NextFunction) => {
     const ValidSchemaIdName = idValSchemaCreateFunc(idName);
-    ValidSchemaIdName.parse(req.params[idName]);
+    ValidSchemaIdName.parse(req[petition]);
     next();
   };
 }
 
-function validationIdMid () {
-  validationIdCreateFunc('id');
+function idBodyValidMid () {
+  return attrValidMidCreate('id', 'body');
 }
 
-function validationIdBodyMid (req: Request, res: Response, next: NextFunction) {
-  IdValSchema.parse(req.body);
+function idParamValidMid () {
+  return attrValidMidCreate();
+}
+
+function searchParamsBodyValidMid (req: Request, res: Response, next: NextFunction) {
+  SearchParamsValSchema.parse(req.body);
   next();
 }
 
-function validationSearchParamsMid (req: Request, res: Response, next: NextFunction) {
-  SearParamsValSchema.parse(req.body);
+function searchParamsBodyParamValidMid (req: Request, res: Response, next: NextFunction) {
+  SearchParamsValSchema.parse(req.body.searchParams);
   next();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapVals: Record<string, any> = {
+  area: AreaValSchema,
   article: ArticleValSchema,
+  articleArea: ArticleAreaValSchema,
   comment: CommentValSchema,
   user: UserValSchema,
   cart: CartValSchema,
@@ -46,23 +54,40 @@ const mapVals: Record<string, any> = {
   shipping: ShippingValSchema
 };
 
-function validationBodyMidCreateFunc (name: string) {
+// All body is a model object
+function bodyValidMidCreate (name: string) {
   return (req: Request, res: Response, next: NextFunction) => {
     mapVals[name].parse(req.body);
     next();
   };
 }
 
-function validationLoginMid (req: Request, res: Response, next: NextFunction) {
-  LoginValSchema.parse(req.body);
+// A param body is a model object
+function bodyParamValidMidCreate (name: string) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    mapVals[name].parse(req.body[name]);
+    next();
+  };
+}
+
+function loginValidMid (req: Request, res: Response, next: NextFunction) {
+  UserLoginValSchema.parse(req.body);
+  next();
+}
+
+function shippingOpsMid (req: Request, res: Response, next: NextFunction) {
+  ShippingOpsValSchema.parse(req.body.shippingOps);
   next();
 }
 
 export {
-  validationIdMid,
-  validationIdBodyMid,
-  validationSearchParamsMid,
-  validationIdCreateFunc,
-  validationBodyMidCreateFunc,
-  validationLoginMid
+  attrValidMidCreate,
+  idBodyValidMid,
+  idParamValidMid,
+  searchParamsBodyValidMid,
+  searchParamsBodyParamValidMid,
+  bodyValidMidCreate,
+  bodyParamValidMidCreate,
+  loginValidMid,
+  shippingOpsMid
 };

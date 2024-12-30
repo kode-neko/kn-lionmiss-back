@@ -1,11 +1,39 @@
 export {
+  NotFoundDbException,
+  IdRequiredDbException
+} from './error';
+export {
+  createConn,
+  getArea,
+  getArticle,
+  getCart,
+  getComment,
+  getShipping,
+  getUser
+} from './utils';
+export {
   IModelDB,
   IModelDBArea,
   IModelDBArticle,
-  IModelDBArticleArea,
   IModelDBCart,
   IModelDBComment,
   IModelDBShipping,
-  IModelDBUser
+  IModelDBUser,
+  IModelDBType
 } from './interfaces';
-export { NotFoundDbException } from './error';
+export {
+  AreaMongo,
+  ArticleVariantMongo,
+  ArticleAreaMongo,
+  ArticleMongo,
+  CommentMongo,
+  PictureMongo,
+  ShippingLineMongo,
+  ShippingMongo,
+  CartLineMongo,
+  MeasuresMongo,
+  AddressMongo,
+  UserMongo,
+  createConnMongo,
+  getConnMongo
+} from './mongo';

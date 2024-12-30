@@ -1,9 +1,11 @@
-import { Article } from '@model/index';
+import { Article } from '../article';
 
 interface CartLine {
-  id: string;
+  order: string;
   qty: number;
-  article: Article;
+
+  articleId?: string;
+  article?: Article;
 }
 
 export default CartLine;

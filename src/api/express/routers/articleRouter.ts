@@ -1,90 +1,85 @@
 import { Router } from 'express';
 import {
-  getArticleId,
+  getArticleById,
   postArticleList,
   postArticle,
   putArticle,
   deleteArticle,
-  getArticleIdCommentId,
-  postArticleIdCommentIdList,
-  postArticleIdCommentId,
-  putArticleIdCommentId,
-  deleteArticleIdCommentId,
-  getArticleIdAreaList,
-  getArticleIdAreaId
+  getArticleByIdArea,
+  postArticleListByArea,
+  postArticleArea,
+  putArticleArea,
+  deleteArticleArea
 } from '../controllers';
 import {
-  validationBodyMidCreateFunc,
-  validationIdBodyMid,
-  validationIdMid,
-  validationIdCreateFunc,
-  validationSearchParamsMid
-} from '../middlewares';
+  attrValidMidCreate,
+  bodyParamValidMidCreate,
+  bodyValidMidCreate,
+  idBodyValidMid,
+  idParamValidMid,
+  searchParamsBodyValidMid
+} from '../middlewares/validationsMid';
 
 const router = Router();
 
 // Article ops
-router.get('/:id', validationIdMid, getArticleId);
-router.post('/list', validationSearchParamsMid, postArticleList);
+router.get(
+  '/:id',
+  idParamValidMid,
+  getArticleById
+);
+router.post(
+  '/list',
+  searchParamsBodyValidMid,
+  postArticleList
+);
 router.post(
   '/',
-  validationIdBodyMid,
-  validationBodyMidCreateFunc('article'),
+  bodyValidMidCreate('article'),
   postArticle
 );
 router.put(
   '/',
-  validationIdBodyMid,
-  validationBodyMidCreateFunc('article'),
+  idBodyValidMid,
+  bodyParamValidMidCreate('article'),
   putArticle
 );
 router.delete(
-  '/',
-  validationIdMid,
+  '/:id',
+  idParamValidMid,
   deleteArticle
 );
 
 // Translations per area
 router.get(
-  '/:idArticle/area/list',
-  validationIdCreateFunc('idArticle'),
-  getArticleIdAreaId
-);
-router.get(
-  '/:idArticle/area/:idArea',
-  validationIdCreateFunc('idArticle'),
-  validationIdCreateFunc('idArea'),
-  getArticleIdAreaList
-);
-
-// Comments related
-router.get(
-  '/:idArticle/comment/:idComment',
-  validationIdCreateFunc('idArticle'),
-  validationIdCreateFunc('idComment'),
-  getArticleIdCommentId
+  '/:idArticle/area/:area',
+  attrValidMidCreate('idArticle'),
+  attrValidMidCreate('area'),
+  getArticleByIdArea
 );
 router.post(
-  '/:idArticle/comment/:idComment/list',
-  validationIdCreateFunc('idArticle'),
-  validationIdCreateFunc('idComment'),
-  postArticleIdCommentIdList
+  '/area/list',
+  attrValidMidCreate('idArticle', 'body'),
+  bodyParamValidMidCreate('area'),
+  postArticleListByArea
 );
 router.post(
-  '/:idArticle/comment',
-  validationIdCreateFunc('idArticle'),
-  postArticleIdCommentId
+  '/area',
+  attrValidMidCreate('idArticle', 'body'),
+  bodyParamValidMidCreate('articleArea'),
+  postArticleArea
 );
 router.put(
-  '/:idArticle/comment',
-  validationIdCreateFunc('idArticle'),
-  putArticleIdCommentId
+  '/area',
+  attrValidMidCreate('idArticle', 'body'),
+  bodyParamValidMidCreate('articleArea'),
+  putArticleArea
 );
 router.delete(
-  '/:idArticle/comment/:idComment',
-  validationIdCreateFunc('idArticle'),
-  validationIdCreateFunc('idComment'),
-  deleteArticleIdCommentId
+  '/:idArticle/area/:area',
+  attrValidMidCreate('idArticle', 'body'),
+  bodyParamValidMidCreate('articleArea'),
+  deleteArticleArea
 );
 
 export default router;
