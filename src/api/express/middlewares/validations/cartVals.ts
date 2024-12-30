@@ -9,8 +9,12 @@ const CartLineValSchema = z.object({
     .number()
     .positive()
     .int(),
+  articleId: z
+    .string()
+    .optional(),
   article:
     ArticleValSchema
+      .optional()
 });
 
 const CartValSchema = z.object({
@@ -28,8 +32,12 @@ const ShippingtLineValSchema = z.object({
     .number()
     .positive()
     .int(),
+  articleId: z
+    .string()
+    .optional(),
   article:
     ArticleValSchema
+      .optional()
 });
 
 const ShipStateEnumValSchema = z.nativeEnum(ShipStateEnum);
