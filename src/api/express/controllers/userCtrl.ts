@@ -11,7 +11,7 @@ function factoryUserLogin (req: Request, res: Response, loginFunc: (req: Request
   const { userName, pass } = req.params;
   getUser()
     .read(userName)
-    .then((user) => {
+    .then((user: User) => {
       if (!compare(pass, `${user.salt}${user.hash}`)) throw new Error('User not found');
       return loginFunc(req, user);
     })

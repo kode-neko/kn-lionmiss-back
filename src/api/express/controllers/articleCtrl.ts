@@ -13,21 +13,20 @@ function getArticleById (req: Request, res: Response) {
 }
 
 function postArticleList (req: Request, res: Response) {
-  const { searchParams } = req.body;
   return getArticle()
-    .readList(searchParams)
+    .readList(req.body)
     .then((list) => res.status(200).send(list));
 }
 
 function postArticle (req: Request, res: Response) {
   return getArticle()
-    .create(req)
+    .create(req.body)
     .then((objId) => res.status(201).send(objId));
 }
 
 function putArticle (req: Request, res: Response) {
   return getArticle()
-    .update(req)
+    .update(req.body)
     .then(() => res.status(200))
     .catch((err) => errorResponse(err, res));
 }
@@ -43,9 +42,9 @@ function deleteArticle (req: Request, res: Response) {
 // Translations per area
 
 function getArticleByIdArea (req: Request, res: Response) {
-  const { idArticle, area } = req.params;
+  const { id, area } = req.params;
   return getArticle()
-    .readByArea(idArticle, area)
+    .readByArea(id, area)
     .then((obj) => res.status(200).send(obj))
     .catch((err) => errorResponse(err, res));
 }
@@ -65,16 +64,16 @@ function postArticleArea (req: Request, res: Response) {
 }
 
 function putArticleArea (req: Request, res: Response) {
-  const { articleArea } = req.body;
+  const { id, articleArea } = req.body;
   return getArticle()
-    .updateArticleArea(articleArea)
+    .updateArticleArea(id, articleArea)
     .then((list) => res.status(200).send(list));
 }
 
 function deleteArticleArea (req: Request, res: Response) {
-  const { id, articleArea } = req.params;
+  const { id, idArticleArea } = req.params;
   return getArticle()
-    .deleteArticleArea(id, articleArea)
+    .deleteArticleArea(id, idArticleArea)
     .then((list) => res.status(200).send(list));
 }
 

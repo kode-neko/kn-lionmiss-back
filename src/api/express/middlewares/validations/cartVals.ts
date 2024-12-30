@@ -52,7 +52,8 @@ const ShippingValSchema = z.object({
     .string()
     .optional(),
   state: z
-    .record(ShipStateEnumValSchema, z.date()),
+    .record(ShipStateEnumValSchema, z.date())
+    .optional(),
   idPayment: z
     .string()
     .optional(),
@@ -61,6 +62,13 @@ const ShippingValSchema = z.object({
       .optional(),
   shippingLineList: z
     .array(ShippingtLineValSchema)
+});
+
+const ShippingOpsValSchema = ShippingValSchema.pick({
+  idTracking: true,
+  state: true,
+  idPayment: true,
+  payment: true
 });
 
 export {

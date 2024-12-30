@@ -1,4 +1,7 @@
 import {
+  IModelDBArea, IModelDBArticle, IModelDBCart, IModelDBComment, IModelDBShipping, IModelDBUser
+} from './interfaces';
+import {
   ModelDBAreaMongo, ModelDBArticleMongo, ModelDBCartMongo, ModelDBCommentMongo, ModelDBShippingMongo, ModelDBUserMongo
 } from './mongo/data';
 import { createConnMongo } from './mongo/db/utils';
@@ -37,12 +40,12 @@ const dataAccess = {
   }
 };
 
-const getArea = () => dataAccess[DATA_ACCESS]['area'].getInstance();
-const getArticle = () => dataAccess[DATA_ACCESS]['article'].getInstance();
-const getCart = () => dataAccess[DATA_ACCESS]['cart'].getInstance();
-const getComment = () => dataAccess[DATA_ACCESS]['comment'].getInstance();
-const getShipping = () => dataAccess[DATA_ACCESS]['shipping'].getInstance();
-const getUser = () => dataAccess[DATA_ACCESS]['user'].getInstance();
+const getArea: () => IModelDBArea = () => dataAccess[DATA_ACCESS]['area'].getInstance();
+const getArticle: () => IModelDBArticle = () => dataAccess[DATA_ACCESS]['article'].getInstance();
+const getCart: () => IModelDBCart = () => dataAccess[DATA_ACCESS]['cart'].getInstance();
+const getComment: () => IModelDBComment = () => dataAccess[DATA_ACCESS]['comment'].getInstance();
+const getShipping: () => IModelDBShipping = () => dataAccess[DATA_ACCESS]['shipping'].getInstance();
+const getUser: () => IModelDBUser = () => dataAccess[DATA_ACCESS]['user'].getInstance();
 
 export {
   createConn,

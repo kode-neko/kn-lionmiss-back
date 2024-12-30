@@ -12,7 +12,7 @@ interface ShippingLineMongo {
 interface ShippingMongo {
   _id?: ObjectId;
   idTracking?: string;
-  state: Partial<Record<ShipStateEnum, Date>>;
+  state?: Partial<Record<ShipStateEnum, Date>>;
   idPayment?: string;
   payment?: PaymentEnum;
   shippingLineList: ShippingLineMongo[];
