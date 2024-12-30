@@ -10,10 +10,13 @@ import helmet from 'helmet';
 import { xss } from 'express-xss-sanitizer';
 import { chkAuthMid, errorMid } from './middlewares';
 import { Server } from 'http';
+import session from 'express-session';
 
 function initExpress (okCallback: () => void): Server {
   // Env bars
-  const { HOST_API, PORT_API } = process.env;
+  const {
+    AUTH_SYS, KEY_SECRET, HOST_API, PORT_API
+  } = process.env;
 
   // Create server app...
   const app = express();
@@ -29,6 +32,16 @@ function initExpress (okCallback: () => void): Server {
   app.use(helmet());
   app.use(xss());
   app.disable('x-powered-by');
+
+  // Session
+  if (AUTH_SYS === 'session') {
+    app.use(session({
+      secret: KEY_SECRET as string,
+      saveUninitialized: false,
+      cookie: {}
+    }));
+  }
+  app.use(express.json());
 
   // Routers
   app.use(userRouter);
