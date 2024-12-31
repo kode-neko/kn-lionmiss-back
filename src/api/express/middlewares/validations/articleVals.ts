@@ -1,6 +1,6 @@
-import { InstructEnum } from '@model/index';
 import { z } from 'zod';
 import { PictureValSchema } from './commonVals';
+import { InstructEnum } from '../../../../model';
 
 const InstructEnumValSchema = z.nativeEnum(InstructEnum);
 

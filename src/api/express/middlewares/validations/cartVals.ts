@@ -1,6 +1,6 @@
-import { ShipStateEnum, PaymentEnum } from '@model/index';
 import { z } from 'zod';
 import { ArticleValSchema } from './articleVals';
+import { PaymentEnum, ShipStateEnum } from '../../../../model';
 
 const CartLineValSchema = z.object({
   order: z

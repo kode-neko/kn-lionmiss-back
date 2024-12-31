@@ -1,10 +1,8 @@
-import {
-  Article,
-  ArticleArea,
-  SearchParams
-} from '@model/index';
 import IModelDB from './IModelDB';
 import { NotFoundDbException } from '../error';
+import {
+  Article, ArticleArea, SearchParams
+} from '../../model';
 
 interface IModelDBArticle extends IModelDB<Article> {
   readByArea(id: string, area: string): Promise<Article | NotFoundDbException>;

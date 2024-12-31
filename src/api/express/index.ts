@@ -11,6 +11,8 @@ import { xss } from 'express-xss-sanitizer';
 import { chkAuthMid, errorMid } from './middlewares';
 import { Server } from 'http';
 import session from 'express-session';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '../../docs';
 
 function initExpress (okCallback: () => void): Server {
   // Env bars
@@ -42,6 +44,9 @@ function initExpress (okCallback: () => void): Server {
     }));
   }
   app.use(express.json());
+
+  // Swagger
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // Routers
   app.use(userRouter);
