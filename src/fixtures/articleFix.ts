@@ -4,7 +4,7 @@ import {
   ArticleAreaMongo, ArticleMongo, ArticleVariantMongo
 } from '../data-access';
 import { InstructEnum } from '../model';
-import { faker } from '@faker-js/faker';
+import { fakerES as faker } from '@faker-js/faker';
 
 function createFixArticleVariantMongo (): ArticleVariantMongo {
   return {
