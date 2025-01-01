@@ -4,13 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test": "dotenvx run -f ./config/env/.env.dev -- npx jest --config ./config/jest.config.ts",
-    "docker": "docker-compose --env-file ./config/env/.env.dev up --detach",
+    "docker:up": "docker-compose --env-file ./config/env/.env.dev up --detach",
     "docker:down": "docker-compose down",
-    "build": "npx tsc --project ./config/tsconfig.json",
-    "mongo:fix": "dotenvx run -f ./config/env/.env.dev -- node ./public/fixtures/app.js",
-    "express": "dotenvx run -f ./config/env/.env.dev -- node ./public/api/express/index.js",
     "pass:app": "node ./scripts/pass-app.mjs",
-    "scratch": "tsc --module esnext ./scripts/scratches.ts && node ./scripts/scratches.js",
+    "mongo:fix": "dotenvx run -f ./config/env/.env.dev -- node ./public/fixtures/app.js",
+    "build:dev": "npx tsc --project ./config/tsconfig.json --watch",
+    "start:dev": "dotenvx run -f ./config/env/.env.dev -- node ./public/index.js --watch",
+    "build": "npx tsc --project ./config/tsconfig.json",
+    "start": "dotenvx run -f ./config/env/.env -- node ./public/index.js",
     "prisma:generate": "dotenvx run -f ./config/env/.env.dev -- npx prisma generate --schema=./src/data-access/sql/db/prisma/schema.prisma",
     "prisma:migrate": "dotenvx run -f ./config/env/.env.dev -- npx prisma migrate dev --schema=./src/data-access/sql/db/prisma/schema.prisma"
   },
@@ -19,7 +20,6 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.9.1",
-    "@faker-js/faker": "^9.0.3",
     "@inquirer/input": "^4.0.2",
     "@inquirer/select": "^4.0.2",
     "@stylistic/eslint-plugin": "^2.7.2",
@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.31.0",
+    "@faker-js/faker": "^9.3.0",
     "@prisma/client": "^6.1.0",
     "casual": "^1.6.2",
     "cors": "^2.8.5",
@@ -61,6 +62,8 @@
     "prisma": "^6.0.1",
     "rate-limiter-flexible": "^5.0.4",
     "sequelize": "^6.37.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^11.0.3",
     "zod": "^3.24.1"
   }

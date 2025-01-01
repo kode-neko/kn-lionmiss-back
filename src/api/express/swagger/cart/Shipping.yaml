@@ -1,0 +1,59 @@
+components:
+  schemas:
+    ShippingLine:
+      type: object
+      required:
+        - order
+        - qty
+      properties:
+        order:
+          type: string
+        qty:
+          type: integer
+        articleId:
+          type: string
+        article:
+          $ref: "#/components/schemas/Article"
+      example:
+        order: "order123"
+        qty: 2
+        articleId: ""
+
+    Shipping:
+      type: object
+      required:
+        - shippingLineList
+      properties:
+        id:
+          type: integer
+        idTracking:
+          idTracking: string
+        state:
+          type: object
+          additionalProperties:
+            type: string
+            format: date-time
+        idPayment:
+          idPayment: string
+        payment:
+          payment: string
+        shippingLineList:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShippingLine"
+      example:
+        id: "67743db1e1ddd426cc4f38f3"
+        idTracking: "tracking123"
+        state:
+          SHIPPED: "2023-10-01T12:00:00Z"
+        idPayment: "payment123"
+        payment: "CREDIT_CARD"
+        shippingLineList:
+          - order: "order123"
+            qty: 2
+            articleId: "article123"
+
+    ShippingList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Shipping"

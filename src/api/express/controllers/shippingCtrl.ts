@@ -39,7 +39,7 @@ function postShipping (req: Request, res: Response) {
   const { userId, shipping } = req.body;
   return getShipping()
     .createFromUserCart(userId, shipping)
-    .then((objId) => res.status(201).send(objId));
+    .then((shipping) => res.status(201).send(shipping));
 }
 
 export {

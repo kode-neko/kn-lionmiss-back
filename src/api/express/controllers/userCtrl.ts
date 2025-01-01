@@ -1,9 +1,9 @@
-import { User } from '@model/index';
 import { Request, Response } from 'express';
 import { getUser } from '../../../data-access';
 import { errorResponse } from './utils';
 import { compare } from 'bcrypt';
 import { createTokenJwt } from '../../../utils';
+import { User } from '../../../model';
 
 // Factory and bricks
 
@@ -11,8 +11,9 @@ function factoryUserLogin (req: Request, res: Response, loginFunc: (req: Request
   const { userName, pass } = req.params;
   getUser()
     .read(userName)
-    .then((user: User) => {
-      if (!compare(pass, `${user.salt}${user.hash}`)) throw new Error('User not found');
+    .then((res) => {
+      const user = res as User;
+      if (!compare(pass, `${user.salt}${user.pass}`)) throw new Error('User not found');
       return loginFunc(req, user);
     })
     .then((info) => res.status(201).send(info))

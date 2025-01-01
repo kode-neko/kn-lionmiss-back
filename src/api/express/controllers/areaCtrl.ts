@@ -5,6 +5,7 @@ import { errorResponse } from './utils';
 // CRUD
 
 function getAreaById (req: Request, res: Response) {
+  console.log(req.params.id);
   const { id } = req.params;
   return getArea()
     .read(id)

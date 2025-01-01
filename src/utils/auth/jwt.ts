@@ -1,11 +1,11 @@
 /* eslint-disable @stylistic/multiline-comment-style */
-import { User } from '@model/index';
 import {
   jwtVerify, KeyLike, SignJWT, jwtDecrypt,
   JWTPayload
 } from 'jose';
 import { AuthException } from '../../api/express/middlewares/error';
 import { getUser } from '../../data-access';
+import { User } from '../../model';
 // import { v6 as uuidv6 } from 'uuid';
 
 const KEY_SECRET: KeyLike = process.env.KEY_SECRET as unknown as KeyLike;

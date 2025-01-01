@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { InstructEnum } from '@model/index';
 import { PictureMongo } from './PictureMongo';
 import { AreaMongo } from './AreaMongo';
+import { InstructEnum } from '../../../../model';
 
 interface ArticleVariantMongo {
   name: string;

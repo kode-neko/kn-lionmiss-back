@@ -1,9 +1,8 @@
-import { SearchParams, Area } from '@model/index';
 import { IModelDBArea } from '../../interfaces';
 import { NotFoundDbException } from '../../error';
 import { PrismaClient } from '@prisma/client';
 import { getPrismaClient } from '../db/utils';
-import { idToNum, idToStr } from './utils';
+import { Area, SearchParams } from '../../../model';
 
 class AreaMongoModelDB implements IModelDBArea {
 
@@ -21,19 +20,24 @@ class AreaMongoModelDB implements IModelDBArea {
   private constructor () {
     this.prisma = getPrismaClient();
   }
-  read(id: string): Promise<any> {
+
+  read (id: string): Promise<Area> {
     throw new Error('Method not implemented.');
   }
-  readList(searchParams?: SearchParams<Area>): Promise<Area[]> {
+
+  readList (searchParams: SearchParams<Area>): Promise<Area[]> {
     throw new Error('Method not implemented.');
   }
-  create(obj: Area): Promise<Area> {
+
+  create (obj: Area): Promise<Area> {
     throw new Error('Method not implemented.');
   }
-  update(obj: Area): Promise<void | NotFoundDbException> {
+
+  update (obj: Area): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
-  delete(id: string): Promise<void | NotFoundDbException> {
+
+  delete (id: string): Promise<void | NotFoundDbException> {
     throw new Error('Method not implemented.');
   }
 

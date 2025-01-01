@@ -1,4 +1,4 @@
-import { SearchParams } from '@model/index';
+import { SearchParams } from '../../model';
 import { NotFoundDbException } from '../error';
 
 interface IModelDB<T> {

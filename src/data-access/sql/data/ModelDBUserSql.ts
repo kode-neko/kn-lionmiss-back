@@ -1,4 +1,4 @@
-import { User } from '@model/index';
+import { User } from '../../../model';
 import { IModelDBUser } from '../../interfaces';
 
 class UserMongoModelDB implements IModelDBUser {

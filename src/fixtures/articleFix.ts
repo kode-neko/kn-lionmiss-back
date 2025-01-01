@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb';
-import { faker } from '@faker-js/faker';
 import { createFixPictureMongo } from './pictureFix';
 import {
   ArticleAreaMongo, ArticleMongo, ArticleVariantMongo
 } from '../data-access';
 import { InstructEnum } from '../model';
+import { fakerES as faker } from '@faker-js/faker';
 
 function createFixArticleVariantMongo (): ArticleVariantMongo {
   return {

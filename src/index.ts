@@ -14,7 +14,7 @@ const msgErr = (err) => `💥 There was a problem:\n${err}`;
 // Init App
 function initApp () {
   createConn()
-    .then(() => {
+    .then(async () => {
       console.log(msgOkDb);
       initExpress(() => console.log(msgOkServer));
     })

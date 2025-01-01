@@ -1,4 +1,4 @@
-import { Area } from '@model/index';
+import { Area } from '../../model';
 import IModelDB from './IModelDB';
 
 type IModelDBArea = IModelDB<Area>;

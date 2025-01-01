@@ -1,0 +1,20 @@
+components:
+  schemas:
+    SearchParams:
+      type: object
+      required:
+        - obj
+      properties:
+        limit:
+          type: integer
+          default: 10
+        skip:
+          type: integer
+          default: 0
+        obj:
+          type: object
+        tags:
+          type: array
+          items:
+            type: string
+          default: []
