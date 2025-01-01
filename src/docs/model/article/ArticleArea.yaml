@@ -1,0 +1,37 @@
+components:
+  schemas:
+    ArticleArea:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        desc:
+          type: string
+        variantList:
+          type: object
+          additionalProperties:
+            type: string
+        price:
+          type: number
+        tax:
+          type: number
+        area:
+          $ref: "#/components/schemas/Area"
+      example:
+        id: "area123"
+        title: "Living Room"
+        desc: "A spacious living room area"
+        variantList:
+          variant1: "Sofa"
+          variant2: "Coffee Table"
+        price: 999.99
+        tax: 79.99
+        area:
+          id: "area456"
+          name: "Main Area"
+    ArticleAreaList:
+      type: array
+      items:
+        $ref: "#/components/schemas/ArticleArea"
