@@ -20,7 +20,7 @@ const router = Router();
 
 router.get(
   '/:id',
-  idParamValidMid,
+  idParamValidMid(),
   getCommentById
 );
 router.post(
@@ -41,7 +41,7 @@ router.put(
 );
 router.delete(
   '/:id',
-  idParamValidMid,
+  idParamValidMid(),
   deleteComment
 );
 

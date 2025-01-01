@@ -20,7 +20,7 @@ const router = Router();
 
 router.get(
   '/:id',
-  idParamValidMid,
+  idParamValidMid(),
   getShippingById
 );
 router.post(
@@ -36,7 +36,7 @@ router.put(
 );
 router.delete(
   '/:id',
-  idParamValidMid,
+  idParamValidMid(),
   deleteShipping
 );
 

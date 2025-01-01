@@ -25,7 +25,7 @@ const router = Router();
 // Article ops
 router.get(
   '/:id',
-  idParamValidMid,
+  idParamValidMid(),
   getArticleById
 );
 router.post(
@@ -46,7 +46,7 @@ router.put(
 );
 router.delete(
   '/:id',
-  idParamValidMid,
+  idParamValidMid(),
   deleteArticle
 );
 

@@ -17,7 +17,7 @@ const router = Router();
 
 router.get(
   '/:id',
-  idParamValidMid,
+  idParamValidMid(),
   getCartById
 );
 
