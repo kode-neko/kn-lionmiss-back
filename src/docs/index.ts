@@ -5,9 +5,9 @@ const { HOST_API, PORT_API } = process.env;
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
-    title: 'LionMiss',
+    title: 'LionMiss API Rest',
     version: '1.0.0',
-    description: 'API documentation for my Express application'
+    description: 'API doc for the online shop LionMiss. Sorry for the mistakes. This deployment has no auth system, but the app is concived to support session & jwt.'
   },
   servers: [
     { url: `http://${HOST_API}:${PORT_API}` }
