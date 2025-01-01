@@ -1,20 +1,14 @@
-# KN KionMiss Back
+# KN LionMiss
 
 Welcome to this Node.js project 😎 It's a back for an online clothes shop 🛍️👕👗 This permits me to learn and test several techs ⚙️🛠️💻
 
 ---
-
-- [KN KionMiss Back](#kn-kionmiss-back)
+- [KN LionMiss](#kn-lionmiss)
   - [1. Description](#1-description)
-  - [2. Techs](#2-techs)
-  - [3. Architecture](#3-architecture)
-    - [3.1. UML Architecture](#31-uml-architecture)
-    - [3.2. UML Class](#32-uml-class)
-    - [3.3 ER Schema](#33-er-schema)
-    - [3.4. Mongo Schema](#34-mongo-schema)
+  - [2. Implementations](#2-implementations)
+  - [3. Schemas](#3-schemas)
   - [4. Deploy](#4-deploy)
   - [5. Contribution](#5-contribution)
-
 
 ---
 
@@ -22,8 +16,7 @@ Welcome to this Node.js project 😎 It's a back for an online clothes shop 🛍
 
 This project consist on a complete back made in Node.js. The idea is -juntar several techs for learning porpouse. You can learn through this ficticial online clothe shop called LionMis. It's under construction yet, so I'm sorry for the incomplete or buggy parts
 
-## 2. Techs
-
+## 2. Implementations
 
 Desc | Icon |
 ---------|----------|
@@ -38,6 +31,7 @@ Desc | Icon |
 - **API Rest**
   - Express.js ✅
   - Koa 🍪
+  - Swagger UI ⚠️
 - **GraphQL**
   - Test bench ⚠️ (In this project)
   - Complete implementation 🍪
@@ -62,37 +56,14 @@ Desc | Icon |
   - Pass & Hash Generator ✅
   - Small tests in testing folder ⚠️
 
-## 3. Architecture
+## 3. Schemas
 
-### 3.1. UML Architecture
+Each link shows schema diagrams
 
-This schema shows the diferent app parts. Pay attention to following:
-- Data Access layer: One inetrface and several DB implementations which they must to respect it. This is a very good software practice but sadly ignored...
-- The previous data access layer is apoyada ina whole model domaind. The data base schemes for several techs are based respecting this domain.
-- Through env bars you can switch between techs for api, data-access and auth systems.
-
-[picture]
-
-
-### 3.2. UML Class
-
-This is a complete domaind model of the online shop
-
-[picture]
-
-### 3.3 ER Schema
-
-The SQL data base has this scheme
-
-[picture]
-
-Here you can find the SQL scripts.
-
-### 3.4. Mongo Schema
-
-This is the MongoDB document structure
-
-[picture]
+- [UML Architecture](./src/docs/diagrams/uml-arch.md)
+- [UML Class](./src/docs/diagrams/uml-class.md)
+- [ER Schema](./src/docs/diagrams/er-sql.md)
+- [Mongo Schema](./src/docs/diagrams/mongo.md)
 
 ## 4. Deploy
 
@@ -105,6 +76,8 @@ npm mongo:fix
 npm build
 npm start
 ```
+
+You can use a browser API rest calling app or the Swaguer UI [http://localhost:3014/api-docs]([mongo-diagram.png](http://localhost:3014/api-docs)) 
 
 ## 5. Contribution
 
