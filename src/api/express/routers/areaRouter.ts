@@ -88,7 +88,7 @@ router.post(
  *           schema:
  *            $ref: '#/components/schemas/Area'
  *     responses:
- *       200:
+ *       201:
  *         description: Area found
  *         content:
  *           application/json:
