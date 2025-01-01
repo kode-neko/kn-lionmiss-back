@@ -32,8 +32,6 @@ function chkAuthMid (req: Request, res: Response, next: NextFunction) {
     case 'session':
       chkSessionMid(req);
       break;
-    default:
-      chkAuthJwtMid(req);
   }
   next();
 }

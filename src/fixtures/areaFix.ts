@@ -3,7 +3,7 @@ import { AreaMongo } from '../data-access';
 
 const createAreaMongoListFix: AreaMongo[] = [
   {
-    _id: new ObjectId(),
+    _id: new ObjectId('67743db1e1ddd426cc4f38f2'),
     name: 'spanish',
     country: 'Spain',
     locale: 'es-ES',
