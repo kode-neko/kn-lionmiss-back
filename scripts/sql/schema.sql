@@ -32,9 +32,7 @@ CREATE TABLE article_materials(
 	
 	PRIMARY KEY(article, material)
 );
-CREATE TABLE instruct(
-	name VARCHAR(25) PRIMARY KEY
-);
+
 CREATE TABLE article_instruct(
 	article MEDIUMINT UNSIGNED NOT NULL,
 	instruct 

@@ -1,0 +1,71 @@
+components:
+  schemas:
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        materials:
+          type: object
+          additionalProperties:
+            type: number
+        instructs:
+          type: object
+          additionalProperties:
+            type: string
+        discolor:
+          type: boolean
+        articleVariantList:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArticleVariant"
+        pictureList:
+          type: array
+          items:
+            $ref: "#/components/schemas/Picture"
+        articleAreaList:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArticleArea"
+      example: # Example for Swagger UI
+        id: "article123"
+        tags: ["tag1", "tag2"]
+        materials:
+          wood: 50
+          metal: 30
+        instructs:
+          ASSEMBLY: "Follow the instructions carefully."
+        discolor: false
+        articleVariantList:
+          - id: "variant123"
+            name: "Large"
+            sizes:
+              S: 10
+              M: 20
+              L: 30
+        pictureList:
+          - id: "picture123"
+            ext: "jpg"
+            src: "https://example.com/image.jpg"
+            alt: "An example image"
+        articleAreaList:
+          - id: "area123"
+            title: "Living Room"
+            desc: "A spacious living room area"
+            variantList:
+              variant1: "Sofa"
+              variant2: "Coffee Table"
+            price: 999.99
+            tax: 79.99
+            area:
+              id: "area456"
+              name: "Main Area"
+
+    ArticleList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Article"

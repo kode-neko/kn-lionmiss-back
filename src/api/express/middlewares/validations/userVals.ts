@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import {
-  SexEnum, UnitsHeightEnum, UnitsWeightEnum
-} from '@model/index';
 import { AreaValSchema, ArticleValSchema } from './articleVals';
 import { CartValSchema, ShippingValSchema } from './cartVals';
+import {
+  SexEnum, UnitsHeightEnum, UnitsWeightEnum
+} from '../../../../model';
 
 const SexEnumValSchema = z.nativeEnum(SexEnum);
 const UnitsHeightEnumValSchema = z.nativeEnum(UnitsHeightEnum);

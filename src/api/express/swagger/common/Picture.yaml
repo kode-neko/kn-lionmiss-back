@@ -1,0 +1,23 @@
+components:
+  schemas:
+    Picture:
+      type: object
+      properties:
+        id:
+          type: string
+        ext:
+          type: string
+        src:
+          type: string
+        alt:
+          type: string
+      example: # Example for Swagger UI
+        id: "picture123"
+        ext: "jpg"
+        src: "https://example.com/image.jpg"
+        alt: "An example image"
+
+    PictureList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Picture"

@@ -2,6 +2,18 @@ name: lionmiss-back
 
 services:
   
+  sql:
+    image: mariadb:latest
+    ports:
+      - ${PORT_MARIA}:3306
+    networks:
+      - net-lionmiss-back
+    environment:
+      MARIADB_ROOT_PASSWORD: ${PASS_ROOT}
+      MARIADB_DATABASE: ${DB}
+      MARIADB_USER: ${USER_ADMIN}
+      MARIADB_PASSWORD: ${PASS_USER_ADMIN}
+
   mongo:
     image: mongo:latest
     restart: always
@@ -25,3 +37,4 @@ services:
 networks:
   net-lionmiss-back:
     driver: bridge
+    

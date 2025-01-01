@@ -3,7 +3,7 @@ import {
   attrValidMidCreate,
   bodyParamValidMidCreate, bodyValidMidCreate, idBodyValidMid, idParamValidMid, loginValidMid,
   searchParamsBodyValidMid
-} from '../../../src/api/express/middlewares/validationsMid';
+} from '../../../../src/api/express/middlewares';
 
 describe('Validation Middleware', () => {
   let req, res, next;

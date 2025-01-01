@@ -1,7 +1,9 @@
 import express from 'express';
 import {
+  areaRouter,
   articleRouter,
   cartRouter,
+  commentRouter,
   shippingRouter,
   userRouter
 } from './routers';
@@ -11,6 +13,8 @@ import { xss } from 'express-xss-sanitizer';
 import { chkAuthMid, errorMid } from './middlewares';
 import { Server } from 'http';
 import session from 'express-session';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger';
 
 function initExpress (okCallback: () => void): Server {
   // Env bars
@@ -43,12 +47,17 @@ function initExpress (okCallback: () => void): Server {
   }
   app.use(express.json());
 
+  // Swagger
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
   // Routers
-  app.use(userRouter);
+  app.use('/user', userRouter);
   app.use(chkAuthMid); // el resto de rutas necesitan autenticación
-  app.use(articleRouter);
-  app.use(cartRouter);
-  app.use(shippingRouter);
+  app.use('/area', areaRouter);
+  app.use('/article', articleRouter);
+  app.use('/comment', commentRouter);
+  app.use('/cart', cartRouter);
+  app.use('/shipping', shippingRouter);
 
   // Error management
   app.use(errorMid);

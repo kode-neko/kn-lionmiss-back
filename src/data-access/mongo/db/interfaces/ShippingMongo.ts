@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { ShipStateEnum, PaymentEnum } from '@model/index';
 import { ArticleMongo } from './ArticleMongo';
+import { PaymentEnum, ShipStateEnum } from '../../../../model';
 
 interface ShippingLineMongo {
   order: string;
