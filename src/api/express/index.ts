@@ -14,7 +14,7 @@ import { chkAuthMid, errorMid } from './middlewares';
 import { Server } from 'http';
 import session from 'express-session';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from '../../docs';
+import swaggerSpec from './swagger';
 
 function initExpress (okCallback: () => void): Server {
   // Env bars
@@ -27,14 +27,12 @@ function initExpress (okCallback: () => void): Server {
   app.use(express.json());
 
   // Security
-  /*
   app.use(cors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204
   }));
-  */
   app.use(helmet());
   app.use(xss());
   app.disable('x-powered-by');

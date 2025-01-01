@@ -60,10 +60,10 @@ Desc | Icon |
 
 Each link shows schema diagrams
 
-- [UML Architecture](./src/docs/diagrams/uml-arch.md)
-- [UML Class](./src/docs/diagrams/uml-class.md)
-- [ER Schema](./src/docs/diagrams/er-sql.md)
-- [Mongo Schema](./src/docs/diagrams/mongo.md)
+- [UML Architecture](./docs/diagrams/uml-arch.md)
+- [UML Class](./docs/diagrams/uml-class.md)
+- [ER Schema](./docs/diagrams/er-sql.md)l
+- [Mongo Schema](./docs/diagrams/mongo.md)
 
 ## 4. Deploy
 
